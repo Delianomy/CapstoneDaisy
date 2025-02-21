@@ -376,7 +376,6 @@ void CapstoneSceneDream::Render() const {
 	glUniform1f(cube->GetComponent<ShaderComponent>()->GetUniformID("iTime"), iTime);
 	glUniformMatrix4fv(cube->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, cube->GetModelMatrix());
 	glUniformMatrix4fv(cube->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, MMath::inverse(camera->orient));
-
 	//camera->orient.print("Camera orientation");
 	glUniformMatrix4fv(cube->GetComponent<ShaderComponent>()->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
 	cube->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);

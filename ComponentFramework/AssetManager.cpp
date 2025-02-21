@@ -28,7 +28,7 @@ AssetManager::AssetManager() {
 	AddComponent<ShaderComponent>("DrawNormalsShader",nullptr,"shaders/drawNormalsVert.glsl", "shaders/drawNormalsFrag.glsl","shaders/drawNormalsGeom.glsl");
 	AddComponent<ShaderComponent>("WireFrameShader",nullptr,"shaders/wireFrameVert.glsl", "shaders/wireFrameFrag.glsl","shaders/wireFrameGeom.glsl");
 	AddComponent<ShaderComponent>("RefularTexture", nullptr, "shaders/textureVertRegular.glsl", "shaders/textureFragRegular.glsl");
-	AddComponent<ShaderComponent>("WaveShader", nullptr, "shaders/defaultVert.glsl", "shaders/wave_test.glsl");
+	AddComponent<ShaderComponent>("SimpleWavesShader", nullptr, "shaders/waveVert.glsl", "shaders/waveFrag.glsl");
 
 
 

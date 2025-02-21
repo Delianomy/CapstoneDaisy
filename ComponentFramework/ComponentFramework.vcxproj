@@ -231,12 +231,13 @@
     <None Include="shaders\textureFragRegular.glsl" />
     <None Include="shaders\textureVert.glsl" />
     <None Include="shaders\textureVertRegular.glsl" />
+    <None Include="shaders\waveFrag.glsl" />
+    <None Include="shaders\waveVert.glsl" />
     <None Include="shaders\wireFrameFrag.glsl" />
     <None Include="shaders\wireFrameGeom.glsl" />
     <None Include="shaders\wireFrameVert.glsl" />
     <None Include="skyBoxFrag.glsl" />
     <None Include="skyBoxVert.glsl" />
-    <None Include="wave_test.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

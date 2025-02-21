@@ -303,7 +303,10 @@
     <None Include="shaders\textureVertRegular.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="wave_test.glsl">
+    <None Include="shaders\waveFrag.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\waveVert.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

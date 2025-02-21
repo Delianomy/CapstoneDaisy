@@ -4,6 +4,8 @@
 #include "Window.h"
 #include "CapstoneScene.h"
 #include "CapstoneSceneDream.h"
+#include "ShaderTestScene.h"
+
 SceneManager::SceneManager(): 
 	currentScene(nullptr), window(nullptr), timer(nullptr),
 	fps(60), isRunning(false), fullScreen(false) {
@@ -43,7 +45,7 @@ bool SceneManager::Initialize(std::string name_, int width_, int height_) {
 	}
 
 	/********************************   Default first scene   ***********************/
-	BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE_DREAM);
+	BuildNewScene(SCENE_NUMBER::SCENE_SHADER_TEST);
 	//bedroomScene = new CapstoneScene();
 	//bedroomScene->OnCreate();
 
@@ -93,7 +95,9 @@ void SceneManager::HandleEvents() {
 				//currentScene = dreamScene;
 				BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE_DREAM);
 				break;
-
+			case SDL_SCANCODE_F3:
+				BuildNewScene(SCENE_NUMBER::SCENE_SHADER_TEST);
+				break;
 			case SDL_SCANCODE_F11:
 				BuildNewScene(SCENE_NUMBER::SCENE0);
 				break;
@@ -125,6 +129,10 @@ void SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 		break;
 	case SCENE_NUMBER::SCENE_CAPSTONE_DREAM:
 		currentScene = new CapstoneSceneDream();
+		status = currentScene->OnCreate();
+		break;
+	case SCENE_NUMBER::SCENE_SHADER_TEST:
+		currentScene = new ShaderTestScene();
 		status = currentScene->OnCreate();
 		break;
 	default:

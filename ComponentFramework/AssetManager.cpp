@@ -32,9 +32,9 @@ AssetManager::AssetManager() {
 
 
 
-	AddComponent<MaterialComponent>("Sprite_Sheet_HEAVY", nullptr, "textures/walking_sprite_sheet.png");
+	//AddComponent<MaterialComponent>("Sprite_Sheet_HEAVY", nullptr, "textures/walking_sprite_sheet.png");
 
-	//AddComponent<MaterialComponent>("ChessBoard",nullptr, "textures/8x8_checkered_board.png");
+	AddComponent<MaterialComponent>("ChessBoard",nullptr, "textures/8x8_checkered_board.png");
 	//AddComponent<MaterialComponent>("Sprite_Sheet", nullptr, "textures/sprite_sheet.png");
 	//AddComponent<MaterialComponent>("Sprite_Sheet_JPG", nullptr, "textures/walking_sprite_sheet_test_2.png");
 

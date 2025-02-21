@@ -42,12 +42,12 @@ void CameraActor::UpdateViewMatrix() {
 		/// From the perspective of the model multiply left to right
 		Matrix4 trans = MMath::translate(position);
 		orient = MMath::toMatrix4(orientation);
-		Matrix4 parentTransform = dynamic_cast<Actor*>(parent)->GetModelMatrix();
+		/*Matrix4 parentTransform = dynamic_cast<Actor*>(parent)->GetModelMatrix();*/
 
 		viewMatrix = orient * trans;
-		viewMatrix *= MMath::inverse(parentTransform);
+		/*viewMatrix *= MMath::inverse(parentTransform);
 
-		orient *= MMath::inverse(MMath::toMatrix4(dynamic_cast<Actor*>(parent)->GetComponent<TransformComponent>()->GetQuaternion()));
+		orient *= MMath::inverse(MMath::toMatrix4(dynamic_cast<Actor*>(parent)->GetComponent<TransformComponent>()->GetQuaternion()));*/
 	}
 	UpdateRayCastMatrix();
 	size_t offset = sizeof(Matrix4);

@@ -25,7 +25,7 @@ class ShaderTestScene : public Scene
 	Ref<LightActor> light;
 	Ref<Actor> player;
 	Ref<Actor> cube;
-
+	Ref<Actor> skybox;
 
 
 	float playerAngle;

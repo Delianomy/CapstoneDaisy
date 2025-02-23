@@ -184,6 +184,7 @@
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="coolWaterFrag.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="EMath.h" />
     <ClInclude Include="Euler.h" />
@@ -218,6 +219,7 @@
     <Text Include="GameEngineLog.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="coolWaterVert.glsl" />
     <None Include="shaders\colorPickingFrag.glsl" />
     <None Include="shaders\colorPickingVert.glsl" />
     <None Include="shaders\defaultFrag.glsl" />
@@ -225,6 +227,8 @@
     <None Include="shaders\drawNormalsFrag.glsl" />
     <None Include="shaders\drawNormalsGeom.glsl" />
     <None Include="shaders\drawNormalsVert.glsl" />
+    <None Include="shaders\prettyWaterFrag.glsl" />
+    <None Include="shaders\prettyWaterVert.glsl" />
     <None Include="shaders\shadowDepthFrag.glsl" />
     <None Include="shaders\shadowDepthVert.glsl" />
     <None Include="shaders\textureFrag.glsl" />

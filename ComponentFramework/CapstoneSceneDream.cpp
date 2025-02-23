@@ -49,7 +49,7 @@ bool CapstoneSceneDream::OnCreate() {
 	player->AddComponent<CollisionComponent>(nullptr, 1.0f);
 	player->GetComponent<PhysicsComponent>()->isStatic = false;
 	player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
-	player->AddComponent<ShaderComponent>(shader);
+	player->AddComponent<ShaderComponent>(CubeShader);
 	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Sprite_Sheet_HEAVY"));
 
 	AddActor(player);
@@ -71,34 +71,34 @@ bool CapstoneSceneDream::OnCreate() {
 
 
 
-	skybox = std::make_shared<SkyBox>(nullptr, "textures/posx.png", "textures/posx.png",
-		"textures/posx.png", "textures/posx.png", "textures/posx.png",
-		"textures/posx.png");
+	skybox = std::make_shared<SkyBox>(nullptr, "textures/px.png", "textures/nx.png",
+		"textures/py.png", "textures/ny.png", "textures/pz.png",
+		"textures/nz.png");
 
 	skybox->OnCreate();
 
 	light = std::make_shared<LightActor>(camera.get(), LightStyle::DirectionLight, Vec3(0.0f, 5.0f, 1.0f), Vec4(0.85f, 0.6, 0.6f, 0.0f));
 	light->OnCreate();
 
-	cube = std::make_shared<Actor>(nullptr);
+	//cube = std::make_shared<Actor>(nullptr);
 	//cube->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -3.0f), orientation);
 	//cube->GetComponent<TransformComponent>()->SetScale(Vec3(0.1f, 0.1f, 0.1f));
-	cube->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, 0.0f, -4.0f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)), Vec3(0.0f, 0.0f, 0.0f));
-	cube->GetComponent<PhysicsComponent>()->SetScale(Vec3(5.0f, 5.0f, 5.0f));
-	cube->AddComponent<CollisionComponent>(nullptr, 1.0f);
-	cube->GetComponent<PhysicsComponent>()->isStatic = true;
-	cube->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
-	cube->AddComponent<ShaderComponent>(WaveShader);
+	//cube->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, 0.0f, -4.0f),/// pos
+	//	QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)), Vec3(0.0f, 0.0f, 0.0f));
+	//cube->GetComponent<PhysicsComponent>()->SetScale(Vec3(5.0f, 5.0f, 5.0f));
+	//cube->AddComponent<CollisionComponent>(nullptr, 1.0f);
+	//cube->GetComponent<PhysicsComponent>()->isStatic = true;
+	//cube->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
+	//cube->AddComponent<ShaderComponent>(WaveShader);
 	//cube->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Sprite_Sheet_HEAVY"));
-	AddActor(cube);
+	//AddActor(cube);
 
 
 	/// Register the two balls with the physics and collision systems
 	physicsSystem.AddActor(player);
-	physicsSystem.AddActor(cube);
+	//physicsSystem.AddActor(cube);
 	collisionSystem.AddActor(player);
-	collisionSystem.AddActor(cube);
+	//collisionSystem.AddActor(cube);
 
 	return true;
 }
@@ -320,7 +320,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 			Quaternion newQuat = QMath::angleAxisRotation(playerAngle, Vec3(0.0f, 1.0f, 0.0f));
 
 
-			/*player->GetComponent<TransformComponent>()->SetQuaternion(newQuat);*/
+			player->GetComponent<PhysicsComponent>()->SetQuaternion(newQuat);
 
 			//camera->GetViewMatrix().print("ViewMatrix");
 		}
@@ -331,7 +331,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 			Quaternion newQuat = QMath::angleAxisRotation(playerAngle, Vec3(0.0f, 1.0f, 0.0f));
 
 
-			/*player->GetComponent<TransformComponent>()->SetQuaternion(newQuat);*/
+			player->GetComponent<PhysicsComponent>()->SetQuaternion(newQuat);
 
 			//camera->GetViewMatrix().print("ViewMatrix");
 		}
@@ -348,12 +348,14 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 
 void CapstoneSceneDream::Render() const {
 	glEnable(GL_DEPTH_TEST);
-	glClearColor(0.2f, 0.2f, 0.2f, 0.2f);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
 
 	glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
 	glBindBuffer(GL_UNIFORM_BUFFER, light->GetLightID());
-	
+
 	Ref<ShaderComponent> skyboxShader = skybox->GetComponent<ShaderComponent>();
 
 	glUseProgram(skyboxShader->GetProgram());
@@ -362,26 +364,18 @@ void CapstoneSceneDream::Render() const {
 
 	//camera->orient.print("Camera orientation");
 	glUniformMatrix4fv(skyboxShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
-	//std::dynamic_pointer_cast<SkyBox>(skybox)->Render();
+	std::dynamic_pointer_cast<SkyBox>(skybox)->Render();
 	glUseProgram(0);
 
-	/*for (auto actor : actors) {
+
+	for (auto actor : actors) {
 		glUseProgram(actor->GetComponent<ShaderComponent>()->GetProgram());
 		glUniform1f(actor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
 		glUniformMatrix4fv(actor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, actor->GetModelMatrix());
 		glBindTexture(GL_TEXTURE_2D, actor->GetComponent<MaterialComponent>()->getTextureID());
 		actor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
-	}*/
-	glUseProgram(cube->GetComponent<ShaderComponent>()->GetProgram());
-	glUniform1f(cube->GetComponent<ShaderComponent>()->GetUniformID("iTime"), iTime);
-	glUniformMatrix4fv(cube->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, cube->GetModelMatrix());
-	glUniformMatrix4fv(cube->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, MMath::inverse(camera->orient));
-	//camera->orient.print("Camera orientation");
-	glUniformMatrix4fv(cube->GetComponent<ShaderComponent>()->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
-	cube->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glUseProgram(0);
+	}
+	
 
 	if (drawOverlay == true) {
 		DrawMeshOverlay(Vec4(1.0f, 1.0f, 1.0f, 0.5f));

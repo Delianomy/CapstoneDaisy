@@ -242,6 +242,9 @@
     <ClInclude Include="ShaderTestScene.h">
       <Filter>Header Files\Scenes</Filter>
     </ClInclude>
+    <ClInclude Include="coolWaterFrag.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="GameEngineLog.txt">
@@ -307,6 +310,15 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="shaders\waveVert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="coolWaterVert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\prettyWaterFrag.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\prettyWaterVert.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

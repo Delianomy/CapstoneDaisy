@@ -14,8 +14,7 @@ bool MaterialComponent::OnCreate() {
 }
 
 bool MaterialComponent::LoadImage(const char* filename) {
-	int w=0;
-	int h=0;
+
 	int channels =0;
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);

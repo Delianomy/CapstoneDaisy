@@ -45,7 +45,7 @@ bool SceneManager::Initialize(std::string name_, int width_, int height_) {
 	}
 
 	/********************************   Default first scene   ***********************/
-	BuildNewScene(SCENE_NUMBER::SCENE_SHADER_TEST);
+	BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE_DREAM);
 	//bedroomScene = new CapstoneScene();
 	//bedroomScene->OnCreate();
 

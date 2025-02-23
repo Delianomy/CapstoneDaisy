@@ -49,16 +49,16 @@ bool CapstoneScene::OnCreate() {
 	camera->GetViewMatrix().print("ViewMatrix");
 
 	
-	doll = std::make_shared<Actor>(nullptr);
-	doll->AddComponent<TransformComponent>(nullptr, Vec3(3.99f, 0.94f, -1.6f), QMath::angleAxisRotation(270.0f, Vec3(0.0f, 1.0f, 0.0f)));
-	doll->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
-	doll->AddComponent<ShaderComponent>(regularTextureShader);
-	doll->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Doll"));
+	//doll = std::make_shared<Actor>(nullptr);
+	//doll->AddComponent<TransformComponent>(nullptr, Vec3(3.99f, 0.94f, -1.6f), QMath::angleAxisRotation(270.0f, Vec3(0.0f, 1.0f, 0.0f)));
+	//doll->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
+	//doll->AddComponent<ShaderComponent>(regularTextureShader);
+	//doll->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Doll"));
 	
 	
 
-	room = std::make_shared<Room>(nullptr, "textures/Wall2_new.png", "textures/Wall1.png",
-		"textures/Ceiling.png", "textures/Floor.png", "textures/Wall4.png",
+	room = std::make_shared<Room>(nullptr, "textures/Wall5.png", "textures/Wall1.png",
+		"textures/Ceiling.png", "textures/Floor.png", "textures/Wall4_new.png",
 		"textures/Wall3_new.png", 4.0f);
 
 	room->OnCreate();
@@ -315,12 +315,12 @@ void CapstoneScene::Render() const {
 	glDepthFunc(GL_LESS);  // Only render if closer than existing geometry
 
 
-	glUseProgram(doll->GetComponent<ShaderComponent>()->GetProgram());
-	glUniformMatrix4fv(doll->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, doll->GetModelMatrix());
-	glUniformMatrix4fv(doll->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
-//	glUniformMatrix4fv(roomShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
-	glBindTexture(GL_TEXTURE_2D, doll->GetComponent<MaterialComponent>()->getTextureID());
-	doll->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+//	glUseProgram(doll->GetComponent<ShaderComponent>()->GetProgram());
+//	glUniformMatrix4fv(doll->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, doll->GetModelMatrix());
+//	glUniformMatrix4fv(doll->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
+////	glUniformMatrix4fv(roomShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
+//	glBindTexture(GL_TEXTURE_2D, doll->GetComponent<MaterialComponent>()->getTextureID());
+//	doll->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
 	glUseProgram(0);
 
 

@@ -11,7 +11,7 @@
 #include "MeshComponent.h"
 #include "ShaderComponent.h"
 #include "MaterialComponent.h"
-
+#include "SkyBox.h"
 
 #include <string>
 using namespace MATH;
@@ -30,6 +30,7 @@ bool ShaderTestScene::OnCreate() {
 	Ref<ShaderComponent> CubeShader = assetManager->GetComponent<ShaderComponent>("RefularTexture");
 	
 	Ref<ShaderComponent> WaveShader = assetManager->GetComponent<ShaderComponent>("SimpleWavesShader");
+	Ref<ShaderComponent> CoolWaveShader = assetManager->GetComponent<ShaderComponent>("CoolWaveShader");
 
 	camera = std::make_shared<CameraActor>(nullptr);
 	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -4.0f), Quaternion());
@@ -40,22 +41,29 @@ bool ShaderTestScene::OnCreate() {
 	light = std::make_shared<LightActor>(camera.get(), LightStyle::DirectionLight, Vec3(0.0f, 5.0f, 1.0f), Vec4(0.85f, 0.6, 0.6f, 0.0f));
 	light->OnCreate();
 
+
+
+
 	cube = std::make_shared<Actor>(nullptr);
 	//cube->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -3.0f), orientation);
 	//cube->GetComponent<TransformComponent>()->SetScale(Vec3(0.1f, 0.1f, 0.1f));
 	cube->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, 0.0f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)), Vec3(0.0f, 0.0f, 0.0f));
-	cube->GetComponent<TransformComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
+	cube->GetComponent<TransformComponent>()->SetScale(Vec3(3.0f, 3.0f, 3.0f));
 
 	cube->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
 	auto meshComp = cube->GetComponent<MeshComponent>();
-	cube->AddComponent<ShaderComponent>(WaveShader);
+	cube->AddComponent<ShaderComponent>(CoolWaveShader);
 	cube->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("ChessBoard"));
 	cube->OnCreate();
 
 
 
-	
+	skybox = std::make_shared<SkyBox>(nullptr, "textures/posx.png", "textures/posx.png",
+		"textures/posx.png", "textures/posx.png", "textures/posx.png",
+		"textures/posx.png");
+
+	skybox->OnCreate();
 	
 
 	return true;
@@ -92,18 +100,37 @@ void ShaderTestScene::Update(const float deltaTime) {
 
 
 void ShaderTestScene::Render() const {
-	//glEnable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+
 
 	glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
 	glBindBuffer(GL_UNIFORM_BUFFER, light->GetLightID());
 
+	Ref<ShaderComponent> skyboxShader = skybox->GetComponent<ShaderComponent>();
+
+	glUseProgram(skyboxShader->GetProgram());
+	glUniformMatrix4fv(skyboxShader->GetUniformID("modelMatrix"), 1, GL_FALSE, skybox->GetModelMatrix());
+	glUniformMatrix4fv(skyboxShader->GetUniformID("viewMatrix"), 1, GL_FALSE, MMath::inverse(camera->orient));
+
+	//camera->orient.print("Camera orientation");
+	glUniformMatrix4fv(skyboxShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
+	std::dynamic_pointer_cast<SkyBox>(skybox)->Render();
+	glUseProgram(0);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_CULL_FACE);
+
+
 	glUseProgram(cube->GetComponent<ShaderComponent>()->GetProgram());
 	//glUniform1f(cube->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
 	glUniform1f(cube->GetComponent<ShaderComponent>()->GetUniformID("iTime"), iTime);
-	
+	//cube->GetComponent<MaterialComponent>()->w, cube->GetComponent<MaterialComponent>()->h
+	Vec2 iRes = Vec2(1.0f , 1.0f);
+	glUniform2f(cube->GetComponent<ShaderComponent>()->GetUniformID("iResolution"), iRes.x, iRes.y);
 	glUniformMatrix4fv(cube->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, cube->GetModelMatrix());
 
 	glBindTexture(GL_TEXTURE_2D, cube->GetComponent<MaterialComponent>()->getTextureID());

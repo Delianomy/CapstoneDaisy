@@ -30,7 +30,7 @@ uniform float index;
 void main() {
     texCoord = uvCoord;
     texCoord.y *= -1.0;
-    //texCoord.x = texCoord.x*0.077 + (index*0.077);
+    texCoord.x = texCoord.x*0.077 + (index*0.077);
     mat3 normalMatrix = mat3(transpose(inverse(view * modelMatrix)));
     vertNormal = normalize(normalMatrix * vNormal); /// Rotate the normal to the correct orientation 
     vec3 vertPos = vec3(view * modelMatrix * vVertex);

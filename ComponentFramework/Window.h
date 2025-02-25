@@ -28,6 +28,7 @@ public:
 	int getWidth() const { return width; }
 	int getHeight() const { return height; }
 	SDL_Window* getWindow() const { return window; }
+	SDL_GLContext getContext() const { return context; }
 
 private: /// internal tools OpenGl versions. 
 	void setAttributes(int major_, int minor_);

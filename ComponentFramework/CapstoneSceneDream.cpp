@@ -14,6 +14,7 @@
 #include "PhysicsComponent.h"
 #include "CollisionComponent.h"
 
+
 #include "SkyBox.h"
 #include <string>
 using namespace MATH;
@@ -44,12 +45,12 @@ bool CapstoneSceneDream::OnCreate() {
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 		);
-	player->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
+	player->GetComponent<PhysicsComponent>()->SetScale(Vec3(2.0f, 2.0f, 2.0f));
 	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
 	player->AddComponent<CollisionComponent>(nullptr, 1.0f);
 	player->GetComponent<PhysicsComponent>()->isStatic = false;
 	player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
-	player->AddComponent<ShaderComponent>(CubeShader);
+	player->AddComponent<ShaderComponent>(shader);
 	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Sprite_Sheet_HEAVY"));
 
 	AddActor(player);
@@ -64,7 +65,7 @@ bool CapstoneSceneDream::OnCreate() {
 	printf("Available GPU Memory: %d KB\n", totalMemoryKB);
 
 	camera = std::make_shared<CameraActor>(player.get());
-	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -4.0f), Quaternion());
+	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -3.0f), Quaternion());
 	camera->OnCreate();
 	camera->GetProjectionMatrix().print("ProjectionMatrix");
 	camera->GetViewMatrix().print("ViewMatrix");
@@ -80,6 +81,8 @@ bool CapstoneSceneDream::OnCreate() {
 	light = std::make_shared<LightActor>(camera.get(), LightStyle::DirectionLight, Vec3(0.0f, 5.0f, 1.0f), Vec4(0.85f, 0.6, 0.6f, 0.0f));
 	light->OnCreate();
 
+
+	
 	//cube = std::make_shared<Actor>(nullptr);
 	//cube->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -3.0f), orientation);
 	//cube->GetComponent<TransformComponent>()->SetScale(Vec3(0.1f, 0.1f, 0.1f));
@@ -109,6 +112,7 @@ bool CapstoneSceneDream::OnCreate() {
 
 CapstoneSceneDream::~CapstoneSceneDream() {
 	Debug::Info("Deleted Scene Dream: ", __FILE__, __LINE__);
+
 	OnDestroy();
 }
 
@@ -256,9 +260,35 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 		break;
 	}
 	}
+	ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
 }
 
 void CapstoneSceneDream::Update(const float deltaTime) {
+	
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL2_NewFrame();
+	ImGui::NewFrame();
+	ImGui::Begin("name");
+	ImGui::SetCursorPos(ImVec2(100, 100));
+	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 1.0f, 0.0f, 1.0f));
+	
+	ImGui::Text("Hello, world!");
+	ImGui::PopStyleColor();
+
+
+	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));  // Red Button
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.8f, 0.0f, 0.0f, 1.0f)); // Darker red when hovered
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.6f, 0.0f, 0.0f, 1.0f));  // Even darker when clicked
+
+	ImGui::SetCursorPos(ImVec2(100, 100));
+	if (ImGui::Button("Click Me")) {
+		printf("ButtonCLicked");
+	}
+	ImGui::PopStyleColor(3);
+
+	ImGui::End();
+	
+
 	iTime += deltaTime;
 	player->GetComponent<PhysicsComponent>()->SetVel(Vec3(0.0, 0.0, 0.0));
 
@@ -351,7 +381,7 @@ void CapstoneSceneDream::Render() const {
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
+	
 
 	glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
 	glBindBuffer(GL_UNIFORM_BUFFER, light->GetLightID());
@@ -376,6 +406,10 @@ void CapstoneSceneDream::Render() const {
 		actor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
 	}
 	
+	ImGui::Render();
+
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 
 	if (drawOverlay == true) {
 		DrawMeshOverlay(Vec4(1.0f, 1.0f, 1.0f, 0.5f));

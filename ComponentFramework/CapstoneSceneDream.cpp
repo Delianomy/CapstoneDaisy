@@ -32,7 +32,7 @@ bool CapstoneSceneDream::OnCreate() {
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("TextureShader");
 	Ref<ShaderComponent> CubeShader = assetManager->GetComponent<ShaderComponent>("RefularTexture");
 	Ref<ShaderComponent> WaveShader = assetManager->GetComponent<ShaderComponent>("WaveShader");
-
+	
 
 	//make an actor
 	player = std::make_shared<Actor>(nullptr);
@@ -52,8 +52,8 @@ bool CapstoneSceneDream::OnCreate() {
 	player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
 	player->AddComponent<ShaderComponent>(shader);
 	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Sprite_Sheet_HEAVY"));
-
-	AddActor(player);
+	AddTransparentActor(player);
+	//AddActor(player);
 
 	//now technically it would mean that out player now has a collider
 	GLint maxTextureSize;
@@ -65,7 +65,7 @@ bool CapstoneSceneDream::OnCreate() {
 	printf("Available GPU Memory: %d KB\n", totalMemoryKB);
 
 	camera = std::make_shared<CameraActor>(player.get());
-	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -3.0f), Quaternion());
+	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -3.5f), Quaternion());
 	camera->OnCreate();
 	camera->GetProjectionMatrix().print("ProjectionMatrix");
 	camera->GetViewMatrix().print("ViewMatrix");
@@ -83,18 +83,18 @@ bool CapstoneSceneDream::OnCreate() {
 
 
 	
-	//cube = std::make_shared<Actor>(nullptr);
-	//cube->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -3.0f), orientation);
-	//cube->GetComponent<TransformComponent>()->SetScale(Vec3(0.1f, 0.1f, 0.1f));
-	//cube->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, 0.0f, -4.0f),/// pos
-	//	QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)), Vec3(0.0f, 0.0f, 0.0f));
-	//cube->GetComponent<PhysicsComponent>()->SetScale(Vec3(5.0f, 5.0f, 5.0f));
+	cube = std::make_shared<Actor>(nullptr);
+	/*cube->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -3.0f), orientation);
+	cube->GetComponent<TransformComponent>()->SetScale(Vec3(0.1f, 0.1f, 0.1f));*/
+	cube->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, 0.0f, -4.0f),/// pos
+		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)), Vec3(0.0f, 0.0f, 0.0f));
+	cube->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
 	//cube->AddComponent<CollisionComponent>(nullptr, 1.0f);
-	//cube->GetComponent<PhysicsComponent>()->isStatic = true;
-	//cube->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
-	//cube->AddComponent<ShaderComponent>(WaveShader);
-	//cube->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Sprite_Sheet_HEAVY"));
-	//AddActor(cube);
+	cube->GetComponent<PhysicsComponent>()->isStatic = true;
+	cube->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
+	cube->AddComponent<ShaderComponent>(CubeShader);
+	cube->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Sprite_Sheet_HEAVY"));
+	AddOpaqueActor(cube);
 
 
 	/// Register the two balls with the physics and collision systems
@@ -263,114 +263,63 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 	ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
 }
 
+
 void CapstoneSceneDream::Update(const float deltaTime) {
 	
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame();
-	ImGui::NewFrame();
-	ImGui::Begin("name");
-	ImGui::SetCursorPos(ImVec2(100, 100));
-	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 1.0f, 0.0f, 1.0f));
 	
-	ImGui::Text("Hello, world!");
-	ImGui::PopStyleColor();
-
-
-	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));  // Red Button
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.8f, 0.0f, 0.0f, 1.0f)); // Darker red when hovered
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.6f, 0.0f, 0.0f, 1.0f));  // Even darker when clicked
-
-	ImGui::SetCursorPos(ImVec2(100, 100));
-	if (ImGui::Button("Click Me")) {
-		printf("ButtonCLicked");
-	}
-	ImGui::PopStyleColor(3);
-
-	ImGui::End();
-	
+	DrawUI_imgui();
 
 	iTime += deltaTime;
 	player->GetComponent<PhysicsComponent>()->SetVel(Vec3(0.0, 0.0, 0.0));
-
+	Vec3 movement(0.0f, 0.0f, 0.0f);
 	if (goRight) {
-		currentTime += deltaTime;
-		animIndex = static_cast<int>(currentTime / frameSpeed) % 13;
-
-		Ref<PhysicsComponent> physics = player->GetComponent<PhysicsComponent>();
-		physics->SetVel(Vec3(1.0, 0.0, 0.0));
-
-		/*Vec3 currentPos = physics->GetPosition();
-		Quaternion currentRot = physics->GetQuaternion();
-
-		physics->SetPosition(currentPos + MMath::toMatrix4(currentRot) * lefr_right_Vector);*/
-
+		movement.x += 1.0f;
 	}
 	if (goLeft) {
-		currentTime += deltaTime;
-		animIndex = static_cast<int>(currentTime / frameSpeed) % 13;
-
-		Ref<PhysicsComponent> physics = player->GetComponent<PhysicsComponent>();
-		physics->SetVel(Vec3(-1.0, 0.0, 0.0));
-
-		/*Vec3 currentPos = physics->GetPosition();
-		Quaternion currentRot = physics->GetQuaternion();
-
-		physics->SetPosition(currentPos - MMath::toMatrix4(currentRot) * lefr_right_Vector);*/
-
+		movement.x -= 1.0f;
 	}
 	if (goForward) {
-		currentTime += deltaTime;
-		animIndex = static_cast<int>(currentTime / frameSpeed) % 13;
-
-		Ref<PhysicsComponent> physics = player->GetComponent<PhysicsComponent>();
-		physics->SetVel(Vec3(0.0, 0.0, 1.0));
-		/*Vec3 currentPos = physics->GetPosition();
-		Quaternion currentRot = physics->GetQuaternion();
-
-		physics->SetPosition(currentPos + MMath::toMatrix4(currentRot) * forwardVector);*/
-
+		movement.z += 1.0f;
 	}
-
 	if (goBackwards) {
-		currentTime += deltaTime;
-		animIndex = static_cast<int>(currentTime / frameSpeed) % 13;
+		movement.z -= 1.0f;
+	}
 
-		Ref<PhysicsComponent> physics = player->GetComponent<PhysicsComponent>();
-		physics->SetVel(Vec3(0.0, 0.0, -1.0));
-		/*Vec3 currentPos = physics->GetPosition();
-		Quaternion currentRot = physics->GetQuaternion();
+	//normalize the movement to remove the diagonal speed up
+	if (VMath::mag(movement) > 0.0f) {
+		VMath::normalize(movement);
+	}
+	
+	Ref<PhysicsComponent> playerPhysics = player->GetComponent<PhysicsComponent>();
+	
 
-		physics->SetPosition(currentPos - MMath::toMatrix4(currentRot) * forwardVector);*/
+	//Update players rotation 
+	if(rotatePlayerLeft || rotatePlayerRight){
+		if(rotatePlayerLeft){
+			playerAngle -= 0.4f;
+		}
+		else {
+			playerAngle += 0.4f;
+		}
+		Quaternion newQuat = QMath::angleAxisRotation(playerAngle, Vec3(0.0f, 1.0f, 0.0f));
+		player->GetComponent<PhysicsComponent>()->SetQuaternion(newQuat);
 
 	}
 
-		if (rotatePlayerLeft) {
 
-			playerAngle += 0.4f;
-			Quaternion newQuat = QMath::angleAxisRotation(playerAngle, Vec3(0.0f, 1.0f, 0.0f));
-
-
-			player->GetComponent<PhysicsComponent>()->SetQuaternion(newQuat);
-
-			//camera->GetViewMatrix().print("ViewMatrix");
-		}
-
-		if (rotatePlayerRight) {
-
-			playerAngle -= 0.4f;
-			Quaternion newQuat = QMath::angleAxisRotation(playerAngle, Vec3(0.0f, 1.0f, 0.0f));
+	if (goRight || goLeft || goForward || goBackwards) {
+		currentTime += deltaTime;
+		animIndex = static_cast<int>(currentTime / frameSpeed) % 13;
+		playerPhysics->SetVel(Vec3(1.0f, 0.0f, 0.0f));
+		//playerPhysics->SetPosition(currentPos + MMath::toMatrix4(currentRot) * lefr_right_Vector);
+	}
 
 
-			player->GetComponent<PhysicsComponent>()->SetQuaternion(newQuat);
-
-			//camera->GetViewMatrix().print("ViewMatrix");
-		}
-		camera->UpdateViewMatrix();
-	
-		collisionSystem.Update(deltaTime);
-		physicsSystem.Update(deltaTime);
-		/*player->GetComponent<PhysicsComponent>()->Update(deltaTime);
-		cube->GetComponent<PhysicsComponent>()->Update(deltaTime);*/
+	camera->UpdateViewMatrix();
+	collisionSystem.Update(deltaTime);
+	physicsSystem.Update(deltaTime);
+	/*player->GetComponent<PhysicsComponent>()->Update(deltaTime);
+	cube->GetComponent<PhysicsComponent>()->Update(deltaTime);*/
 
 
 	}
@@ -397,13 +346,24 @@ void CapstoneSceneDream::Render() const {
 	std::dynamic_pointer_cast<SkyBox>(skybox)->Render();
 	glUseProgram(0);
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	for (auto actor : actors) {
-		glUseProgram(actor->GetComponent<ShaderComponent>()->GetProgram());
-		glUniform1f(actor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
-		glUniformMatrix4fv(actor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, actor->GetModelMatrix());
-		glBindTexture(GL_TEXTURE_2D, actor->GetComponent<MaterialComponent>()->getTextureID());
-		actor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+	for (auto opaqueActor : opaqueActors) {
+		glUseProgram(opaqueActor->GetComponent<ShaderComponent>()->GetProgram());
+		glUniform1f(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
+		glUniformMatrix4fv(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, opaqueActor->GetModelMatrix());
+		glBindTexture(GL_TEXTURE_2D, opaqueActor->GetComponent<MaterialComponent>()->getTextureID());
+		opaqueActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+	}
+
+
+	for (auto transparentActor : transparentActors) {
+		glUseProgram(transparentActor->GetComponent<ShaderComponent>()->GetProgram());
+		glUniform1f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
+		glUniformMatrix4fv(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, transparentActor->GetModelMatrix());
+		glBindTexture(GL_TEXTURE_2D, transparentActor->GetComponent<MaterialComponent>()->getTextureID());
+		transparentActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
 	}
 	
 	ImGui::Render();
@@ -411,14 +371,66 @@ void CapstoneSceneDream::Render() const {
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 
-	if (drawOverlay == true) {
-		DrawMeshOverlay(Vec4(1.0f, 1.0f, 1.0f, 0.5f));
-	}
+	//if (drawOverlay == true) {
+	//	DrawMeshOverlay(Vec4(1.0f, 1.0f, 1.0f, 0.5f));
+	//}
 
-	if (drawNormals == true) {
-		DrawNormals(Vec4(1.0f, 1.0f, 0.0f, 0.05f));
-	}
+	//if (drawNormals == true) {
+	//	DrawNormals(Vec4(1.0f, 1.0f, 0.0f, 0.05f));
+	//}
 }
+
+
+
+
+void CapstoneSceneDream::DrawUI_imgui()
+{
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL2_NewFrame();
+	ImGui::NewFrame();
+	ImGui::SetNextWindowSize(ImVec2( 200, 200));
+	ImGui::Begin("name", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
+	ImGui::SetCursorPos(ImVec2(100, 100));
+	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 1.0f, 0.0f, 1.0f));
+
+	ImGui::Text("Hello, world!");
+	ImGui::PopStyleColor();
+
+	//regular button
+	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));  // Red Button
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.8f, 0.0f, 0.0f, 1.0f)); // Darker red when hovered
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.6f, 0.0f, 0.0f, 1.0f));  // Even darker when clicked
+
+	ImGui::SetCursorPos(ImVec2(100, 100));
+	if (ImGui::Button("Click Me")) {
+		printf("ButtonCLicked");
+	}
+	ImGui::PopStyleColor(3);
+
+	//image button
+
+
+
+
+	ImGui::End();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

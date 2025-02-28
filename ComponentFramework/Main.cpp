@@ -17,7 +17,7 @@ int main(int argc, char* args[]) {
 	{
 		Debug::DebugInit("GameEngineLog.txt");
 		std::unique_ptr<SceneManager> game = std::make_unique<SceneManager>();
-		if (game->Initialize("Game Engine", 1280, 720) == true) {
+		if (game->Initialize("Game Engine", 1920, 1080) == true) {
 			game->Run();
 		}
 	}

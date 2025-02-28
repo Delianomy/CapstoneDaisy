@@ -10,6 +10,7 @@
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_opengl3.h"
+#include "SceneManager.h"
 using namespace MATH;
 
 /// Forward declarations 
@@ -31,7 +32,7 @@ class CapstoneSceneDream : public Scene
 
 	PhysicsSystem physicsSystem;
 	CollisionSystem collisionSystem;
-
+	SceneManager* sceneManagerRef;
 	float playerAngle;
 	float iTime = 0.0f;
 	bool goLeft = false;
@@ -64,7 +65,7 @@ public:
 	void DrawNormals(const Vec4 color) const;
 
 	void DrawMeshOverlay(const Vec4 color) const;
-
+	void DrawUI_imgui();
 };
 
 #endif // CAPSTONESCENE_DREAM_H

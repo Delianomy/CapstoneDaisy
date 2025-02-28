@@ -23,7 +23,9 @@ struct ViewPort {
 
 class Scene{
 protected:
-	std::vector< Ref<Actor> > actors;
+	std::vector<Ref<Actor>> actors;
+	std::vector<Ref<Actor>> opaqueActors;
+	std::vector<Ref<Actor>> transparentActors;
 	ViewPort viewport;
 public:	
 	virtual ~Scene() {}
@@ -36,6 +38,17 @@ public:
 	template<typename ActorTemplate>
 	void AddActor(Ref<ActorTemplate> actor_) {
 		actors.push_back(actor_);
+	}
+
+	template<typename ActorTemplate>
+	void AddTransparentActor(Ref<ActorTemplate> actor_) {
+		transparentActors.push_back(actor_);
+	}
+
+
+	template<typename ActorTemplate>
+	void AddOpaqueActor(Ref<ActorTemplate> actor_) {
+		opaqueActors.push_back(actor_);
 	}
 
 	template<typename ActorTemplate, typename ... Args>

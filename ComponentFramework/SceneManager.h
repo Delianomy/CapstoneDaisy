@@ -2,6 +2,7 @@
 #define SCENEMANAGER_H
 
 #include <string>
+#include "Window.h"
 class SceneManager  {
 public:
 	
@@ -37,6 +38,9 @@ private:
 	bool isRunning;
 	bool fullScreen;
 	void BuildNewScene(SCENE_NUMBER scene_);
+public:
+	int getWindowHeight() { return window->getHeight(); };
+	int getWindowWidth() { return window->getWidth(); };
 };
 
 

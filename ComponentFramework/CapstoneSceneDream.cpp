@@ -47,7 +47,7 @@ bool CapstoneSceneDream::OnCreate() {
 		);
 	player->GetComponent<PhysicsComponent>()->SetScale(Vec3(2.0f, 2.0f, 2.0f));
 	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
-	player->AddComponent<CollisionComponent>(nullptr, 1.0f);
+	player->AddComponent<CollisionComponent>(nullptr, 0.5f);
 	player->GetComponent<PhysicsComponent>()->isStatic = false;
 	player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
 	player->AddComponent<ShaderComponent>(shader);
@@ -89,7 +89,7 @@ bool CapstoneSceneDream::OnCreate() {
 	cube->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, 0.0f, -4.0f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)), Vec3(0.0f, 0.0f, 0.0f));
 	cube->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
-	//cube->AddComponent<CollisionComponent>(nullptr, 1.0f);
+	cube->AddComponent<CollisionComponent>(nullptr, 1.0f);
 	cube->GetComponent<PhysicsComponent>()->isStatic = true;
 	cube->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
 	cube->AddComponent<ShaderComponent>(CubeShader);
@@ -99,9 +99,9 @@ bool CapstoneSceneDream::OnCreate() {
 
 	/// Register the two balls with the physics and collision systems
 	physicsSystem.AddActor(player);
-	//physicsSystem.AddActor(cube);
+	physicsSystem.AddActor(cube);
 	collisionSystem.AddActor(player);
-	//collisionSystem.AddActor(cube);
+	collisionSystem.AddActor(cube);
 
 	return true;
 }
@@ -311,6 +311,24 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 		currentTime += deltaTime;
 		animIndex = static_cast<int>(currentTime / frameSpeed) % 13;
 		playerPhysics->SetVel(Vec3(1.0f, 0.0f, 0.0f));
+		Vec3 moveDirection = Vec3();
+
+		Quaternion currentRot = playerPhysics->GetQuaternion();
+		if (goRight) {
+			moveDirection = MMath::toMatrix4(currentRot) * lefr_right_Vector * walkSpeed;
+		}
+		if (goLeft) {
+			moveDirection = MMath::toMatrix4(currentRot) * lefr_right_Vector * walkSpeed * -1.0f;
+		}
+		if (goBackwards) {
+			moveDirection = MMath::toMatrix4(currentRot) * forwardVector * walkSpeed * -1.0f;
+		}
+		if (goForward) {
+			moveDirection = MMath::toMatrix4(currentRot) * forwardVector * walkSpeed;
+		}
+
+
+		playerPhysics->SetVel(moveDirection);
 		//playerPhysics->SetPosition(currentPos + MMath::toMatrix4(currentRot) * lefr_right_Vector);
 	}
 

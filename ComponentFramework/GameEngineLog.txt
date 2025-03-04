@@ -1,4 +1,4 @@
-Fri Feb 28 02:22:38 2025
+Tue Mar  4 01:04:01 2025
 [INFO]: Starting the SceneManager
 [INFO]: OpenGL version: 4.6.0 NVIDIA 546.80
 [INFO]: Graphics card vendor NVIDIA Corporation
@@ -64,7 +64,6 @@ Fri Feb 28 02:22:38 2025
 "view" loc:-1
 
 [ERROR]: Can't fint requested component in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 31
-[INFO]: Starting the SceneManager
 [INFO]: Creating values for CameraActor: 
 [INFO]: Uniforms:
 "modelMatrix" loc:0

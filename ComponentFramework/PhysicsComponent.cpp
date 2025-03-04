@@ -28,3 +28,4 @@ void PhysicsComponent::ApplyForce(const Vec3 force_) {
 void PhysicsComponent::UndoForce() {
 	force = Vec3(0.0f, 0.0f, 0.0f);
 }
+

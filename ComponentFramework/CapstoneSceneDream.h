@@ -44,6 +44,8 @@ class CapstoneSceneDream : public Scene
 	bool rotatePlayerLeft = false;
 	Vec3 forwardVector = Vec3(0.0f, 0.0f, 0.1f);
 	Vec3 lefr_right_Vector = Vec3(0.1f, 0.0f, 0.0f);
+	float walkSpeed = 10.0f;
+
 	int animIndex = 0;
 	float currentTime = 0.0f;
 	float frameSpeed = 0.1f;

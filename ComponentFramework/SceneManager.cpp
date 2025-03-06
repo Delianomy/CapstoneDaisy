@@ -142,7 +142,7 @@ void SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 		status = currentScene->OnCreate();
 		break;
 	case SCENE_NUMBER::SCENE_CAPSTONE_DREAM:
-		currentScene = new CapstoneSceneDream();
+		currentScene = new CapstoneSceneDream(this);
 		status = currentScene->OnCreate();
 		break;
 	case SCENE_NUMBER::SCENE_SHADER_TEST:

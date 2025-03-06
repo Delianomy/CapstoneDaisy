@@ -29,7 +29,7 @@ void main() {
 	float spec = max(dot(eyeDir, reflection), 0.0);
 	spec = pow(spec,14.0);
 	vec4 outColor = ka + (textureColor * kd * diff) + (ks * spec);
-	outColor.a = 0.5;
-	fragColor =  ka + (textureColor * kd * diff);	
+	outColor.a = 1.0;
+	fragColor =  outColor;	
    
 }

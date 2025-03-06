@@ -1,4 +1,4 @@
-Tue Mar  4 01:04:01 2025
+Thu Mar  6 02:28:47 2025
 [INFO]: Starting the SceneManager
 [INFO]: OpenGL version: 4.6.0 NVIDIA 546.80
 [INFO]: Graphics card vendor NVIDIA Corporation
@@ -6,12 +6,6 @@ Tue Mar  4 01:04:01 2025
 [INFO]: GLSL Version 4.60 NVIDIA
 [INFO]: Created Scene Dream: 
 [INFO]: Loading assets Scene Dream: 
-[INFO]: Uniforms:
-"iTime" loc:0
-"modelMatrix" loc:1
-"projection" loc:-1
-"view" loc:-1
-
 [INFO]: Uniforms:
 "modelMatrix" loc:0
 "projectionMatrix" loc:1
@@ -53,6 +47,12 @@ Tue Mar  4 01:04:01 2025
 "modelMatrix" loc:2
 "myTexture" loc:0
 "position" loc:-1
+"projection" loc:-1
+"view" loc:-1
+
+[INFO]: Uniforms:
+"iTime" loc:0
+"modelMatrix" loc:1
 "projection" loc:-1
 "view" loc:-1
 

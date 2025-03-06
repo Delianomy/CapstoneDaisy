@@ -28,7 +28,7 @@ AssetManager::AssetManager() {
 	AddComponent<ShaderComponent>("ShadowDepthShader",nullptr,"shaders/shadowDepthVert.glsl", "shaders/shadowDepthFrag.glsl");
 	AddComponent<ShaderComponent>("DrawNormalsShader",nullptr,"shaders/drawNormalsVert.glsl", "shaders/drawNormalsFrag.glsl","shaders/drawNormalsGeom.glsl");
 	AddComponent<ShaderComponent>("WireFrameShader",nullptr,"shaders/wireFrameVert.glsl", "shaders/wireFrameFrag.glsl","shaders/wireFrameGeom.glsl");
-	AddComponent<ShaderComponent>("RefularTexture", nullptr, "shaders/textureVertRegular.glsl", "shaders/textureFragRegular.glsl");
+	AddComponent<ShaderComponent>("RefularTextureShader", nullptr, "shaders/textureVertRegular.glsl", "shaders/textureFragRegular.glsl");
 	AddComponent<ShaderComponent>("SimpleWavesShader", nullptr, "shaders/waveVert.glsl", "shaders/waveFrag.glsl");
 	AddComponent<ShaderComponent>("CoolWaveShader", nullptr, "shaders/prettyWaterVert.glsl", "shaders/prettyWaterFrag.glsl");
 
@@ -36,11 +36,17 @@ AssetManager::AssetManager() {
 	AddComponent<MaterialComponent>("Sprite_Sheet_HEAVY", nullptr, "textures/walking_sprite_sheet.png");
 
 	AddComponent<MaterialComponent>("ChessBoard",nullptr, "textures/8x8_checkered_board.png");
-	//AddComponent<MaterialComponent>("Sprite_Sheet", nullptr, "textures/sprite_sheet.png");
-	//AddComponent<MaterialComponent>("Sprite_Sheet_JPG", nullptr, "textures/walking_sprite_sheet_test_2.png");
+	AddComponent<MaterialComponent>("DefaultTexture", nullptr, "textures/Black Chess Base Colour.png");
 
+
+	//UI elements:
+	AddComponent<MaterialComponent>("inventory", nullptr, "textures/UI_elements/inventory_2.png");
+	AddComponent<MaterialComponent>("E button", nullptr, "textures/UI_elements/E_button.png");
+	AddComponent<MaterialComponent>("inventory slot", nullptr, "textures/UI_elements/inventory_slot_test2.png");
 	
-
+	AddComponent<MaterialComponent>("number 1", nullptr, "textures/UI_elements/number_1.png");
+	AddComponent<MaterialComponent>("number 2", nullptr, "textures/UI_elements/number_2.png");
+	AddComponent<MaterialComponent>("number 3", nullptr, "textures/UI_elements/number_3.png");
 
 	//AddComponent<MaterialComponent>("Doll", nullptr, "textures/doll.png");
 	OnCreate();

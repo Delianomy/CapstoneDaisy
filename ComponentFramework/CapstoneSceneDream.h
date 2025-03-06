@@ -30,11 +30,26 @@ class CapstoneSceneDream : public Scene
 	Ref<Actor> cube;
 	Ref<Actor> skybox;
 
+	//Middle part
+	Ref<Actor> RightIsland;
+	Ref<Actor> MiddleIsland;
+	Ref<Actor> LeftIsland;
+	Ref<Actor> House;
+	Ref<Actor> Flower_One;
+
+
+	//Test collisions
+	Ref<Actor> sphere;
+	Ref<Actor> plane;
+
+
 	PhysicsSystem physicsSystem;
 	CollisionSystem collisionSystem;
 	SceneManager* sceneManagerRef;
 	float playerAngle;
 	float iTime = 0.0f;
+
+	//player controls imput
 	bool goLeft = false;
 	bool goRight = false;
 	bool goForward = false;
@@ -44,7 +59,16 @@ class CapstoneSceneDream : public Scene
 	bool rotatePlayerLeft = false;
 	Vec3 forwardVector = Vec3(0.0f, 0.0f, 0.1f);
 	Vec3 lefr_right_Vector = Vec3(0.1f, 0.0f, 0.0f);
-	float walkSpeed = 10.0f;
+	float walkSpeed = 40.0f;
+
+
+	//invetory UI imput
+	bool inventoryButtonPressed = true;
+	bool select_item_1 = false;
+	bool select_item_2 = false;
+	bool select_item_3 = false;
+
+
 
 	int animIndex = 0;
 	float currentTime = 0.0f;
@@ -53,7 +77,8 @@ class CapstoneSceneDream : public Scene
 	bool drawOverlay;
 public:
 	Matrix4 orient;
-	explicit CapstoneSceneDream();
+	explicit CapstoneSceneDream(SceneManager* scenemanager);
+	bool CreateLevelLayout();
 	virtual ~CapstoneSceneDream();
 
 	virtual bool OnCreate();
@@ -68,6 +93,7 @@ public:
 
 	void DrawMeshOverlay(const Vec4 color) const;
 	void DrawUI_imgui();
+	Plane CalculatePlaneCollider(Ref<Actor> obj);
 };
 
 #endif // CAPSTONESCENE_DREAM_H

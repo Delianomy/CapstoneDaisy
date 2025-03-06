@@ -40,7 +40,9 @@ AssetManager::AssetManager() {
 
 
 	//UI elements:
-	AddComponent<MaterialComponent>("inventory", nullptr, "textures/UI_elements/inventory_2.png");
+	AddComponent<MaterialComponent>("inventory_closed", nullptr, "textures/UI_elements/inventory_2.png");
+	AddComponent<MaterialComponent>("inventory_open", nullptr, "textures/UI_elements/inventory_open.png");
+
 	AddComponent<MaterialComponent>("E button", nullptr, "textures/UI_elements/E_button.png");
 	AddComponent<MaterialComponent>("inventory slot", nullptr, "textures/UI_elements/inventory_slot_test2.png");
 	

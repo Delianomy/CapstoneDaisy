@@ -419,6 +419,14 @@ void CapstoneSceneDream::DrawUI_imgui()
 	int windowHeight = sceneManagerRef->getWindowHeight();
 	int windowWidth = sceneManagerRef->getWindowWidth();
 
+	GLuint inventoryTextureID;
+	if (inventoryButtonPressed) {
+		inventoryTextureID = assetManager->GetComponent<MaterialComponent>("inventory_closed")->getTextureID();
+	}
+	else {
+		inventoryTextureID = assetManager->GetComponent<MaterialComponent>("inventory_open")->getTextureID();
+	}
+
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
@@ -433,7 +441,7 @@ void CapstoneSceneDream::DrawUI_imgui()
 	ImGui::Begin("inventory", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoDecoration);
 	//ImGui::SetCursorPos(ImVec2(-400, 400));
 	//draw image
-	ImGui::Image((intptr_t)assetManager->GetComponent<MaterialComponent>("inventory")->getTextureID(), ImVec2(200, 200));
+	ImGui::Image((intptr_t)inventoryTextureID, ImVec2(200, 200));
 	ImGui::End();
 	ImGui::PopStyleVar();
 	ImGui::PopStyleColor();

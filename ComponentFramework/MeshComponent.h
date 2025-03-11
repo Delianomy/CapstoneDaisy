@@ -3,6 +3,7 @@
 #include <glew.h>
 #include <vector>
 #include "VMath.h"
+#include "MEW.h"
 using namespace MATH;
 
 class MeshComponent : public Component {
@@ -33,5 +34,7 @@ public:
 	void Render() const;
 	void Render(GLenum drawmode) const;
 	
+	void PrintVertices() { MEW::PrintVecList(vertices); }
+	float GetVertMaxX() { return MEW::GetMaxX(vertices); }
 };
 

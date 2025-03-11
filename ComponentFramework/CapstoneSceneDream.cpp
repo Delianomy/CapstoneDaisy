@@ -90,6 +90,9 @@ bool CapstoneSceneDream::OnCreate() {
 	collisionSystem.AddActor(player);
 
 
+	cube->GetComponent<MeshComponent>()->PrintVertices();
+	cube->GetComponent<MeshComponent>()->GetVertMaxX();
+
 	return true;
 }
 

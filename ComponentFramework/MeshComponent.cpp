@@ -53,6 +53,7 @@ void MeshComponent::LoadModel(const char* filename) {
             vertices.push_back(vertex);
             normals.push_back(normal);
             uvCoords.push_back(uvCoord);
+            //for every object figure out maxX, maxY, maxZ, minX, minY, minZ
         }
     } 
 }

@@ -609,20 +609,6 @@ Plane CapstoneSceneDream::CalculatePlaneCollider(Ref<Actor> obj) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void CapstoneSceneDream::DrawNormals(const Vec4 color) const {
 	glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("DrawNormalsShader");
@@ -634,7 +620,6 @@ void CapstoneSceneDream::DrawNormals(const Vec4 color) const {
 	}
 	glUseProgram(0);
 }
-
 
 
 void CapstoneSceneDream::DrawMeshOverlay(const Vec4 color) const {

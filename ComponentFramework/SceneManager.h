@@ -3,9 +3,20 @@
 
 #include <string>
 #include "Window.h"
+#include <SDL_mixer.h>
+
+//#include "fmod.h"
+#include "fmod.hpp"
+
+
+
 class SceneManager  {
 public:
+	FMOD_RESULT result;
+	FMOD::System* pSystem = nullptr;
 	
+
+
 	SceneManager();
 	~SceneManager();
 	void Run();

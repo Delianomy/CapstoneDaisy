@@ -21,6 +21,7 @@ enum class ColliderType {
 /// Umer does it the same way, he calls the radius the extent
 
 struct AABB {
+	
 	Vec3 center;
 	float rx, ry, rz;
 };

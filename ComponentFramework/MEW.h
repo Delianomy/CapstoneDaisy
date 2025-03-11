@@ -9,17 +9,17 @@ using namespace MATH;
 class MEW {
 public:
     //Printing a vector list
-    static void PrintVecList(std::vector<Vec3>& list) {
+    static void PrintVecList(std::vector<Vec3> list) {
         for (Vec3 v : list) {
             v.print();
         }
     }
 
 
-    static float GetMaxX(std::vector<Vec3>& list) {
+    static float GetMaxX(std::vector<Vec3> list) {
         //Creating a list of floats with the x member value
         std::vector<float> f;
-        for (Vec3 v : list) {
+        for (Vec3& v : list) {
             f.push_back(v.x);
         }
 
@@ -30,7 +30,7 @@ public:
 
     static float GetMinX(std::vector<Vec3>& list) {
         std::vector<float> f;
-        for (Vec3 v : list) {
+        for (Vec3 &v : list) {
             f.push_back(v.x);
         }
 
@@ -42,7 +42,7 @@ public:
 
     static float GetMaxY(std::vector<Vec3>& list) {
         std::vector<float> f;
-        for (Vec3 v : list) {
+        for (Vec3 &v : list) {
             f.push_back(v.y);
         }
 
@@ -53,7 +53,7 @@ public:
 
     static float GetMinY(std::vector<Vec3>& list) {
         std::vector<float> f;
-        for (Vec3 v : list) {
+        for (Vec3 &v : list) {
             f.push_back(v.y);
         }
 
@@ -65,7 +65,7 @@ public:
 
     static float GetMaxZ(std::vector<Vec3>& list) {
         std::vector<float> f;
-        for (Vec3 v : list) {
+        for (Vec3 &v : list) {
             f.push_back(v.z);
         }
 
@@ -76,7 +76,7 @@ public:
 
     static float GetMinZ(std::vector<Vec3>& list) {
         std::vector<float> f;
-        for (Vec3 v : list) {
+        for (Vec3 &v : list) {
             f.push_back(v.z);
         }
 

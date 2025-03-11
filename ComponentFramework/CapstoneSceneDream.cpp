@@ -309,6 +309,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 
 	Vec3 movement(0.0f, 0.0f, 0.0f);
 	if (goRight) {
+		
 		movement.x += 1.0f;
 	}
 	if (goLeft) {

@@ -4,6 +4,7 @@ using namespace MATH;
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
+#include "MEW.h"
 
 MeshComponent::MeshComponent(Component *parent_, const char* filename_): Component(parent_) {
 	filename = filename_;
@@ -53,8 +54,12 @@ void MeshComponent::LoadModel(const char* filename) {
             vertices.push_back(vertex);
             normals.push_back(normal);
             uvCoords.push_back(uvCoord);
+         
+           
         }
+       
     } 
+ 
 }
 
 void MeshComponent::StoreMeshData(GLenum drawmode_) {
@@ -90,6 +95,7 @@ void MeshComponent::StoreMeshData(GLenum drawmode_) {
 	glEnableVertexAttribArray(uvCoordsLayoutLocation);
 	glVertexAttribPointer(uvCoordsLayoutLocation, 2, GL_FLOAT, GL_FALSE, 0, reinterpret_cast<void*>(VERTEX_LENGTH + NORMAL_LENGTH));
 
+    GetMaxX();
 
     dataLength = vertices.size();
 

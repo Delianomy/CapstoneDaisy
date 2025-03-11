@@ -9,79 +9,121 @@ using namespace MATH;
 class MEW {
 public:
     //Printing a vector list
-    static void PrintVecList(std::vector<Vec3> list) {
-        for (Vec3 v : list) {
+    static void PrintVecList(std::vector<Vec3>& list) {
+        for (Vec3 &v : list) {
             v.print();
         }
     }
 
 
-    static float GetMaxX(std::vector<Vec3> list) {
+    static float GetMaxX(std::vector<Vec3>& list) {
         //Creating a list of floats with the x member value
         std::vector<float> f;
         for (Vec3& v : list) {
             f.push_back(v.x);
         }
 
-        std::reverse(f.begin(), f.end());
+        if (f.size() <= 0) { return 404.0000f; }
 
-        return f[0];
+        float currentLargets = f[0];
+        for (float fv : f) {
+            if (fv >= currentLargets) {
+                currentLargets = fv;
+            }
+        }
+
+        return currentLargets;
     }
 
     static float GetMinX(std::vector<Vec3>& list) {
         std::vector<float> f;
-        for (Vec3 &v : list) {
+        for (Vec3& v : list) {
             f.push_back(v.x);
         }
 
-        std::sort(f.begin(), f.end());
+        if (f.size() <= 0) { return 404.0000f; }
 
-        return f[0];
+        float currentSmallest = f[0];
+        for (float fv : f) {
+            if (fv <= currentSmallest) {
+                currentSmallest = fv;
+            }
+        }
+
+        return currentSmallest;
     }
 
 
     static float GetMaxY(std::vector<Vec3>& list) {
         std::vector<float> f;
-        for (Vec3 &v : list) {
+        for (Vec3& v : list) {
             f.push_back(v.y);
         }
 
-        std::reverse(f.begin(), f.end());
+        if (f.size() <= 0) { return 404.0000f; }
 
-        return f[0];
+        float currentLargets = f[0];
+        for (float fv : f) {
+            if (fv >= currentLargets) {
+                currentLargets = fv;
+            }
+        }
+
+        return currentLargets;
     }
 
     static float GetMinY(std::vector<Vec3>& list) {
         std::vector<float> f;
-        for (Vec3 &v : list) {
+        for (Vec3& v : list) {
             f.push_back(v.y);
         }
 
-        std::sort(f.begin(), f.end());
+        if (f.size() <= 0) { return 404.0000f; }
 
-        return f[0];
+        float currentSmallest = f[0];
+        for (float fv : f) {
+            if (fv <= currentSmallest) {
+                currentSmallest = fv;
+            }
+        }
+
+        return currentSmallest;
     }
 
 
     static float GetMaxZ(std::vector<Vec3>& list) {
         std::vector<float> f;
-        for (Vec3 &v : list) {
+        for (Vec3& v : list) {
             f.push_back(v.z);
         }
 
-        std::reverse(f.begin(), f.end());
+        if (f.size() <= 0) { return 404.0000f; }
 
-        return f[0];
+        float currentLargets = f[0];
+        for (float fv : f) {
+            if (fv >= currentLargets) {
+                currentLargets = fv;
+            }
+        }
+
+        return currentLargets;
     }
 
     static float GetMinZ(std::vector<Vec3>& list) {
         std::vector<float> f;
-        for (Vec3 &v : list) {
+        for (Vec3& v : list) {
             f.push_back(v.z);
         }
 
-        std::sort(f.begin(), f.end());
+        if (f.size() <= 0) { return 404.0000f; }
 
-        return f[0];
+        float currentSmallest = f[0];
+        for (float fv : f) {
+            if (fv <= currentSmallest) {
+                currentSmallest = fv;
+            }
+        }
+
+        return currentSmallest;
     }
 };

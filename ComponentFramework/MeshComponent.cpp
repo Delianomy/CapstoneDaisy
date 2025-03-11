@@ -99,6 +99,9 @@ void MeshComponent::StoreMeshData(GLenum drawmode_) {
 
     dataLength = vertices.size();
 
+    /// Printing maxX
+    GetMaxX();
+
     /// give back the memory used in these vectors. The data is safely stored in the GPU now
     vertices.clear();
     normals.clear();

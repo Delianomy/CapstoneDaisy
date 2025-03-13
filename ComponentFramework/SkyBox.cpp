@@ -17,6 +17,7 @@ SkyBox::SkyBox(Component* parent_, const char* posx_, const char* negx_, const c
 bool SkyBox::OnCreate() {
 	AddComponent<MeshComponent>(nullptr, "meshes/Cube.obj");
 	meshComponent = GetComponent<MeshComponent>();
+
 	if (!meshComponent->OnCreate()) { return false; }
 
 
@@ -87,6 +88,7 @@ void SkyBox::Render() {
 	glDisable(GL_CULL_FACE);
 	//glUseProgram(shaderComponent->GetProgram());
 	//glUniformMatrix4fv(shaderComponent->GetUniformID("modelMatrix"), 1, GL_FALSE, GetModelMatrix());
+
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 	meshComponent->Render(GL_TRIANGLES);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
@@ -95,9 +97,7 @@ void SkyBox::Render() {
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
-
-
-
+	
 }
 
 SkyBox::~SkyBox() {}

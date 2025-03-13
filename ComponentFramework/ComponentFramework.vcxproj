@@ -164,6 +164,7 @@
     <ClCompile Include="include\imgui\imgui_tables.cpp" />
     <ClCompile Include="include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="LightActor.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="MaterialComponent.cpp" />
     <ClCompile Include="MeshComponent.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="include\imgui\imstb_textedit.h" />
     <ClInclude Include="include\imgui\imstb_truetype.h" />
     <ClInclude Include="LightActor.h" />
+    <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MaterialComponent.h" />
     <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="MEW.h" />
@@ -249,6 +251,8 @@
     <None Include="shaders\prettyWaterVert.glsl" />
     <None Include="shaders\shadowDepthFrag.glsl" />
     <None Include="shaders\shadowDepthVert.glsl" />
+    <None Include="shaders\skyBoxFrag.glsl" />
+    <None Include="shaders\skyBoxVert.glsl" />
     <None Include="shaders\textureFrag.glsl" />
     <None Include="shaders\textureFragRegular.glsl" />
     <None Include="shaders\textureVert.glsl" />
@@ -258,8 +262,6 @@
     <None Include="shaders\wireFrameFrag.glsl" />
     <None Include="shaders\wireFrameGeom.glsl" />
     <None Include="shaders\wireFrameVert.glsl" />
-    <None Include="skyBoxFrag.glsl" />
-    <None Include="skyBoxVert.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

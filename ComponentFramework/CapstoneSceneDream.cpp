@@ -31,17 +31,16 @@ bool CapstoneSceneDream::OnCreate() {
 	assetManager = std::make_shared<AssetManager>();
 
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("TextureShader");
-
 	Ref<ShaderComponent> WaveShader = assetManager->GetComponent<ShaderComponent>("WaveShader");
-	Ref<ShaderComponent> CubeShader = assetManager->GetComponent<ShaderComponent>("RefularTextureShader");
+	Ref<ShaderComponent> CubeShader = assetManager->GetComponent<ShaderComponent>("RegularTextureShader");
 
 	//make an actor
 	player = std::make_shared<Actor>(nullptr);
-	player->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, 4.0f, 0.0f),/// pos
+	player->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, 2.0f, 0.0f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
-	player->GetComponent<PhysicsComponent>()->SetScale(Vec3(2.0f, 2.0f, 4.0f));
+	player->GetComponent<PhysicsComponent>()->SetScale(Vec3(2.0f, 2.0f, 2.0f));
 	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
 	player->AddComponent<CollisionComponent>(nullptr, 1.0f);
 	player->GetComponent<PhysicsComponent>()->isStatic = false;
@@ -49,8 +48,6 @@ bool CapstoneSceneDream::OnCreate() {
 	player->AddComponent<ShaderComponent>(shader);
 	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Sprite_Sheet_HEAVY"));
 	AddTransparentActor(player);
-	//AddActor(player);
-
 	//now technically it would mean that out player now has a collider
 	GLint maxTextureSize;
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
@@ -61,7 +58,7 @@ bool CapstoneSceneDream::OnCreate() {
 	printf("Available GPU Memory: %d KB\n", totalMemoryKB);
 
 	camera = std::make_shared<CameraActor>(player.get());
-	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -3.5f), Quaternion());
+	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 2.0f, -3.5f), Quaternion());
 	camera->OnCreate();
 	camera->GetProjectionMatrix().print("ProjectionMatrix");
 	camera->GetViewMatrix().print("ViewMatrix");
@@ -115,54 +112,6 @@ bool CapstoneSceneDream:: CreateLevelLayout() {
 	AddOpaqueActor(LeftIsland);
 	physicsSystem.AddActor(LeftIsland);
 	collisionSystem.AddActor(LeftIsland);
-
-
-	/*MiddleIsland = std::make_shared<Actor>(nullptr);
-	MiddleIsland->AddComponent<PhysicsComponent>(nullptr, Vec3(6.0f, -1.0f, 2.0f), ///pos
-		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)), Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	MiddleIsland->GetComponent<PhysicsComponent>()->SetScale(Vec3(6.0f, 0.5f, 6.0f));
-	MiddleIsland->GetComponent<PhysicsComponent>()->isStatic = true;
-	MiddleIsland->AddComponent<CollisionComponent>(nullptr, 1.0f);
-	MiddleIsland->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
-	MiddleIsland->AddComponent<ShaderComponent>(CubeShader);
-	MiddleIsland->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("DefaultTexture"));
-	AddOpaqueActor(MiddleIsland);
-	physicsSystem.AddActor(MiddleIsland);
-	collisionSystem.AddActor(MiddleIsland);
-
-
-
-	House = std::make_shared<Actor>(nullptr);
-	House->AddComponent<PhysicsComponent>(nullptr, Vec3(3.0f, 1.0f, -2.0f), ///pos
-		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)), Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	House->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 2.5f, 1.0f));
-	House->GetComponent<PhysicsComponent>()->isStatic = true;
-	House->AddComponent<CollisionComponent>(nullptr, 0.5f);
-	House->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
-	House->AddComponent<ShaderComponent>(CubeShader);
-	House->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("DefaultTexture"));
-	AddOpaqueActor(House);
-	physicsSystem.AddActor(House);
-	collisionSystem.AddActor(House);
-
-
-
-	RightIsland = std::make_shared<Actor>(nullptr);
-	RightIsland->AddComponent<PhysicsComponent>(nullptr, Vec3(15.0f, -3.0f, -4.0f), ///pos
-		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)), Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	RightIsland->GetComponent<PhysicsComponent>()->SetScale(Vec3(3.0f, 1.0f, 2.0f));
-	RightIsland->GetComponent<PhysicsComponent>()->isStatic = true;
-	RightIsland->AddComponent<CollisionComponent>(nullptr, 1.0f);
-	RightIsland->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
-	RightIsland->AddComponent<ShaderComponent>(CubeShader);
-	RightIsland->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("DefaultTexture"));
-	AddOpaqueActor(RightIsland);
-	physicsSystem.AddActor(RightIsland);
-	collisionSystem.AddActor(RightIsland);*/
-
 
 
 	return true;
@@ -350,8 +299,6 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	camera->UpdateViewMatrix();
 	collisionSystem.Update(deltaTime);
 	physicsSystem.Update(deltaTime);
-	/*player->GetComponent<PhysicsComponent>()->Update(deltaTime);
-	cube->GetComponent<PhysicsComponent>()->Update(deltaTime);*/
 
 
 	}
@@ -378,16 +325,19 @@ void CapstoneSceneDream::Render() const {
 	std::dynamic_pointer_cast<SkyBox>(skybox)->Render();
 	glUseProgram(0);
 
+	// Then render player with proper depth testing
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);  // Only render if closer than existing geometry
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	for (auto opaqueActor : opaqueActors) {
-		glUseProgram(opaqueActor->GetComponent<ShaderComponent>()->GetProgram());
-		glUniform1f(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
-		glUniformMatrix4fv(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, opaqueActor->GetModelMatrix());
-		glBindTexture(GL_TEXTURE_2D, opaqueActor->GetComponent<MaterialComponent>()->getTextureID());
-		opaqueActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
-	}
+	//for (auto opaqueActor : opaqueActors) {
+	//	glUseProgram(opaqueActor->GetComponent<ShaderComponent>()->GetProgram());
+	//	glUniform1f(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
+	//	glUniformMatrix4fv(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, opaqueActor->GetModelMatrix());
+	//	glBindTexture(GL_TEXTURE_2D, opaqueActor->GetComponent<MaterialComponent>()->getTextureID());
+	//	opaqueActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+	//}
 
 
 	for (auto transparentActor : transparentActors) {
@@ -402,14 +352,6 @@ void CapstoneSceneDream::Render() const {
 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-
-	//if (drawOverlay == true) {
-	//	DrawMeshOverlay(Vec4(1.0f, 1.0f, 1.0f, 0.5f));
-	//}
-
-	//if (drawNormals == true) {
-	//	DrawNormals(Vec4(1.0f, 1.0f, 0.0f, 0.05f));
-	//}
 }
 
 
@@ -451,9 +393,9 @@ void CapstoneSceneDream::DrawUI_imgui()
 
 
 
-	if (ImGui::Button("Toggle Inventory Window")) {
-		inventoryButtonPressed = !inventoryButtonPressed;
-	}
+	//if (ImGui::Button("Toggle Inventory Window")) {
+	//	inventoryButtonPressed = !inventoryButtonPressed;
+	//}
 
 	if (inventoryButtonPressed) {
 		//E - button

@@ -5,6 +5,7 @@
 #include "CapstoneScene.h"
 #include "CapstoneSceneDream.h"
 #include "ShaderTestScene.h"
+#include "MainMenu.h"
 
 SceneManager::SceneManager(): 
 	currentScene(nullptr), window(nullptr), timer(nullptr),
@@ -112,6 +113,9 @@ void SceneManager::HandleEvents() {
 			case SDL_SCANCODE_F3:
 				BuildNewScene(SCENE_NUMBER::SCENE_SHADER_TEST);
 				break;
+			case SDL_SCANCODE_F4:
+				BuildNewScene(SCENE_NUMBER::SCENE_MAIN_MENU);
+				break;
 			case SDL_SCANCODE_F11:
 				BuildNewScene(SCENE_NUMBER::SCENE0);
 				break;
@@ -147,6 +151,10 @@ void SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 		break;
 	case SCENE_NUMBER::SCENE_SHADER_TEST:
 		currentScene = new ShaderTestScene();
+		status = currentScene->OnCreate();
+		break;
+	case SCENE_NUMBER::SCENE_MAIN_MENU:
+		currentScene = new MainMenu(this);
 		status = currentScene->OnCreate();
 		break;
 	default:

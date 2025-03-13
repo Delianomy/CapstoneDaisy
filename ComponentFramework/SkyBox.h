@@ -3,7 +3,8 @@
 #include "Actor.h"
 #include "ShaderComponent.h"
 #include "MeshComponent.h"
-
+#include "MMath.h" 
+using namespace MATH;
 class SkyBox : public Actor {
 private:
 	GLuint textureID;

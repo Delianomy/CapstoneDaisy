@@ -153,6 +153,9 @@
     <ClCompile Include="include\imgui\imgui_demo.cpp">
       <Filter>Header Files\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>Source Files\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h">
@@ -302,6 +305,9 @@
     <ClInclude Include="MEW.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Header Files\Scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="GameEngineLog.txt">
@@ -351,12 +357,6 @@
     <None Include="shaders\wireFrameVert.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="skyBoxFrag.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="skyBoxVert.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="shaders\textureFragRegular.glsl">
       <Filter>Resource Files</Filter>
     </None>
@@ -376,6 +376,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="shaders\prettyWaterVert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\skyBoxFrag.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\skyBoxVert.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

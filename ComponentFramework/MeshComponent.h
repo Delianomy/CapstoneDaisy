@@ -42,11 +42,11 @@ public:
 		std::cout << m << std::endl;
 		return MEW::GetMaxX(vertices); }
 	
-	void GetMaxX() {
+	/*void GetMaxX() {
 		std::cout << "===================" << std::endl;
 		MEW::PrintVecList(vertices);
 		std::cout << "===================" << std::endl;
 		std::cout << "Max value: " << MEW::GetMaxX(vertices) << std::endl;
-	}
+	}*/
 };
 

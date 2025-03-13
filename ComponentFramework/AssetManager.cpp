@@ -28,7 +28,7 @@ AssetManager::AssetManager() {
 	AddComponent<ShaderComponent>("ShadowDepthShader",nullptr,"shaders/shadowDepthVert.glsl", "shaders/shadowDepthFrag.glsl");
 	AddComponent<ShaderComponent>("DrawNormalsShader",nullptr,"shaders/drawNormalsVert.glsl", "shaders/drawNormalsFrag.glsl","shaders/drawNormalsGeom.glsl");
 	AddComponent<ShaderComponent>("WireFrameShader",nullptr,"shaders/wireFrameVert.glsl", "shaders/wireFrameFrag.glsl","shaders/wireFrameGeom.glsl");
-	AddComponent<ShaderComponent>("RefularTextureShader", nullptr, "shaders/textureVertRegular.glsl", "shaders/textureFragRegular.glsl");
+	AddComponent<ShaderComponent>("RegularTextureShader", nullptr, "shaders/textureVertRegular.glsl", "shaders/textureFragRegular.glsl");
 	AddComponent<ShaderComponent>("SimpleWavesShader", nullptr, "shaders/waveVert.glsl", "shaders/waveFrag.glsl");
 	AddComponent<ShaderComponent>("CoolWaveShader", nullptr, "shaders/prettyWaterVert.glsl", "shaders/prettyWaterFrag.glsl");
 
@@ -49,6 +49,8 @@ AssetManager::AssetManager() {
 	AddComponent<MaterialComponent>("number 1", nullptr, "textures/UI_elements/number_1.png");
 	AddComponent<MaterialComponent>("number 2", nullptr, "textures/UI_elements/number_2.png");
 	AddComponent<MaterialComponent>("number 3", nullptr, "textures/UI_elements/number_3.png");
+
+	AddComponent<MaterialComponent>("Game Title", nullptr, "textures/UI_elements/Game Title.png");
 
 	//AddComponent<MaterialComponent>("Doll", nullptr, "textures/doll.png");
 	OnCreate();

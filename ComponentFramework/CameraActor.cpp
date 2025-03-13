@@ -23,7 +23,13 @@ bool CameraActor::OnCreate() {
 
 	glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, uboMatriciesID);
 
-	UpdateProjectionMatrix(72.0f, (16.0f / 9.0f), 0.5f, 100.0f); /// default projection
+	if (isInMainMenu == true) {
+		UpdateProjectionMatrix(90.0f, (16.0f / 9.0f), 0.5f, 100.0f); /// default projection
+	}
+	else {
+		UpdateProjectionMatrix(72.0f, (16.0f / 9.0f), 0.5f, 100.0f); /// default projection
+	}
+
 	UpdateViewMatrix();
 	return isCreated;
 }

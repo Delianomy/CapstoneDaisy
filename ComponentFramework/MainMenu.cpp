@@ -44,6 +44,7 @@ bool MainMenu::OnCreate() {
 	AddActor(player);
 
 	camera = std::make_shared<CameraActor>(player.get());
+	camera->isInMainMenu = true;
 	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, 0.0f), Quaternion());
 	camera->OnCreate();
 

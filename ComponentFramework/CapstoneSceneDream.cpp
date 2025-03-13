@@ -391,12 +391,6 @@ void CapstoneSceneDream::DrawUI_imgui()
 
 
 
-
-
-	//if (ImGui::Button("Toggle Inventory Window")) {
-	//	inventoryButtonPressed = !inventoryButtonPressed;
-	//}
-
 	if (inventoryButtonPressed) {
 		//E - button
 		ImGui::SetNextWindowPos(ImVec2(360, 860)); // Set the window position here (x, y)

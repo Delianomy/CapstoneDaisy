@@ -36,11 +36,11 @@ bool CapstoneSceneDream::OnCreate() {
 
 	//make an actor
 	player = std::make_shared<Actor>(nullptr);
-	player->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, 2.0f, 0.0f),/// pos
+	player->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, 0.0f, 0.0f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
-	player->GetComponent<PhysicsComponent>()->SetScale(Vec3(2.0f, 2.0f, 2.0f));
+	player->GetComponent<PhysicsComponent>()->SetScale(Vec3(4.0f, 4.0f, 4.0f));
 	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
 	player->AddComponent<CollisionComponent>(nullptr, 1.0f);
 	player->GetComponent<PhysicsComponent>()->isStatic = false;
@@ -58,7 +58,7 @@ bool CapstoneSceneDream::OnCreate() {
 	printf("Available GPU Memory: %d KB\n", totalMemoryKB);
 
 	camera = std::make_shared<CameraActor>(player.get());
-	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 2.0f, -3.5f), Quaternion());
+	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -2.0f), Quaternion());
 	camera->OnCreate();
 	camera->GetProjectionMatrix().print("ProjectionMatrix");
 	camera->GetViewMatrix().print("ViewMatrix");
@@ -376,7 +376,7 @@ void CapstoneSceneDream::DrawUI_imgui()
 
 
 	//Inventory 
-	ImGui::SetNextWindowPos(ImVec2(200, 750)); // Set the window position here (x, y)
+	ImGui::SetNextWindowPos(ImVec2(220, 750)); // Set the window position here (x, y)
 	ImGui::SetNextWindowSize(ImVec2(220, 220)); // Set the window size
 
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
@@ -405,30 +405,6 @@ void CapstoneSceneDream::DrawUI_imgui()
 		ImGui::PopStyleVar();
 		ImGui::PopStyleColor();
 
-
-		
-;
-
-		// Or here?
-
-		//ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 1.0f, 0.0f, 1.0f));
-
-		//ImGui::Text("Hello, world!");
-		//ImGui::PopStyleColor();
-		//  
-		////regular button
-		//ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));  // Red Button
-		//ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.8f, 0.0f, 0.0f, 1.0f)); // Darker red when hovered
-		//ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.6f, 0.0f, 0.0f, 1.0f));  // Even darker when clicked
-
-		//ImGui::SetCursorPos(ImVec2(100, 100));
-		//if (ImGui::Button("Click Me")) {
-		//	printf("ButtonCLicked");
-		//}
-		//ImGui::PopStyleColor(3);
-
-		//image button
-	
 	}
 	if (!inventoryButtonPressed) {
 	

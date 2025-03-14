@@ -70,7 +70,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\GameDev\OpenGL\include;C:\GameDev\SDL\include;C:\GameDev\MathLibraryEx\include;C:\GameDev\MathLibrary\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameDev\OpenGL\include;C:\GameDev\SDL\include;C:\GameDev\MathLibraryEx\include;C:\GameDev\MathLibrary\include;C:\FMOD Studio API Windows\api\core\inc;C:\FMOD Studio API Windows\api\fsbank\inc;C:\FMOD Studio API Windows\api\studio\inc;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>C:\GameDev\OpenGL\include;C:\GameDev\SDL\include;$(IncludePath)</IncludePath>
@@ -91,8 +91,8 @@
       <AdditionalIncludeDirectories>$(ProjectDir)\include\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\GameDev\OpenGL\lib;C:\GameDev\SDL\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2_image.lib;SDL2main.lib;glew32.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\GameDev\OpenGL\lib;C:\GameDev\SDL\lib;C:\FMOD Studio API Windows\api\core\lib\x86;C:\FMOD Studio API Windows\api\studio\lib\x86;C:\FMOD Studio API Windows\api\fsbank\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2_image.lib;SDL2main.lib;glew32.lib;glew32s.lib;opengl32.lib;fmod_vc.lib;fmodstudio_vc.lib;fsbank_vc.lib;fmodL_vc.lib;fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="AssetManager.cpp" />
+    <ClCompile Include="AudioSystem.cpp" />
     <ClCompile Include="CameraActor.cpp" />
     <ClCompile Include="CapstoneScene.cpp" />
     <ClCompile Include="CapstoneSceneDream.cpp" />
@@ -186,6 +187,7 @@
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="AssetManager.h" />
+    <ClInclude Include="AudioSystem.h" />
     <ClInclude Include="AxisAngle.h" />
     <ClInclude Include="CameraActor.h" />
     <ClInclude Include="CapstoneScene.h" />

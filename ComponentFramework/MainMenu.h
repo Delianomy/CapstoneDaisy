@@ -10,6 +10,7 @@
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_opengl3.h"
+#include "AudioSystem.h"
 #include "SceneManager.h"
 using namespace MATH;
 
@@ -77,6 +78,8 @@ class MainMenu : public Scene
 	float frameSpeed = 0.1f;
 	bool drawNormals;
 	bool drawOverlay;
+
+	AudioManager audioManager;
 public:
 	Matrix4 orient;
 	explicit MainMenu(SceneManager* scenemanager);

@@ -40,10 +40,12 @@ bool CapstoneSceneDream::OnCreate() {
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
-	player->GetComponent<PhysicsComponent>()->SetScale(Vec3(4.0f, 4.0f, 4.0f));
+	player->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
 	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
-	player->AddComponent<CollisionComponent>(nullptr, 1.0f);
+	player->AddComponent<CollisionComponent>(nullptr, 0.8f);
 	player->GetComponent<PhysicsComponent>()->isStatic = false;
+	player->GetComponent<PhysicsComponent>()->useGravity = true;
+	player->GetComponent<PhysicsComponent>()->mass = 5.0f;
 	player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
 	player->AddComponent<ShaderComponent>(shader);
 	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Sprite_Sheet_HEAVY"));
@@ -66,6 +68,29 @@ bool CapstoneSceneDream::OnCreate() {
 
 
 
+	cube = std::make_shared<Actor>(nullptr);
+	cube->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -2.0f, 0.0f),/// pos
+		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	cube->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
+	cube->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("House"));
+	AABB cubeCollider;
+	cubeCollider.center = cube->GetComponent<PhysicsComponent>()->GetPosition();
+	//Problem, this looks a bit weird cause Y goes very deep in the bottom comparing to the top side, leadingfor stuff to look sketchy 
+	cubeCollider.rx = 3.18f;
+	cubeCollider.ry = 0.51f;
+	cubeCollider.rz = 0.904f;
+
+
+	cube->AddComponent<CollisionComponent>(nullptr, cubeCollider);
+	cube->GetComponent<PhysicsComponent>()->isStatic = true;
+
+	cube->AddComponent<ShaderComponent>(CubeShader);
+	cube->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("DefaultTexture"));
+	AddOpaqueActor(cube);
+
+
 	skybox = std::make_shared<SkyBox>(nullptr, "textures/px.png", "textures/nx.png",
 		"textures/py.png", "textures/ny.png", "textures/pz.png",
 		"textures/nz.png");
@@ -77,15 +102,13 @@ bool CapstoneSceneDream::OnCreate() {
 
 	
 
-	
-
-	CreateLevelLayout();
 
 
 	/// Register the two balls with the physics and collision systems
 	physicsSystem.AddActor(player);
-
+	physicsSystem.AddActor(cube);
 	collisionSystem.AddActor(player);
+	collisionSystem.AddActor(cube);
 
 
 	return true;
@@ -93,30 +116,6 @@ bool CapstoneSceneDream::OnCreate() {
 
 
 
-bool CapstoneSceneDream:: CreateLevelLayout() {
-	//Static texture shaders
-	Ref<ShaderComponent> CubeShader = assetManager->GetComponent<ShaderComponent>("RefularTextureShader");
-
-	//Right island in the middle middle part
-	LeftIsland = std::make_shared<Actor>(nullptr);
-	LeftIsland->AddComponent<PhysicsComponent>(nullptr, Vec3(3.0f, 1.0f, 0.0f), ///pos
-		QMath::angleAxisRotation(45.0f, Vec3(0.0f, 1.0f, 0.0f)), Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	LeftIsland->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
-	LeftIsland->GetComponent<PhysicsComponent>()->isStatic = true;
-	Plane colliderPlane = CalculatePlaneCollider(LeftIsland);
-
-	LeftIsland->AddComponent<CollisionComponent>(nullptr, colliderPlane);
-	LeftIsland->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
-	LeftIsland->AddComponent<ShaderComponent>(CubeShader);
-	LeftIsland->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("DefaultTexture"));
-	AddOpaqueActor(LeftIsland);
-	physicsSystem.AddActor(LeftIsland);
-	collisionSystem.AddActor(LeftIsland);
-
-
-	return true;
-}
 
 
 CapstoneSceneDream::~CapstoneSceneDream() {
@@ -332,13 +331,13 @@ void CapstoneSceneDream::Render() const {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	//for (auto opaqueActor : opaqueActors) {
-	//	glUseProgram(opaqueActor->GetComponent<ShaderComponent>()->GetProgram());
-	//	glUniform1f(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
-	//	glUniformMatrix4fv(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, opaqueActor->GetModelMatrix());
-	//	glBindTexture(GL_TEXTURE_2D, opaqueActor->GetComponent<MaterialComponent>()->getTextureID());
-	//	opaqueActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
-	//}
+	for (auto opaqueActor : opaqueActors) {
+		glUseProgram(opaqueActor->GetComponent<ShaderComponent>()->GetProgram());
+		glUniform1f(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
+		glUniformMatrix4fv(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, opaqueActor->GetModelMatrix());
+		glBindTexture(GL_TEXTURE_2D, opaqueActor->GetComponent<MaterialComponent>()->getTextureID());
+		opaqueActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+	}
 
 
 	for (auto transparentActor : transparentActors) {
@@ -487,39 +486,6 @@ void CapstoneSceneDream::DrawUI_imgui()
 }
 
 
-Plane CapstoneSceneDream::CalculatePlaneCollider(Ref<Actor> obj) {
-	Ref<PhysicsComponent> objTransform = obj->GetComponent<PhysicsComponent>();
-	Vec3 pos = objTransform->GetPosition();
-	Vec3 scale = objTransform->GetScale();
-
-	// Assuming your cube mesh is centered at its origin and has a size of 1
-	// The top surface would be at half the height of the cube
-	float halfHeight = scale.y * 0.5f;
-
-	// Calculate position of the top surface
-	Vec3 topSurfacePos = pos;
-	topSurfacePos.y += halfHeight; // Move up by half height
-
-	// Normal points upward for top surface
-	Vec3 normal = Vec3(0.0f, 1.0f, 0.0f);
-	Quaternion rotation = objTransform->GetQuaternion();
-	Quaternion identity =  Quaternion(1.0f, Vec3(0.0f, 0.0f, 0.0f));
-	// If the object has rotation, apply it to the normal
-	
-	if (abs(QMath::dot(rotation, identity)) < 0.99999f) {
-		normal = VMath::normalize(QMath::rotate(normal, rotation ));
-	}
-
-	// Calculate the distance from origin to plane
-	// For a plane equation ax + by + cz + d = 0
-	// d = -dot(normal, point_on_plane)
-	float distance = - VMath::dot(normal, topSurfacePos);
-
-	return Plane(normal, distance);
-}
-
-
-
 
 
 
@@ -556,7 +522,7 @@ void CapstoneSceneDream::DrawMeshOverlay(const Vec4 color) const {
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("DefaultShader");
 	glUseProgram(shader->GetProgram());
 	glUniform4fv(shader->GetUniformID("color"), 1, color);
-
+	
 	for (auto actor : actors) {
 		glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, actor->GetModelMatrix());
 		actor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);

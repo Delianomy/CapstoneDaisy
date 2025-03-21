@@ -25,6 +25,7 @@ private:
 	void StoreMeshData(GLenum drawmode_);
 	GLuint vao, vbo;
 public:
+	int minX, minY, minZ, maxX, maxY, maxZ;
 	
 	MeshComponent(Component *parent_,const char* filename_);
 	~MeshComponent();
@@ -33,14 +34,14 @@ public:
 	void Update(const float deltaTime);
 	void Render() const;
 	void Render(GLenum drawmode) const;
-	float GetMaxX() { 
+	/*float GetMaxX() { 
 		std::cout << "Vertices" << std::endl;
 		MEW::PrintVecList(vertices);
 		std::cout << std::endl;
 
 		float m = MEW::GetMaxX(vertices);
 		std::cout << m << std::endl;
-		return MEW::GetMaxX(vertices); }
+		return MEW::GetMaxX(vertices); }*/
 	
 	/*void GetMaxX() {
 		std::cout << "===================" << std::endl;

@@ -57,7 +57,24 @@ void MeshComponent::LoadModel(const char* filename) {
          
            
         }
-       
+         std::cout << filename<< std::endl;
+
+         
+         std::cout << "MAX X " << MEW::GetMaxX(vertices) << std::endl;
+         std::cout << "MAX Y " << MEW::GetMaxY(vertices) << std::endl;
+         std::cout << "MAX Z " << MEW::GetMaxZ(vertices) << std::endl;
+
+         std::cout << "MIN X " << MEW::GetMinX(vertices) << std::endl;
+         std::cout << "MIN Y " << MEW::GetMinY(vertices) << std::endl;
+         std::cout << "MIN Z " << MEW::GetMinZ(vertices) << std::endl;
+
+         maxX = MEW::GetMaxX(vertices);
+         maxY = MEW::GetMaxY(vertices);
+         maxZ = MEW::GetMaxZ(vertices);
+
+         minX = MEW::GetMinX(vertices);
+         minY = MEW::GetMinY(vertices);
+         minZ = MEW::GetMinZ(vertices);
     } 
  
 }
@@ -95,12 +112,13 @@ void MeshComponent::StoreMeshData(GLenum drawmode_) {
 	glEnableVertexAttribArray(uvCoordsLayoutLocation);
 	glVertexAttribPointer(uvCoordsLayoutLocation, 2, GL_FLOAT, GL_FALSE, 0, reinterpret_cast<void*>(VERTEX_LENGTH + NORMAL_LENGTH));
 
-    GetMaxX();
+  
 
     dataLength = vertices.size();
 
     /// Printing maxX
-    GetMaxX();
+   //TRY HERE
+
 
     /// give back the memory used in these vectors. The data is safely stored in the GPU now
     vertices.clear();

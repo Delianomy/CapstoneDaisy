@@ -19,6 +19,8 @@ AssetManager::AssetManager() {
 	AddComponent<MeshComponent>("Plane", nullptr,"meshes/Plane8x8.obj");
 	AddComponent<MeshComponent>("Island", nullptr, "meshes/Island.obj");
 	AddComponent<MeshComponent>("QuirkyCube", nullptr, "meshes/CubeCore.obj");
+	AddComponent<MeshComponent>("House", nullptr, "meshes/House.obj");
+
 
 
 	
@@ -31,7 +33,7 @@ AssetManager::AssetManager() {
 	AddComponent<ShaderComponent>("RegularTextureShader", nullptr, "shaders/textureVertRegular.glsl", "shaders/textureFragRegular.glsl");
 	AddComponent<ShaderComponent>("SimpleWavesShader", nullptr, "shaders/waveVert.glsl", "shaders/waveFrag.glsl");
 	AddComponent<ShaderComponent>("CoolWaveShader", nullptr, "shaders/prettyWaterVert.glsl", "shaders/prettyWaterFrag.glsl");
-
+	AddComponent<ShaderComponent>("ColorPicker", nullptr,  "shaders/colorPickingVert.glsl", "shaders/colorPickingFrag.glsl");
 
 	AddComponent<MaterialComponent>("Sprite_Sheet_HEAVY", nullptr, "textures/walking_sprite_sheet.png");
 

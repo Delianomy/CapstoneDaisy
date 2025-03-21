@@ -51,6 +51,7 @@ public:
 	virtual bool OnCreate();
 	virtual void OnDestroy();
 	virtual void Update(const float deltaTime);
+	int Pick(int x, int y);
 	virtual void Render() const;
 	virtual void HandleEvents(const SDL_Event& sdlEvent);
 

@@ -5,13 +5,11 @@
 layout(location = 0) in vec4 vVertex;
 
 
-layout (std140, binding = 0) uniform CameraMatricies {
-    mat4 projection;
-    mat4 view;
-};
 
 layout(location = 1) uniform mat4 modelMatrix;
+layout(location = 2) uniform mat4 viewMatrix;
+layout(location = 3) uniform mat4 projectionMatrix;
 
 void main() {
-    gl_Position = projection * view * modelMatrix * vVertex;
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vVertex;
 }

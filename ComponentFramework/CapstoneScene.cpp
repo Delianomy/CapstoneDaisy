@@ -43,18 +43,29 @@ bool CapstoneScene::OnCreate() {
 	AddActor(player);
 	
 	camera = std::make_shared<CameraActor>(player.get());
-	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -6.8f), Quaternion());
+	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -3.8f), Quaternion());
 	camera->OnCreate();
 	camera->GetProjectionMatrix().print("ProjectionMatrix");
 	camera->GetViewMatrix().print("ViewMatrix");
 
 	
+	Quaternion dollRot = QMath::angleAxisRotation(90.0f, Vec3(0.0f, 1.0f, 0.0f));
+	doll = std::make_shared<Actor>(nullptr);
+	doll->AddComponent<TransformComponent>(nullptr, Vec3(3.99f, 0.94f, -1.6f), dollRot);
+	doll->GetComponent<TransformComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
+	doll->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
+	doll->AddComponent<ShaderComponent>(shader);
+	doll->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Sprite_Sheet_HEAVY"));
+	AddTransparentActor(doll);
+
+
+
 	//doll = std::make_shared<Actor>(nullptr);
 	//doll->AddComponent<TransformComponent>(nullptr, Vec3(3.99f, 0.94f, -1.6f), QMath::angleAxisRotation(270.0f, Vec3(0.0f, 1.0f, 0.0f)));
 	//doll->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
 	//doll->AddComponent<ShaderComponent>(regularTextureShader);
 	//doll->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Doll"));
-	
+	//AddTransparentActor(doll);
 	
 
 	room = std::make_shared<Room>(nullptr, "textures/Wall5.png", "textures/Wall1.png",
@@ -96,7 +107,7 @@ void CapstoneScene::HandleEvents(const SDL_Event& sdlEvent) {
 		cameraTC = camera->GetComponent<TransformComponent>();
 		switch (sdlEvent.key.keysym.scancode) {
 
-
+			
 		case SDL_SCANCODE_LEFT:
 		{
 			Quaternion rotate = cameraTC->GetQuaternion() * QMath::angleAxisRotation(-1.0f, Vec3(0.0f, 1.0f, 0.0f));
@@ -150,17 +161,13 @@ void CapstoneScene::HandleEvents(const SDL_Event& sdlEvent) {
 
 
 			case SDL_SCANCODE_A:
-				goLeft = true;
-				break;
-			case SDL_SCANCODE_W:
-				goBackwards = true;
+				rotatePlayerLeft = true;
+
 				break;
 			case SDL_SCANCODE_D:
-				goRight = true;
+				rotatePlayerRight = true;
 				break;
-			case SDL_SCANCODE_S:
-				goForward = true;
-				break;
+
 		
 
 		case SDL_SCANCODE_N:
@@ -182,29 +189,27 @@ void CapstoneScene::HandleEvents(const SDL_Event& sdlEvent) {
 	case SDL_KEYUP:
 		switch (sdlEvent.key.keysym.scancode) {
 		case SDL_SCANCODE_A:
-			goLeft = false;
+			rotatePlayerLeft = false;
 			break;
-		case SDL_SCANCODE_W:
-			goBackwards = false;
-			break;
+
 		case SDL_SCANCODE_D:
-			goRight = false;
+			rotatePlayerRight = false;
 			break;
-		case SDL_SCANCODE_S:
-			goForward = false;
-			break;
+
 		default:
 			break;
 
 		}
 	case SDL_MOUSEBUTTONDOWN:
 		if (sdlEvent.button.button == (SDL_BUTTON_RIGHT)) {
-			rotatePlayerRight = true;
-			break;
+	
 		}
 		if (sdlEvent.button.button == (SDL_BUTTON_LEFT)) {
-			rotatePlayerLeft = true;
-
+		
+			currentMousePos = Vec2(static_cast<float>(sdlEvent.button.x), static_cast<float>(sdlEvent.button.y));
+			lastMousePos = currentMousePos;
+			objID = Pick(sdlEvent.button.x, sdlEvent.button.y);
+			printf("0x%X %d\n", objID, objID);
 			break;
 		}
 		break;
@@ -212,11 +217,11 @@ void CapstoneScene::HandleEvents(const SDL_Event& sdlEvent) {
 	case SDL_MOUSEBUTTONUP:
 	{
 		if (sdlEvent.button.button == (SDL_BUTTON_RIGHT)) {
-			rotatePlayerRight = false;
+		
 			break;
 		}
 		if (sdlEvent.button.button == (SDL_BUTTON_LEFT)) {
-			rotatePlayerLeft = false;
+		
 			break;
 		}
 		break;
@@ -278,7 +283,56 @@ void CapstoneScene::Update(const float deltaTime) {
 }
 
 
+int CapstoneScene::Pick(int x, int y) {
+	glDisable(GL_DEPTH_TEST);
+	glDepthFunc(GL_ALWAYS);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // White background with alpha=1
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	// Get and use the color picker shader
+	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("ColorPicker");
+	glUseProgram(shader->GetProgram());
+
+	// Set matrices
+	glUniformMatrix4fv(shader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
+	glUniformMatrix4fv(shader->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
+
+	// Render opaque actors with unique colors
+	for (GLuint i = 0; i < opaqueActors.size(); i++) {
+		glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, opaqueActors[i]->GetModelMatrix());
+		glUniform1ui(shader->GetUniformID("colorID"), i + 1); // Start from 1 to avoid black
+		opaqueActors[i]->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+	}
+
+	// Render transparent actors with unique colors
+	for (GLuint i = 0; i < transparentActors.size(); i++) {
+		glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, transparentActors[i]->GetModelMatrix());
+		glUniform1ui(shader->GetUniformID("colorID"), opaqueActors.size() + i + 1); // Continue numbering from opaque actors
+		transparentActors[i]->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+	}
+
+	// Unbind shader
+	glUseProgram(0);
+
+	// Read pixel color at mouse position
+	unsigned char pixel[4];
+	glReadPixels(x, viewport.height - y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel);
+
+	// Convert RGB to color index
+	GLuint colorIndex = pixel[0] + (pixel[1] << 8) + (pixel[2] << 16);
+
+	// Debug output
+	printf("Read pixel color: R=%d, G=%d, B=%d, Index=0x%06X\n",
+		pixel[0], pixel[1], pixel[2], colorIndex);
+
+	// Check if background was clicked (white)
+	if (colorIndex == 0xFFFFFF) {
+		return -1;
+	}
+	else {
+		return colorIndex - 1; // Subtract 1 to get back to 0-based index
+	}
+}
 
 void CapstoneScene::Render() const {
 	glEnable(GL_DEPTH_TEST);
@@ -321,18 +375,21 @@ void CapstoneScene::Render() const {
 ////	glUniformMatrix4fv(roomShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
 //	glBindTexture(GL_TEXTURE_2D, doll->GetComponent<MaterialComponent>()->getTextureID());
 //	doll->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
-	glUseProgram(0);
+	/*for (auto opaqueActor : opaqueActors) {
+		glUseProgram(opaqueActor->GetComponent<ShaderComponent>()->GetProgram());
+		glUniform1f(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
+		glUniformMatrix4fv(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, opaqueActor->GetModelMatrix());
+		glBindTexture(GL_TEXTURE_2D, opaqueActor->GetComponent<MaterialComponent>()->getTextureID());
+		opaqueActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+	}*/
 
 
-	for (auto actor : actors) {
-		if (actor->GetComponent<ShaderComponent>() != nullptr) {
-			glUseProgram(actor->GetComponent<ShaderComponent>()->GetProgram());
-			glUniform1f(actor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
-			glUniformMatrix4fv(actor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, actor->GetModelMatrix());
-			glBindTexture(GL_TEXTURE_2D, actor->GetComponent<MaterialComponent>()->getTextureID());
-			actor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
-		}
-	
+	for (auto transparentActor : transparentActors) {
+		glUseProgram(transparentActor->GetComponent<ShaderComponent>()->GetProgram());
+		glUniform1f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
+		glUniformMatrix4fv(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, transparentActor->GetModelMatrix());
+		glBindTexture(GL_TEXTURE_2D, transparentActor->GetComponent<MaterialComponent>()->getTextureID());
+		transparentActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
 	}
 
 

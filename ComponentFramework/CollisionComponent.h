@@ -23,6 +23,7 @@ enum class ColliderType {
 struct AABB {
 	Vec3 center;
 	float rx, ry, rz;
+	//make a cinstructore
 };
 
 /*** Other definitions might be:

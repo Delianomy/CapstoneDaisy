@@ -159,6 +159,9 @@
     <ClCompile Include="AudioSystem.cpp">
       <Filter>Header Files\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerControls.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h">
@@ -313,6 +316,9 @@
     </ClInclude>
     <ClInclude Include="AudioSystem.h">
       <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerControls.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

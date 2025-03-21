@@ -1,87 +1,13 @@
-Thu Mar 20 21:37:42 2025
+Thu Mar 20 22:22:26 2025
 [INFO]: Starting the SceneManager
-[INFO]: OpenGL version: 4.6.0 NVIDIA 546.80
-[INFO]: Graphics card vendor NVIDIA Corporation
-[INFO]: Graphics card name NVIDIA GeForce RTX 3050 Laptop GPU/PCIe/SSE2
-[INFO]: GLSL Version 4.60 NVIDIA
+[INFO]: OpenGL version: 4.6.0 - Build 31.0.101.2111
+[INFO]: Graphics card vendor Intel
+[INFO]: Graphics card name Intel(R) UHD Graphics 630
+[INFO]: GLSL Version 4.60 - Build 31.0.101.2111
 [INFO]: Created Scene Dream: 
 [INFO]: Loading assets Scene Dream: 
 [INFO]: Uniforms:
-"modelMatrix" loc:0
-"projectionMatrix" loc:1
-"viewMatrix" loc:2
-
-[INFO]: Uniforms:
-"colorID" loc:4
-"modelMatrix" loc:1
-"projectionMatrix" loc:3
-"viewMatrix" loc:2
-
-[INFO]: Uniforms:
-"colour" loc:-1
-"index" loc:0
 "modelMatrix" loc:2
-"myTexture" loc:1
-"position" loc:-1
-"projection" loc:-1
-"view" loc:-1
+"projectionMatrix" loc:0
+"viewMatrix" loc:1
 
-[INFO]: Uniforms:
-"depthProjectionMatrix" loc:0
-"depthViewMatrix" loc:1
-"modelMatrix" loc:2
-
-[INFO]: Uniforms:
-"color" loc:2
-"modelMatrix" loc:1
-"projection" loc:-1
-"view" loc:-1
-
-[INFO]: Uniforms:
-"modelMatrix" loc:1
-"projection" loc:-1
-"view" loc:-1
-
-[INFO]: Uniforms:
-"colour" loc:-1
-"modelMatrix" loc:2
-"myTexture" loc:0
-"position" loc:-1
-"projection" loc:-1
-"view" loc:-1
-
-[INFO]: Uniforms:
-"iTime" loc:0
-"modelMatrix" loc:1
-"projection" loc:-1
-"view" loc:-1
-
-[INFO]: Uniforms:
-"iResolution" loc:0
-"iTime" loc:1
-"modelMatrix" loc:2
-"projection" loc:-1
-"view" loc:-1
-
-[INFO]: Uniforms:
-"colorID" loc:4
-"modelMatrix" loc:1
-"projectionMatrix" loc:3
-"viewMatrix" loc:2
-
-[ERROR]: Can't fint requested component in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 31
-[INFO]: Creating values for CameraActor: 
-[INFO]: Uniforms:
-"modelMatrix" loc:0
-"projectionMatrix" loc:1
-"skybox" loc:2
-"viewMatrix" loc:3
-
-[INFO]: Deleted Scene Dream: 
-[INFO]: Deleting Scene Dream: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting the SceneManager

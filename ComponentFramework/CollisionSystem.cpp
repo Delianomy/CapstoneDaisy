@@ -39,7 +39,6 @@ void CollisionSystem::Update(const float deltaTime) {
                 box.rz = collidingActors[j]->GetComponent<CollisionComponent>()->aabb.rz;
 
                 if (SphereAABBCollisionDetection(s, box)) {
-                    std::cout << "Collided! " << std::endl;
                     Ref<PhysicsComponent> pc1 = collidingActors[i]->GetComponent<PhysicsComponent>();
                     Ref<PhysicsComponent> pc2 = collidingActors[j]->GetComponent<PhysicsComponent>();
                     SphereAABBCollisionResponce(s, pc1, box, pc2);
@@ -60,7 +59,7 @@ void CollisionSystem::Update(const float deltaTime) {
                 box.rz = collidingActors[i]->GetComponent<CollisionComponent>()->aabb.rz;
 
                 if (SphereAABBCollisionDetection(s, box)) {
-                    std::cout << "Collided! " << std::endl;
+                  
                     Ref<PhysicsComponent> pc1 = collidingActors[i]->GetComponent<PhysicsComponent>();
                     Ref<PhysicsComponent> pc2 = collidingActors[j]->GetComponent<PhysicsComponent>();
                     SphereAABBCollisionResponce(s, pc1, box, pc2);

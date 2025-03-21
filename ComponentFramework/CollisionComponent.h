@@ -53,7 +53,6 @@ protected:
 
 
 public:
-	
 	CollisionComponent(Component* parent_, float radius_); /// Sphere 
 	CollisionComponent(Component* parent_, Plane& plane); /// Plane
 	CollisionComponent(Component* parent_, AABB& aabb);   /// AABB

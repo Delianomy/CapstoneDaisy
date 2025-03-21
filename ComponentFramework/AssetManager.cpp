@@ -41,6 +41,10 @@ AssetManager::AssetManager() {
 	AddComponent<MaterialComponent>("DefaultTexture", nullptr, "textures/Black Chess Base Colour.png");
 
 
+	//House:
+	AddComponent<MaterialComponent>("house", nullptr, "textures/house.png");
+
+
 	//UI elements:
 	AddComponent<MaterialComponent>("inventory_closed", nullptr, "textures/UI_elements/inventory_2.png");
 	AddComponent<MaterialComponent>("inventory_open", nullptr, "textures/UI_elements/inventory_open.png");

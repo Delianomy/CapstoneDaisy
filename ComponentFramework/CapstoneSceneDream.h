@@ -7,6 +7,7 @@
 #include "AssetManager.h"
 #include "PhysicsSystem.h"
 #include "CollisionSystem.h"
+#include "TriggerSystem.h"
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_opengl3.h"
@@ -26,6 +27,8 @@ class CapstoneSceneDream : public Scene
 	Ref<AssetManager> assetManager;
 	Ref<CameraActor> camera;
 	Ref<LightActor> light;
+
+
 	Ref<Actor> player;
 	Ref<Actor> cube;
 	Ref<Actor> skybox;
@@ -45,6 +48,7 @@ class CapstoneSceneDream : public Scene
 
 	PhysicsSystem physicsSystem;
 	CollisionSystem collisionSystem;
+	TriggerSystem triggerSystem;
 	SceneManager* sceneManagerRef;
 	float playerAngle;
 	float iTime = 0.0f;

@@ -182,6 +182,8 @@
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
+    <ClCompile Include="TriggerComponent.cpp" />
+    <ClCompile Include="TriggerSystem.cpp" />
     <ClCompile Include="VMath.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -234,6 +236,8 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="TransformComponent.h" />
+    <ClInclude Include="TriggerComponent.h" />
+    <ClInclude Include="TriggerSystem.h" />
     <ClInclude Include="UBO_Padding.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="VMath.h" />

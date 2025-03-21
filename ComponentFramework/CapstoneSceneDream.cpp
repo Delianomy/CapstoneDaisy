@@ -13,6 +13,7 @@
 #include "MaterialComponent.h"
 #include "PhysicsComponent.h"
 #include "CollisionComponent.h"
+#include "TriggerComponent.h"
 
 
 #include "SkyBox.h"
@@ -49,7 +50,12 @@ bool CapstoneSceneDream::OnCreate() {
 	player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
 	player->AddComponent<ShaderComponent>(shader);
 	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Sprite_Sheet_HEAVY"));
+	player->AddComponent<TriggerComponent>(nullptr, 1.0f);
+
 	AddTransparentActor(player);
+
+
+
 	//now technically it would mean that out player now has a collider
 	GLint maxTextureSize;
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
@@ -87,7 +93,8 @@ bool CapstoneSceneDream::OnCreate() {
 	cube->GetComponent<PhysicsComponent>()->isStatic = true;
 
 	cube->AddComponent<ShaderComponent>(CubeShader);
-	cube->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("DefaultTexture"));
+	cube->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("house"));
+	cube->AddComponent<TriggerComponent>(nullptr, 1.0f);
 	AddOpaqueActor(cube);
 
 
@@ -107,9 +114,14 @@ bool CapstoneSceneDream::OnCreate() {
 	/// Register the two balls with the physics and collision systems
 	physicsSystem.AddActor(player);
 	physicsSystem.AddActor(cube);
+	
+
 	collisionSystem.AddActor(player);
 	collisionSystem.AddActor(cube);
 
+
+	triggerSystem.AddActor(player);
+	triggerSystem.AddActor(cube);
 
 	return true;
 }
@@ -299,6 +311,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	camera->UpdateViewMatrix();
 	collisionSystem.Update(deltaTime);
 	physicsSystem.Update(deltaTime);
+	triggerSystem.Update(deltaTime);
 
 
 	}

@@ -3,6 +3,7 @@
 class PhysicsComponent : public TransformComponent {
 	friend class PhysicsSystem;
 	friend class CollisionSystem;
+	friend class TriggerSystem;
 	friend class AISystem;
 
 	PhysicsComponent(const PhysicsComponent&) = delete;

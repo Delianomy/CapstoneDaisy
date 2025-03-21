@@ -162,6 +162,12 @@
     <ClCompile Include="PlayerControls.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TriggerComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TriggerSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h">
@@ -318,6 +324,12 @@
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
     <ClInclude Include="PlayerControls.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TriggerComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TriggerSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

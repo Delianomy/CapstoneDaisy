@@ -2,7 +2,7 @@
 #include <iostream>
 #include <SDL.h>
 #include "Debug.h"
-#include "CapstoneSceneDream.h"
+#include "SandboxAdriel.h"
 #include "MMath.h"
 #include "Debug.h"
 #include "CameraActor.h"
@@ -14,20 +14,18 @@
 #include "PhysicsComponent.h"
 #include "CollisionComponent.h"
 #include "TriggerComponent.h"
-
-
 #include "SkyBox.h"
 #include <string>
 using namespace MATH;
 
 
-CapstoneSceneDream::CapstoneSceneDream(SceneManager* scenemanager) :drawNormals(false), drawOverlay(false) {
+SandboxAdriel::SandboxAdriel(SceneManager* scenemanager) :drawNormals(false), drawOverlay(false) {
 	Debug::Info("Created Scene Dream: ", __FILE__, __LINE__);
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	this->sceneManagerRef = scenemanager;
 }
 
-bool CapstoneSceneDream::OnCreate() {
+bool SandboxAdriel::OnCreate() {
 	Debug::Info("Loading assets Scene Dream: ", __FILE__, __LINE__);
 	assetManager = std::make_shared<AssetManager>();
 
@@ -37,7 +35,6 @@ bool CapstoneSceneDream::OnCreate() {
 
 	//make an actor
 	player = std::make_shared<Actor>(nullptr);
-	player->NPCid = 0;
 	player->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, 0.0f, 0.0f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
@@ -46,34 +43,16 @@ bool CapstoneSceneDream::OnCreate() {
 	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
 	player->AddComponent<CollisionComponent>(nullptr, 0.8f);
 	player->GetComponent<PhysicsComponent>()->isStatic = false;
-	//player->GetComponent<PhysicsComponent>()->useGravity = true;
+	player->GetComponent<PhysicsComponent>()->useGravity = true;
 	player->GetComponent<PhysicsComponent>()->mass = 5.0f;
 	player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
 	player->AddComponent<ShaderComponent>(shader);
-	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Daisy_spriteSheet"));
+	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("ChessBoard"));
 	player->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	player->GetComponent<TriggerComponent>()->SetCallback(TriggerCallbackCreator::CreateTriggerCallback(this, &CapstoneSceneDream::PrintStatement));
+	player->GetComponent<TriggerComponent>()->SetCallback(TriggerCallbackCreator::CreateTriggerCallback(this, &SandboxAdriel::PrintStatement));
 
 	AddTransparentActor(player);
 
-
-	mermaid = std::make_shared<Actor>(nullptr);
-	mermaid->NPCid = 1;
-	mermaid->AddComponent<PhysicsComponent>(nullptr, Vec3(2.0f, 0.0f, 0.0f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	mermaid->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
-	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
-	mermaid->AddComponent<CollisionComponent>(nullptr, 0.8f);
-	mermaid->GetComponent<PhysicsComponent>()->isStatic = true;
-	mermaid->GetComponent<PhysicsComponent>()->mass = 1.0f;
-	mermaid->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
-	mermaid->AddComponent<ShaderComponent>(shader);
-	mermaid->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Mermaid_spriteSheet"));
-	mermaid->AddComponent<TriggerComponent>(nullptr, 1.0f);
-
-	AddTransparentActor(mermaid);
 
 
 	//now technically it would mean that out player now has a collider
@@ -127,18 +106,12 @@ bool CapstoneSceneDream::OnCreate() {
 	light = std::make_shared<LightActor>(camera.get(), LightStyle::DirectionLight, Vec3(0.0f, 5.0f, 1.0f), Vec4(0.85f, 0.6, 0.6f, 0.0f));
 	light->OnCreate();
 
-	
 
-
-
-	/// Register the two balls with the physics and collision systems
 	physicsSystem.AddActor(player);
 	physicsSystem.AddActor(cube);
 	
-
 	collisionSystem.AddActor(player);
 	collisionSystem.AddActor(cube);
-
 
 	triggerSystem.AddActor(player);
 	triggerSystem.AddActor(cube);
@@ -146,21 +119,17 @@ bool CapstoneSceneDream::OnCreate() {
 	return true;
 }
 
-
-
-
-
-CapstoneSceneDream::~CapstoneSceneDream() {
+SandboxAdriel::~SandboxAdriel() {
 	Debug::Info("Deleted Scene Dream: ", __FILE__, __LINE__);
 
 	OnDestroy();
 }
 
-void CapstoneSceneDream::OnDestroy() {
+void SandboxAdriel::OnDestroy() {
 	Debug::Info("Deleting Scene Dream: ", __FILE__, __LINE__);
 }
 
-void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
+void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 	static int objID = -1;
 	static Vec2 currentMousePos;
 	static Vec2	lastMousePos;
@@ -262,8 +231,7 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 	}
 }
 
-
-void CapstoneSceneDream::Update(const float deltaTime) {
+void SandboxAdriel::Update(const float deltaTime) {
 	
 	
 	DrawUI_imgui();
@@ -324,11 +292,9 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 		animIndex = 0;
 	}
 		
-	NPCcurrentTime += deltaTime;
-	NPCanimIndex = static_cast<int>(NPCcurrentTime / frameSpeed) % 17;
 
-	std::cout << "Player anim index: " << animIndex << std::endl;
-	std::cout << "NPC anim index: " << NPCanimIndex << std::endl;
+
+
 
 	camera->UpdateViewMatrix();
 	collisionSystem.Update(deltaTime);
@@ -338,56 +304,48 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 
 	}
 
+void SandboxAdriel::Render() const{
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	void CapstoneSceneDream::Render() const {
-		glEnable(GL_DEPTH_TEST);
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
+	glBindBuffer(GL_UNIFORM_BUFFER, light->GetLightID());
 
-	
+	Ref<ShaderComponent> skyboxShader = skybox->GetComponent<ShaderComponent>();
 
-		glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
-		glBindBuffer(GL_UNIFORM_BUFFER, light->GetLightID());
+	glUseProgram(skyboxShader->GetProgram());
+	glUniformMatrix4fv(skyboxShader->GetUniformID("modelMatrix"), 1, GL_FALSE, skybox->GetModelMatrix());
+	glUniformMatrix4fv(skyboxShader->GetUniformID("viewMatrix"), 1, GL_FALSE, MMath::inverse(camera->orient));
+	glUniformMatrix4fv(skyboxShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
+	std::dynamic_pointer_cast<SkyBox>(skybox)->Render();
+	glUseProgram(0);
 
-		Ref<ShaderComponent> skyboxShader = skybox->GetComponent<ShaderComponent>();
+	// Then render player with proper depth testing
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);  // Only render if closer than existing geometry
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		glUseProgram(skyboxShader->GetProgram());
-		glUniformMatrix4fv(skyboxShader->GetUniformID("modelMatrix"), 1, GL_FALSE, skybox->GetModelMatrix());
-		glUniformMatrix4fv(skyboxShader->GetUniformID("viewMatrix"), 1, GL_FALSE, MMath::inverse(camera->orient));
+	for (auto opaqueActor : opaqueActors) {
+		glUseProgram(opaqueActor->GetComponent<ShaderComponent>()->GetProgram());
+		glUniform1f(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
+		glUniformMatrix4fv(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, opaqueActor->GetModelMatrix());
+		glBindTexture(GL_TEXTURE_2D, opaqueActor->GetComponent<MaterialComponent>()->getTextureID());
+		opaqueActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+	}
 
-		//camera->orient.print("Camera orientation");
-		glUniformMatrix4fv(skyboxShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
-		std::dynamic_pointer_cast<SkyBox>(skybox)->Render();
-		glUseProgram(0);
-
-		// Then render player with proper depth testing
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS);  // Only render if closer than existing geometry
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		for (auto opaqueActor : opaqueActors) {
-			glUseProgram(opaqueActor->GetComponent<ShaderComponent>()->GetProgram());
-			glUniform1f(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
-			glUniformMatrix4fv(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, opaqueActor->GetModelMatrix());
-			glBindTexture(GL_TEXTURE_2D, opaqueActor->GetComponent<MaterialComponent>()->getTextureID());
-			opaqueActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
-		}
+	DrawSphere(player->GetComponent<TransformComponent>()->GetPosition(), 1.0f);
+	DrawCube(cube->GetComponent<TransformComponent>()->GetPosition(), Vec3(3.18f, 0.51f, 0.904f));
 
 
-		for (auto transparentActor : transparentActors) {
-			glUseProgram(transparentActor->GetComponent<ShaderComponent>()->GetProgram());
-			glUniform1i(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("NPC_id"), transparentActor->NPCid);
-			glUniform1i(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("talking"), );
-			glUniform2f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("playeranimIndex"), animIndex, animIndex);
-			glUniform2f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("NPCanimIndex"), NPCanimIndex,1 );
-
-			glUniformMatrix4fv(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, transparentActor->GetModelMatrix());
-			if (transparentActor->GetComponent<MaterialComponent>()) {
-				glBindTexture(GL_TEXTURE_2D, transparentActor->GetComponent<MaterialComponent>()->getTextureID());
-				transparentActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
-			}
-		}
+	for (auto transparentActor : transparentActors) {
+		glUseProgram(transparentActor->GetComponent<ShaderComponent>()->GetProgram());
+		glUniform1f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
+		glUniformMatrix4fv(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, transparentActor->GetModelMatrix());
+		glBindTexture(GL_TEXTURE_2D, transparentActor->GetComponent<MaterialComponent>()->getTextureID());
+		transparentActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+	}
 	
 	ImGui::Render();
 
@@ -395,10 +353,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 
 }
 
-
-
-
-void CapstoneSceneDream::DrawUI_imgui()
+void SandboxAdriel::DrawUI_imgui()
 {
 	int windowHeight = sceneManagerRef->getWindowHeight();
 	int windowWidth = sceneManagerRef->getWindowWidth();
@@ -526,14 +481,53 @@ void CapstoneSceneDream::DrawUI_imgui()
 	
 }
 
+void SandboxAdriel::DrawSphere(Vec3 pos, float radius) const{
+	Ref<Actor> sphere = std::make_shared<Actor>(nullptr);
+	sphere->AddComponent<TransformComponent>(nullptr, pos, Quaternion(), Vec3(radius, radius, radius));
+	sphere->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Sphere"));
+	sphere->AddComponent<ShaderComponent>(assetManager->GetComponent< ShaderComponent>("DefaultShader"));
 
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+	glUseProgram(sphere->GetComponent<ShaderComponent>()->GetProgram());
+	glUniformMatrix4fv(sphere->GetComponent<ShaderComponent>()->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
+	glUniformMatrix4fv(sphere->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
+	glUniformMatrix4fv(sphere->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, sphere->GetModelMatrix());
 
+	sphere->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
 
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+	sphere.reset();
+}
+void SandboxAdriel::DrawSphere(Sphere s) const {
+	DrawSphere(s.center, s.r);
+}
 
+void SandboxAdriel::DrawCube(Vec3 pos, Vec3 dimensions) const {
+	Ref<Actor> cube = std::make_shared<Actor>(nullptr);
+	cube->AddComponent<TransformComponent>(nullptr, pos, Quaternion(), dimensions);
+	cube->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
+	cube->AddComponent<ShaderComponent>(assetManager->GetComponent< ShaderComponent>("DefaultShader"));
 
-void CapstoneSceneDream::DrawNormals(const Vec4 color) const {
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	glUseProgram(cube->GetComponent<ShaderComponent>()->GetProgram());
+	glUniformMatrix4fv(cube->GetComponent<ShaderComponent>()->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
+	glUniformMatrix4fv(cube->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
+	glUniformMatrix4fv(cube->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, cube->GetModelMatrix());
+
+	cube->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	cube.reset();
+}
+void SandboxAdriel::DrawCube(AABB a) const {
+	DrawCube(a.center, Vec3(a.rx, a.ry, a.rz));
+}
+
+void SandboxAdriel::DrawNormals(const Vec4 color) const {
 	glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("DrawNormalsShader");
 	glUseProgram(shader->GetProgram());
@@ -545,9 +539,7 @@ void CapstoneSceneDream::DrawNormals(const Vec4 color) const {
 	glUseProgram(0);
 }
 
-
-
-void CapstoneSceneDream::DrawMeshOverlay(const Vec4 color) const {
+void SandboxAdriel::DrawMeshOverlay(const Vec4 color) const {
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -555,7 +547,6 @@ void CapstoneSceneDream::DrawMeshOverlay(const Vec4 color) const {
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("DefaultShader");
 	glUseProgram(shader->GetProgram());
 	glUniform4fv(shader->GetUniformID("color"), 1, color);
-	
 	for (auto actor : actors) {
 		glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, actor->GetModelMatrix());
 		actor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);

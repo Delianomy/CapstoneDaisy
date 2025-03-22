@@ -1,5 +1,5 @@
-#ifndef CAPSTONESCENE_DREAM_H
-#define CAPSTONESCENE_DREAM_H
+#ifndef SANDBOX_ADRIEL_H
+#define SANDBOX_ADRIEL_H
 #include "Scene.h"
 #include "Vector.h"
 #include "Matrix.h"
@@ -23,17 +23,15 @@ class Actor;
 class SkyBox;
 
 #include "Scene.h"
-class CapstoneSceneDream : public Scene 
+class SandboxAdriel : public Scene 
 {
 	Ref<AssetManager> assetManager;
 	Ref<CameraActor> camera;
 	Ref<LightActor> light;
 
-
 	Ref<Actor> player;
 	Ref<Actor> cube;
 	Ref<Actor> skybox;
-	Ref<Actor> mermaid;
 
 	//Middle part
 	Ref<Actor> RightIsland;
@@ -78,17 +76,15 @@ class CapstoneSceneDream : public Scene
 
 
 	int animIndex = 0;
-	int NPCanimIndex = 0;
 	float currentTime = 0.0f;
-	float NPCcurrentTime = 0.0f;
 	float frameSpeed = 0.1f;
 	bool drawNormals;
 	bool drawOverlay;
 public:
 	Matrix4 orient;
-	explicit CapstoneSceneDream(SceneManager* scenemanager);
+	explicit SandboxAdriel(SceneManager* scenemanager);
 	bool CreateLevelLayout();
-	virtual ~CapstoneSceneDream();
+	virtual ~SandboxAdriel();
 
 	virtual bool OnCreate();
 	virtual void OnDestroy();
@@ -96,18 +92,31 @@ public:
 	virtual void Render() const;
 	virtual void HandleEvents(const SDL_Event& sdlEvent);
 
-	
-	/// The w component holds the scale of the normal
-	void DrawNormals(const Vec4 color) const;
+	Plane CalculatePlaneCollider(Ref<Actor> obj);
+		void DrawNormals(const Vec4 color) const;
 
 	void DrawMeshOverlay(const Vec4 color) const;
 	void DrawUI_imgui();
-	Plane CalculatePlaneCollider(Ref<Actor> obj);
 
+	/// Adriel Territory
 	void PrintStatement(std::shared_ptr<Actor> a) {
 		std::cout << "I collided with ";
 		std::cout << a.get() << "\n";
 	}
+	/// <summary>
+	/// Draws a sphere actor that is in wireframe mode. Use this in the Render() only. Kind expensive, so don't use it as much
+	/// </summary>
+	/// <param name="pos">Position of the Sphere</param>
+	/// <param name="radius">How big the sphere is</param>
+	void DrawSphere(Vec3 pos, float radius) const;
+	void DrawSphere(Sphere s) const;
+	/// <summary>
+	/// Draws a cube actor that is in wireframe mode. Use this in Render() only. Kind of expensive, so don't use it as much
+	/// </summary>
+	/// <param name="pos">Position of the cube</param>
+	/// <param name="radius">width, height, depth of the cube</param>
+	void DrawCube(Vec3 pos, Vec3 dimensions) const;
+	void DrawCube(AABB a) const;
 };
 
 #endif // CAPSTONESCENE_DREAM_H

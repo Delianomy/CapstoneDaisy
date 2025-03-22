@@ -91,7 +91,8 @@ CapstoneScene::~CapstoneScene() {
 
 void CapstoneScene::OnDestroy() {
 	Debug::Info("Deleting assets Scene Bedroom: ", __FILE__, __LINE__);
-}
+	auto test = &CapstoneScene::Update;
+}	
 
 void CapstoneScene::HandleEvents(const SDL_Event& sdlEvent) {
 	static int objID = -1;

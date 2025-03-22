@@ -1,6 +1,7 @@
 #pragma once
 
 #include "VMath.h"
+#include "AssetManager.h"
 #include <vector>
 #include <algorithm>
 using namespace MATH;
@@ -8,6 +9,10 @@ using namespace MATH;
 
 class MEW {
 public:
+    void DrawWireSphere(std::shared_ptr<AssetManager> assetManager, Vec3 pos, float r){
+    
+    }
+
     //Printing a vector list
     static void PrintVecList(std::vector<Vec3>& list) {
         for (Vec3 &v : list) {

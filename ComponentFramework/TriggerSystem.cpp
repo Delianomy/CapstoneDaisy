@@ -18,22 +18,23 @@ void TriggerSystem::Update(const float deltaTime)
     for (size_t i = 0; i < triggeringActors.size(); ++i) {
         for (size_t j = i + 1; j < triggeringActors.size(); ++j) {
 
+            //Getting the components
+            //First actor
+            Ref<TriggerComponent> TriggerCompA = triggeringActors[i]->GetComponent<TriggerComponent>();
+            Ref<PhysicsComponent> PhysicsCompA = triggeringActors[i]->GetComponent<PhysicsComponent>();
 
+            //Second actor
+            Ref<TriggerComponent> TriggerCompB = triggeringActors[j]->GetComponent<TriggerComponent>();
+            Ref<PhysicsComponent> PhysicsCompB = triggeringActors[j]->GetComponent<PhysicsComponent>();
 
-            Sphere s1, s2;  /// I'm just going to do sphere-sphere collions first
-            s1.r = triggeringActors[i]->GetComponent<TriggerComponent>()->radius;
-            s1.center = triggeringActors[i]->GetComponent<PhysicsComponent>()->pos;
+            Sphere S1 = Sphere(PhysicsCompA->pos, TriggerCompA->radius);
+            Sphere S2 = Sphere(PhysicsCompB->pos, TriggerCompB->radius);
 
-            s2.r = triggeringActors[j]->GetComponent<TriggerComponent>()->radius;
-            s2.center = triggeringActors[j]->GetComponent<PhysicsComponent>()->pos;
-
-            if (SphereSphereCollisionDetection(s1, s2) == true) {
+            if (SphereSphereCollisionDetection(S1, S2) == true) {
+                TriggerCompA->Call(triggeringActors[j]);
+                TriggerCompB->Call(triggeringActors[i]);
                 std::cout << "TRIGGERED" << std::endl;
-
-
             }
-
-
         }
 
     }

@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "CapstoneScene.h"
 #include "CapstoneSceneDream.h"
+#include "SandboxAdriel.h"
 #include "ShaderTestScene.h"
 #include "MainMenu.h"
 
@@ -60,7 +61,7 @@ bool SceneManager::Initialize(std::string name_, int width_, int height_) {
 	ImGui_ImplOpenGL3_Init();
 
 	/********************************   Default first scene   ***********************/
-	BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE_DREAM);
+	BuildNewScene(SCENE_NUMBER::SCENE_SANDBOX_ADRIEL);
 	//bedroomScene = new CapstoneScene();
 	//bedroomScene->OnCreate();
 
@@ -157,6 +158,11 @@ void SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 		currentScene = new MainMenu(this);
 		status = currentScene->OnCreate();
 		break;
+	case SCENE_NUMBER::SCENE_SANDBOX_ADRIEL:
+		currentScene = new SandboxAdriel(this);
+		status = currentScene->OnCreate();
+		break;
+
 	default:
 		Debug::Error("Incorrect scene number assigned in the manager", __FILE__, __LINE__);
 		currentScene = nullptr;

@@ -35,7 +35,10 @@ AssetManager::AssetManager() {
 	AddComponent<ShaderComponent>("CoolWaveShader", nullptr, "shaders/prettyWaterVert.glsl", "shaders/prettyWaterFrag.glsl");
 	AddComponent<ShaderComponent>("ColorPicker", nullptr,  "shaders/colorPickingVert.glsl", "shaders/colorPickingFrag.glsl");
 
-	AddComponent<MaterialComponent>("Sprite_Sheet_HEAVY", nullptr, "textures/walking_sprite_sheet.png");
+
+	//SPRITE SHEETS
+	AddComponent<MaterialComponent>("Mermaid_spriteSheet", nullptr, "textures/mermaid_spritesheet.png");
+	AddComponent<MaterialComponent>("Daisy_spriteSheet", nullptr, "textures/walking_sprite_sheet_shmol.png");
 
 	AddComponent<MaterialComponent>("ChessBoard",nullptr, "textures/8x8_checkered_board.png");
 	AddComponent<MaterialComponent>("DefaultTexture", nullptr, "textures/Black Chess Base Colour.png");

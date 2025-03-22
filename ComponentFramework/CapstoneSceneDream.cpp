@@ -37,6 +37,7 @@ bool CapstoneSceneDream::OnCreate() {
 
 	//make an actor
 	player = std::make_shared<Actor>(nullptr);
+	player->NPCid = 0;
 	player->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, 0.0f, 0.0f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
@@ -45,15 +46,33 @@ bool CapstoneSceneDream::OnCreate() {
 	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
 	player->AddComponent<CollisionComponent>(nullptr, 0.8f);
 	player->GetComponent<PhysicsComponent>()->isStatic = false;
-	player->GetComponent<PhysicsComponent>()->useGravity = true;
+	//player->GetComponent<PhysicsComponent>()->useGravity = true;
 	player->GetComponent<PhysicsComponent>()->mass = 5.0f;
 	player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
 	player->AddComponent<ShaderComponent>(shader);
-	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Sprite_Sheet_HEAVY"));
+	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Daisy_spriteSheet"));
 	player->AddComponent<TriggerComponent>(nullptr, 1.0f);
 
 	AddTransparentActor(player);
 
+
+	mermaid = std::make_shared<Actor>(nullptr);
+	mermaid->NPCid = 1;
+	mermaid->AddComponent<PhysicsComponent>(nullptr, Vec3(2.0f, 0.0f, 0.0f),/// pos
+		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	mermaid->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
+	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
+	mermaid->AddComponent<CollisionComponent>(nullptr, 0.8f);
+	mermaid->GetComponent<PhysicsComponent>()->isStatic = true;
+	mermaid->GetComponent<PhysicsComponent>()->mass = 1.0f;
+	mermaid->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
+	mermaid->AddComponent<ShaderComponent>(shader);
+	mermaid->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Mermaid_spriteSheet"));
+	mermaid->AddComponent<TriggerComponent>(nullptr, 1.0f);
+
+	AddTransparentActor(mermaid);
 
 
 	//now technically it would mean that out player now has a collider
@@ -304,9 +323,11 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 		animIndex = 0;
 	}
 		
+	NPCcurrentTime += deltaTime;
+	NPCanimIndex = static_cast<int>(NPCcurrentTime / frameSpeed) % 17;
 
-
-
+	std::cout << "Player anim index: " << animIndex << std::endl;
+	std::cout << "NPC anim index: " << NPCanimIndex << std::endl;
 
 	camera->UpdateViewMatrix();
 	collisionSystem.Update(deltaTime);
@@ -317,49 +338,55 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	}
 
 
-void CapstoneSceneDream::Render() const {
-	glEnable(GL_DEPTH_TEST);
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	void CapstoneSceneDream::Render() const {
+		glEnable(GL_DEPTH_TEST);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	
 
-	glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
-	glBindBuffer(GL_UNIFORM_BUFFER, light->GetLightID());
+		glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
+		glBindBuffer(GL_UNIFORM_BUFFER, light->GetLightID());
 
-	Ref<ShaderComponent> skyboxShader = skybox->GetComponent<ShaderComponent>();
+		Ref<ShaderComponent> skyboxShader = skybox->GetComponent<ShaderComponent>();
 
-	glUseProgram(skyboxShader->GetProgram());
-	glUniformMatrix4fv(skyboxShader->GetUniformID("modelMatrix"), 1, GL_FALSE, skybox->GetModelMatrix());
-	glUniformMatrix4fv(skyboxShader->GetUniformID("viewMatrix"), 1, GL_FALSE, MMath::inverse(camera->orient));
+		glUseProgram(skyboxShader->GetProgram());
+		glUniformMatrix4fv(skyboxShader->GetUniformID("modelMatrix"), 1, GL_FALSE, skybox->GetModelMatrix());
+		glUniformMatrix4fv(skyboxShader->GetUniformID("viewMatrix"), 1, GL_FALSE, MMath::inverse(camera->orient));
 
-	//camera->orient.print("Camera orientation");
-	glUniformMatrix4fv(skyboxShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
-	std::dynamic_pointer_cast<SkyBox>(skybox)->Render();
-	glUseProgram(0);
+		//camera->orient.print("Camera orientation");
+		glUniformMatrix4fv(skyboxShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
+		std::dynamic_pointer_cast<SkyBox>(skybox)->Render();
+		glUseProgram(0);
 
-	// Then render player with proper depth testing
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);  // Only render if closer than existing geometry
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		// Then render player with proper depth testing
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);  // Only render if closer than existing geometry
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	for (auto opaqueActor : opaqueActors) {
-		glUseProgram(opaqueActor->GetComponent<ShaderComponent>()->GetProgram());
-		glUniform1f(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
-		glUniformMatrix4fv(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, opaqueActor->GetModelMatrix());
-		glBindTexture(GL_TEXTURE_2D, opaqueActor->GetComponent<MaterialComponent>()->getTextureID());
-		opaqueActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
-	}
+		for (auto opaqueActor : opaqueActors) {
+			glUseProgram(opaqueActor->GetComponent<ShaderComponent>()->GetProgram());
+			glUniform1f(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
+			glUniformMatrix4fv(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, opaqueActor->GetModelMatrix());
+			glBindTexture(GL_TEXTURE_2D, opaqueActor->GetComponent<MaterialComponent>()->getTextureID());
+			opaqueActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+		}
 
 
-	for (auto transparentActor : transparentActors) {
-		glUseProgram(transparentActor->GetComponent<ShaderComponent>()->GetProgram());
-		glUniform1f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
-		glUniformMatrix4fv(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, transparentActor->GetModelMatrix());
-		glBindTexture(GL_TEXTURE_2D, transparentActor->GetComponent<MaterialComponent>()->getTextureID());
-		transparentActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
-	}
+		for (auto transparentActor : transparentActors) {
+			glUseProgram(transparentActor->GetComponent<ShaderComponent>()->GetProgram());
+			glUniform1i(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("NPC_id"), transparentActor->NPCid);
+			glUniform1i(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("talking"), );
+			glUniform2f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("playeranimIndex"), animIndex, animIndex);
+			glUniform2f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("NPCanimIndex"), NPCanimIndex,1 );
+
+			glUniformMatrix4fv(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, transparentActor->GetModelMatrix());
+			if (transparentActor->GetComponent<MaterialComponent>()) {
+				glBindTexture(GL_TEXTURE_2D, transparentActor->GetComponent<MaterialComponent>()->getTextureID());
+				transparentActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+			}
+		}
 	
 	ImGui::Render();
 
@@ -497,14 +524,6 @@ void CapstoneSceneDream::DrawUI_imgui()
 
 	
 }
-
-
-
-
-
-
-
-
 
 
 

@@ -27,13 +27,14 @@ void TriggerSystem::Update(const float deltaTime)
             s2.r = triggeringActors[j]->GetComponent<TriggerComponent>()->radius;
             s2.center = triggeringActors[j]->GetComponent<PhysicsComponent>()->pos;
 
-            if (SphereSphereCollisionDetection(s1, s2) == true) { 
-                std::cout << "TRIGGERED"<<std::endl;
-             
+            if (SphereSphereCollisionDetection(s1, s2) == true) {
+                std::cout << "TRIGGERED" << std::endl;
+
+
+            }
+
 
         }
 
-
     }
-
 }

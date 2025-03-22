@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "TransformComponent.h" 
 
+
 class Actor: public Component {
 	/// Unless you know what these do don't allow them to be created implicitly 
 	Actor(const Actor&) = delete;
@@ -13,9 +14,11 @@ class Actor: public Component {
 
 private:
 	bool isMovable = false;
+
 	std::vector< Ref<Component> > components;
 	Matrix4 modelMatrix; 
 public:
+	int NPCid;
 	Actor(Component* parent_);
 	~Actor();
 	bool OnCreate();

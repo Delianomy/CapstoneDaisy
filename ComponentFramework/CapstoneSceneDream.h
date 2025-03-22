@@ -32,6 +32,7 @@ class CapstoneSceneDream : public Scene
 	Ref<Actor> player;
 	Ref<Actor> cube;
 	Ref<Actor> skybox;
+	Ref<Actor> mermaid;
 
 	//Middle part
 	Ref<Actor> RightIsland;
@@ -75,7 +76,9 @@ class CapstoneSceneDream : public Scene
 
 
 	int animIndex = 0;
+	int NPCanimIndex = 0;
 	float currentTime = 0.0f;
+	float NPCcurrentTime = 0.0f;
 	float frameSpeed = 0.1f;
 	bool drawNormals;
 	bool drawOverlay;

@@ -25,12 +25,31 @@ layout(location = 1) out vec3 lightDir;
 layout(location = 2) out vec3 eyeDir; 
 layout(location = 3) out vec2 texCoord; 
 
-uniform float index;
+uniform vec2 playeranimIndex;
+uniform vec2 NPCanimIndex;
+uniform int NPC_id;
+uniform bool talking;
 
 void main() {
     texCoord = uvCoord;
-    texCoord.y *= -1.0;
-    texCoord.x = texCoord.x*0.077 + (index*0.077);
+   
+    if(NPC_id == 0){ //player
+     texCoord.y *= -1.0;
+     texCoord.x = texCoord.x*0.077 + (playeranimIndex.x*0.077);
+    }
+    if(NPC_id == 1){ //mermaid
+        texCoord.y *= -1.0;
+          texCoord.y = texCoord.y * 0.5;
+            texCoord.x = texCoord.x*0.05882 + (NPCanimIndex.x * 0.05882);
+        if(talking){
+             texCoord.y *= -1.0;
+             texCoord.y = texCoord.y * 0.5 + (NPCanimIndex.y * 0.5);
+             texCoord.x = texCoord.x*0.058 + (NPCanimIndex.x *0.058);
+        }
+    }
+  
+  
+   
     mat3 normalMatrix = mat3(transpose(inverse(view * modelMatrix)));
     vertNormal = normalize(normalMatrix * vNormal); /// Rotate the normal to the correct orientation 
     vec3 vertPos = vec3(view * modelMatrix * vVertex);

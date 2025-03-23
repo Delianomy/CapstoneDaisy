@@ -37,8 +37,12 @@ AssetManager::AssetManager() {
 
 
 	//SPRITE SHEETS
-	AddComponent<MaterialComponent>("Mermaid_spriteSheet", nullptr, "textures/mermaid_spritesheet.png");
+	AddComponent<MaterialComponent>("Mermaid_spriteSheet", nullptr, "textures/sprite_sheets/mermaid_spritesheet.png");
 	AddComponent<MaterialComponent>("Daisy_spriteSheet", nullptr, "textures/walking_sprite_sheet_shmol.png");
+	AddComponent<MaterialComponent>("mrOwl_spriteSheet", nullptr, "textures/sprite_sheets/Owl_spritesheet.png");
+	AddComponent<MaterialComponent>("mrMouse_spriteSheet", nullptr, "textures/sprite_sheets/Mouse_spritesheet.png");
+	AddComponent<MaterialComponent>("fairy_spriteSheet", nullptr, "textures/sprite_sheets/fairy_spritesheet.png");
+
 
 	AddComponent<MaterialComponent>("ChessBoard",nullptr, "textures/8x8_checkered_board.png");
 	AddComponent<MaterialComponent>("DefaultTexture", nullptr, "textures/Black Chess Base Colour.png");

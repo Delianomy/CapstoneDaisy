@@ -35,7 +35,81 @@ bool CapstoneSceneDream::OnCreate() {
 	Ref<ShaderComponent> WaveShader = assetManager->GetComponent<ShaderComponent>("WaveShader");
 	Ref<ShaderComponent> CubeShader = assetManager->GetComponent<ShaderComponent>("RegularTextureShader");
 
-	//make an actor
+
+
+
+	mermaid = std::make_shared<Actor>(nullptr);
+	mermaid->NPCid = 1;
+	mermaid->AddComponent<PhysicsComponent>(nullptr, Vec3(1.0f, 0.0f, 0.0f),/// pos
+		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	mermaid->GetComponent<PhysicsComponent>()->SetScale(Vec3(2.0f, 2.0f, 1.0f));
+	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
+	mermaid->AddComponent<CollisionComponent>(nullptr, 0.8f);
+	mermaid->GetComponent<PhysicsComponent>()->isStatic = true;
+	mermaid->GetComponent<PhysicsComponent>()->mass = 1.0f;
+	mermaid->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
+	mermaid->AddComponent<ShaderComponent>(shader);
+	mermaid->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Mermaid_spriteSheet"));
+	mermaid->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	AddTransparentActor(mermaid);
+
+
+	mrOwl = std::make_shared<Actor>(nullptr);
+	mrOwl->NPCid = 2;
+	mrOwl->AddComponent<PhysicsComponent>(nullptr, Vec3(3.0f, 0.0f, 0.0f),/// pos
+		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	mrOwl->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.3f, 1.3f, 1.0f));
+	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
+	mrOwl->AddComponent<CollisionComponent>(nullptr, 0.8f);
+	mrOwl->GetComponent<PhysicsComponent>()->isStatic = true;
+	mrOwl->GetComponent<PhysicsComponent>()->mass = 1.0f;
+	mrOwl->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
+	mrOwl->AddComponent<ShaderComponent>(shader);
+	mrOwl->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("mrOwl_spriteSheet"));
+	mrOwl->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	AddTransparentActor(mrOwl);
+
+
+	mrsMouse = std::make_shared<Actor>(nullptr);
+	mrsMouse->NPCid = 3;
+	mrsMouse->AddComponent<PhysicsComponent>(nullptr, Vec3(4.0f, 0.0f, 0.0f),/// pos
+		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	mrsMouse->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
+	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
+	mrsMouse->AddComponent<CollisionComponent>(nullptr, 0.8f);
+	mrsMouse->GetComponent<PhysicsComponent>()->isStatic = true;
+	mrsMouse->GetComponent<PhysicsComponent>()->mass = 1.0f;
+	mrsMouse->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
+	mrsMouse->AddComponent<ShaderComponent>(shader);
+	mrsMouse->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("mrMouse_spriteSheet"));
+	mrsMouse->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	AddTransparentActor(mrsMouse);
+
+
+	fairy = std::make_shared<Actor>(nullptr);
+	fairy->NPCid = 4;
+	fairy->AddComponent<PhysicsComponent>(nullptr, Vec3(5.0f, 0.0f, 0.0f),/// pos
+		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	fairy->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
+	fairy->AddComponent<CollisionComponent>(nullptr, 0.8f);
+	fairy->GetComponent<PhysicsComponent>()->isStatic = true;
+	fairy->GetComponent<PhysicsComponent>()->mass = 1.0f;
+	fairy->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
+	fairy->AddComponent<ShaderComponent>(shader);
+	fairy->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("fairy_spriteSheet"));
+	fairy->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	AddTransparentActor(fairy);
+
+
+
 	player = std::make_shared<Actor>(nullptr);
 	player->NPCid = 0;
 	player->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, 0.0f, 0.0f),/// pos
@@ -56,26 +130,6 @@ bool CapstoneSceneDream::OnCreate() {
 
 	AddTransparentActor(player);
 
-
-	mermaid = std::make_shared<Actor>(nullptr);
-	mermaid->NPCid = 1;
-	mermaid->AddComponent<PhysicsComponent>(nullptr, Vec3(2.0f, 0.0f, 0.0f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	mermaid->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
-	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
-	mermaid->AddComponent<CollisionComponent>(nullptr, 0.8f);
-	mermaid->GetComponent<PhysicsComponent>()->isStatic = true;
-	mermaid->GetComponent<PhysicsComponent>()->mass = 1.0f;
-	mermaid->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
-	mermaid->AddComponent<ShaderComponent>(shader);
-	mermaid->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Mermaid_spriteSheet"));
-	mermaid->AddComponent<TriggerComponent>(nullptr, 1.0f);
-
-	AddTransparentActor(mermaid);
-
-
 	//now technically it would mean that out player now has a collider
 	GLint maxTextureSize;
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
@@ -87,7 +141,7 @@ bool CapstoneSceneDream::OnCreate() {
 
 	camera = std::make_shared<CameraActor>(player.get());
 	camera->isInMainMenu = false;
-	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -2.0f), Quaternion());
+	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -1.8f), Quaternion());
 	camera->OnCreate();
 	camera->GetProjectionMatrix().print("ProjectionMatrix");
 	camera->GetViewMatrix().print("ViewMatrix");
@@ -324,7 +378,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 		animIndex = 0;
 	}
 		
-	NPCcurrentTime += deltaTime;
+	NPCcurrentTime += deltaTime * 0.6;
 	NPCanimIndex = static_cast<int>(NPCcurrentTime / frameSpeed) % 17;
 
 	std::cout << "Player anim index: " << animIndex << std::endl;
@@ -378,9 +432,9 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 		for (auto transparentActor : transparentActors) {
 			glUseProgram(transparentActor->GetComponent<ShaderComponent>()->GetProgram());
 			glUniform1i(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("NPC_id"), transparentActor->NPCid);
-			glUniform1i(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("talking"), );
+			glUniform1i(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("talking"), true );
 			glUniform2f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("playeranimIndex"), animIndex, animIndex);
-			glUniform2f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("NPCanimIndex"), NPCanimIndex,1 );
+			glUniform2f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("NPCanimIndex"), NPCanimIndex,0 );
 
 			glUniformMatrix4fv(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, transparentActor->GetModelMatrix());
 			if (transparentActor->GetComponent<MaterialComponent>()) {

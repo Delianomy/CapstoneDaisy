@@ -2,7 +2,7 @@
 
 void Inventory::AddItem(PickableItem* item) {
 	for (int i = 0; i < inventorySize; i++) {
-		if (items[i] != nullptr) {
+		if (items[i] == nullptr) {
 			AddItem(item, i);
 		}
 	}
@@ -14,12 +14,7 @@ void Inventory::AddItem(PickableItem* item, int index) {
 		return;
 	}
 
-	if (items[index] != nullptr) {
-		items[index] = item;
-	}
-	else {
-		DropCallback(item);
-	}
+	items[index] = item;
 }
 
 void Inventory::PrintInventory() {

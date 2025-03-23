@@ -17,6 +17,7 @@ void TriggerSystem::Update(const float deltaTime)
 {
     for (size_t i = 0; i < triggeringActors.size(); ++i) {
         for (size_t j = i + 1; j < triggeringActors.size(); ++j) {
+            if (triggeringActors[i] == triggeringActors[j]) { continue; }
 
             //Getting the components
             //First actor
@@ -33,9 +34,7 @@ void TriggerSystem::Update(const float deltaTime)
             if (SphereSphereCollisionDetection(S1, S2) == true) {
                 TriggerCompA->Call(triggeringActors[j]);
                 TriggerCompB->Call(triggeringActors[i]);
-                std::cout << "TRIGGERED" << std::endl;
             }
         }
-
     }
 }

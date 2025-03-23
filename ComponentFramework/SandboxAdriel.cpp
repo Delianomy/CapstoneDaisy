@@ -28,72 +28,66 @@ SandboxAdriel::SandboxAdriel(SceneManager* scenemanager) :drawNormals(false), dr
 bool SandboxAdriel::OnCreate() {
 	Debug::Info("Loading assets Scene Dream: ", __FILE__, __LINE__);
 	assetManager = std::make_shared<AssetManager>();
+	inventory = new Inventory();
 
+	//Main Shaders
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("TextureShader");
 	Ref<ShaderComponent> WaveShader = assetManager->GetComponent<ShaderComponent>("WaveShader");
 	Ref<ShaderComponent> CubeShader = assetManager->GetComponent<ShaderComponent>("RegularTextureShader");
 
-	//make an actor
+	//Creating the debug objects
+	DebugSphere = std::make_shared<Actor>(nullptr);
+	DebugSphere->AddComponent<TransformComponent>(nullptr, Vec3(), Quaternion(), Vec3());
+	DebugSphere->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Sphere"));
+	DebugSphere->AddComponent<ShaderComponent>(assetManager->GetComponent< ShaderComponent>("DefaultShader"));
+
+	DebugCube = std::make_shared<Actor>(nullptr);
+	DebugCube->AddComponent<TransformComponent>(nullptr, Vec3(), Quaternion(), Vec3());
+	DebugCube->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
+	DebugCube->AddComponent<ShaderComponent>(assetManager->GetComponent< ShaderComponent>("DefaultShader"));
+
+
+	//Creating the player
 	player = std::make_shared<Actor>(nullptr);
-	player->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, 0.0f, 0.0f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	player->AddComponent<PhysicsComponent>(
+		nullptr, //Parent
+		Vec3(0.0f, 0.0f, 0.0f),//pos
+		Quaternion(), //Rotation
+		Vec3(0.0f, 0.0f, 0.0f) //velocity
 	);
 	player->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
-	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
-	player->AddComponent<CollisionComponent>(nullptr, 0.8f);
 	player->GetComponent<PhysicsComponent>()->isStatic = false;
 	player->GetComponent<PhysicsComponent>()->useGravity = true;
 	player->GetComponent<PhysicsComponent>()->mass = 5.0f;
 	player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
 	player->AddComponent<ShaderComponent>(shader);
 	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("ChessBoard"));
+	player->AddComponent<CollisionComponent>(nullptr, 0.5f);
 	player->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	player->GetComponent<TriggerComponent>()->SetCallback(TriggerCallbackCreator::CreateTriggerCallback(this, &SandboxAdriel::PrintStatement));
-
+	player->GetComponent<TriggerComponent>()->SetCallback(TriggerCallbackCreator::CreateTriggerCallback(this, &SandboxAdriel::TryAddItem));
 	AddTransparentActor(player);
 
-
-
-	//now technically it would mean that out player now has a collider
-	GLint maxTextureSize;
-	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
-	printf("Max Texture Size: %d\n", maxTextureSize);
-
-	GLint totalMemoryKB;
-	glGetIntegerv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX, &totalMemoryKB);
-	printf("Available GPU Memory: %d KB\n", totalMemoryKB);
-
+	//Creating the camera
 	camera = std::make_shared<CameraActor>(player.get());
 	camera->isInMainMenu = false;
-	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -2.0f), Quaternion());
+	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -5.0f), Quaternion());
 	camera->OnCreate();
-	camera->GetProjectionMatrix().print("ProjectionMatrix");
-	camera->GetViewMatrix().print("ViewMatrix");
 
-
-
+	//Creating the floor
 	cube = std::make_shared<Actor>(nullptr);
-	cube->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -2.0f, 0.0f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	cube->AddComponent<PhysicsComponent>(
+		nullptr, //Parent
+		Vec3(0.0f, -2.0f, 0.0f), //pos
+		Quaternion(), //Rotation
+		Vec3(0.0f, 0.0f, 0.0f) //velocity
 	);
-	cube->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
-	cube->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("House"));
-	AABB cubeCollider;
-	cubeCollider.center = cube->GetComponent<PhysicsComponent>()->GetPosition();
-	//Problem, this looks a bit weird cause Y goes very deep in the bottom comparing to the top side, leadingfor stuff to look sketchy 
-	cubeCollider.rx = 3.18f;
-	cubeCollider.ry = 0.51f;
-	cubeCollider.rz = 0.904f;
-
-
-	cube->AddComponent<CollisionComponent>(nullptr, cubeCollider);
+	cube->GetComponent<PhysicsComponent>()->SetScale(Vec3(4.0f, 0.5f, 1.0f));
 	cube->GetComponent<PhysicsComponent>()->isStatic = true;
-
+	cube->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
+	AABB col = AABB(cube->GetComponent<PhysicsComponent>()->GetPosition(), Vec3(4.0f, 0.5f, 1.0f));
+	cube->AddComponent<CollisionComponent>(nullptr, col);
 	cube->AddComponent<ShaderComponent>(CubeShader);
-	cube->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("house"));
-	cube->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	cube->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("ChessBoard"));
 	AddOpaqueActor(cube);
 
 
@@ -106,6 +100,8 @@ bool SandboxAdriel::OnCreate() {
 	light = std::make_shared<LightActor>(camera.get(), LightStyle::DirectionLight, Vec3(0.0f, 5.0f, 1.0f), Vec4(0.85f, 0.6, 0.6f, 0.0f));
 	light->OnCreate();
 
+	Ref<PickableItem> newPickable = std::make_shared<PickableItem>(assetManager, "Item1", Vec3(5.0f,-1.0f,0.0f));
+	triggerSystem.AddActor(newPickable);
 
 	physicsSystem.AddActor(player);
 	physicsSystem.AddActor(cube);
@@ -114,7 +110,6 @@ bool SandboxAdriel::OnCreate() {
 	collisionSystem.AddActor(cube);
 
 	triggerSystem.AddActor(player);
-	triggerSystem.AddActor(cube);
 
 	return true;
 }
@@ -136,7 +131,7 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 	static float flip = 1.0f;
 	Ref<TransformComponent> cameraTC;
 	Ref<TransformComponent> gameBoardTC;
-
+	ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
 	/// Handle Camera movement 
 	switch (sdlEvent.type) {
 	case SDL_KEYDOWN:
@@ -203,31 +198,6 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 			break;
 
 		}
-	case SDL_MOUSEBUTTONDOWN:
-		if (sdlEvent.button.button == (SDL_BUTTON_RIGHT)) {
-			rotatePlayerRight = true;
-			break;
-		}
-		if (sdlEvent.button.button == (SDL_BUTTON_LEFT)) {
-			rotatePlayerLeft = true;
-
-			break;
-		}
-		break;
-
-	case SDL_MOUSEBUTTONUP:
-	{
-		if (sdlEvent.button.button == (SDL_BUTTON_RIGHT)) {
-			rotatePlayerRight = false;
-			break;
-		}
-		if (sdlEvent.button.button == (SDL_BUTTON_LEFT)) {
-			rotatePlayerLeft = false;
-			break;
-		}
-		break;
-	}
-	ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
 	}
 }
 
@@ -294,15 +264,12 @@ void SandboxAdriel::Update(const float deltaTime) {
 		
 
 
-
-
 	camera->UpdateViewMatrix();
 	collisionSystem.Update(deltaTime);
 	physicsSystem.Update(deltaTime);
 	triggerSystem.Update(deltaTime);
 
-
-	}
+}
 
 void SandboxAdriel::Render() const{
 	glEnable(GL_DEPTH_TEST);
@@ -335,8 +302,10 @@ void SandboxAdriel::Render() const{
 		opaqueActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
 	}
 
-	DrawSphere(player->GetComponent<TransformComponent>()->GetPosition(), 1.0f);
-	DrawCube(cube->GetComponent<TransformComponent>()->GetPosition(), Vec3(3.18f, 0.51f, 0.904f));
+	//Drawing all the pickable objects
+	for (auto trigger : triggerSystem.triggeringActors) {
+		DrawSphere(trigger->GetComponent<TransformComponent>()->GetPosition(), trigger->GetComponent<TriggerComponent>()->radius);
+	}
 
 
 	for (auto transparentActor : transparentActors) {
@@ -371,7 +340,9 @@ void SandboxAdriel::DrawUI_imgui()
 	ImGui::NewFrame();
 
 
-	//Inventory 
+	DebugUI();
+
+
 	ImGui::SetNextWindowPos(ImVec2(220, 750)); // Set the window position here (x, y)
 	ImGui::SetNextWindowSize(ImVec2(220, 220)); // Set the window size
 
@@ -482,46 +453,38 @@ void SandboxAdriel::DrawUI_imgui()
 }
 
 void SandboxAdriel::DrawSphere(Vec3 pos, float radius) const{
-	Ref<Actor> sphere = std::make_shared<Actor>(nullptr);
-	sphere->AddComponent<TransformComponent>(nullptr, pos, Quaternion(), Vec3(radius, radius, radius));
-	sphere->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Sphere"));
-	sphere->AddComponent<ShaderComponent>(assetManager->GetComponent< ShaderComponent>("DefaultShader"));
+	DebugSphere->GetComponent<TransformComponent>()->SetPosition(pos);
+	DebugSphere->GetComponent<TransformComponent>()->SetScale(Vec3(radius, radius, radius));
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	glUseProgram(sphere->GetComponent<ShaderComponent>()->GetProgram());
-	glUniformMatrix4fv(sphere->GetComponent<ShaderComponent>()->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
-	glUniformMatrix4fv(sphere->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
-	glUniformMatrix4fv(sphere->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, sphere->GetModelMatrix());
+	glUseProgram(DebugSphere->GetComponent<ShaderComponent>()->GetProgram());
+	glUniformMatrix4fv(DebugSphere->GetComponent<ShaderComponent>()->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
+	glUniformMatrix4fv(DebugSphere->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
+	glUniformMatrix4fv(DebugSphere->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, DebugSphere->GetModelMatrix());
 
-	sphere->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+	DebugSphere->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-	sphere.reset();
 }
 void SandboxAdriel::DrawSphere(Sphere s) const {
 	DrawSphere(s.center, s.r);
 }
 
 void SandboxAdriel::DrawCube(Vec3 pos, Vec3 dimensions) const {
-	Ref<Actor> cube = std::make_shared<Actor>(nullptr);
-	cube->AddComponent<TransformComponent>(nullptr, pos, Quaternion(), dimensions);
-	cube->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
-	cube->AddComponent<ShaderComponent>(assetManager->GetComponent< ShaderComponent>("DefaultShader"));
+	DebugCube->GetComponent<TransformComponent>()->SetPosition(pos);
+	DebugCube->GetComponent<TransformComponent>()->SetScale(dimensions);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	glUseProgram(cube->GetComponent<ShaderComponent>()->GetProgram());
-	glUniformMatrix4fv(cube->GetComponent<ShaderComponent>()->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
-	glUniformMatrix4fv(cube->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
-	glUniformMatrix4fv(cube->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, cube->GetModelMatrix());
+	glUseProgram(DebugCube->GetComponent<ShaderComponent>()->GetProgram());
+	glUniformMatrix4fv(DebugCube->GetComponent<ShaderComponent>()->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
+	glUniformMatrix4fv(DebugCube->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
+	glUniformMatrix4fv(DebugCube->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, DebugCube->GetModelMatrix());
 
-	cube->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+	DebugCube->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-	cube.reset();
 }
 void SandboxAdriel::DrawCube(AABB a) const {
 	DrawCube(a.center, Vec3(a.rx, a.ry, a.rz));
@@ -555,3 +518,27 @@ void SandboxAdriel::DrawMeshOverlay(const Vec4 color) const {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
+void SandboxAdriel::DebugUI() {
+	float windowWidth = 1366;
+	float windowHeight = 768;
+
+	//Inventory 
+	ImGui::SetNextWindowPos(ImVec2(windowWidth / 2 - windowWidth * 0.5f, windowHeight / 2), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowSize(ImVec2(400, 300));
+	bool windowBool = false;
+	ImGui::Begin("Inventory", &windowBool, ImGuiWindowFlags_NoCollapse);
+
+	for (int i = 0; i < 3; i++) {
+		if (inventory->items[i] == nullptr) continue;
+		ImGui::Text("itemName");
+	}
+
+	ImGui::End();
+}
+
+void SandboxAdriel::TryAddItem(std::shared_ptr<Actor> other) {
+	if (std::dynamic_pointer_cast<PickableItem>(other) != nullptr) {
+		inventory->AddItem(std::dynamic_pointer_cast<PickableItem>(other).get());
+		std::cout << "I coolided with " << other << "\n";
+	}
+};

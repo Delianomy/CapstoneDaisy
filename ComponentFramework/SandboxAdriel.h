@@ -45,11 +45,16 @@ class SandboxAdriel : public Scene
 	Ref<Actor> sphere;
 	Ref<Actor> plane;
 
-
+	//Systems
 	PhysicsSystem physicsSystem;
 	CollisionSystem collisionSystem;
 	TriggerSystem triggerSystem;
 	SceneManager* sceneManagerRef;
+
+	//Debug Meshes
+	Ref<Actor> DebugSphere;
+	Ref<Actor> DebugCube;
+
 	float playerAngle;
 	float iTime = 0.0f;
 
@@ -74,12 +79,12 @@ class SandboxAdriel : public Scene
 	//Inventory system
 	Inventory* inventory;
 
-
 	int animIndex = 0;
 	float currentTime = 0.0f;
 	float frameSpeed = 0.1f;
 	bool drawNormals;
 	bool drawOverlay;
+
 public:
 	Matrix4 orient;
 	explicit SandboxAdriel(SceneManager* scenemanager);
@@ -117,6 +122,9 @@ public:
 	/// <param name="radius">width, height, depth of the cube</param>
 	void DrawCube(Vec3 pos, Vec3 dimensions) const;
 	void DrawCube(AABB a) const;
+	void DebugUI();
+
+	void TryAddItem(std::shared_ptr<Actor> other);
 };
 
 #endif // CAPSTONESCENE_DREAM_H

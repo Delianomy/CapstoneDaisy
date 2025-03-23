@@ -4,15 +4,20 @@
 class Inventory{
 private:
 	static const int inventorySize = 3;
-	PickableItem* items[inventorySize];
 
 public:
+	PickableItem* items[inventorySize];
+	
 	/// <summary>
 	/// Callback event to when the item is dropped from the inventory
 	/// </summary>
 	std::function<void(PickableItem*)> DropCallback;
 
-	Inventory() {};
+	Inventory() {
+		for (int i = 0; i < inventorySize; i++) {
+			items[i] = nullptr;
+		}
+	};
 	~Inventory() {};
 
 	/// <summary>

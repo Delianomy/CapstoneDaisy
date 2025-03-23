@@ -16,6 +16,20 @@ PhysicsComponent::PhysicsComponent(Component* parent_, Vec3 pos_, Quaternion ori
 	mass = 1.0f;
 	useGravity = false;
 }
+
+PhysicsComponent::PhysicsComponent(Component* parent_, Vec3 pos_, bool isStatic_, bool useGravity_) :
+	TransformComponent(parent_) {
+	pos = pos_;
+	vel = Vec3();
+	accel = Vec3();
+	force = Vec3();
+	orientation = Quaternion();
+	scale = Vec3(1.0, 1.0, 1.0);
+	mass = 1.0f;
+	isStatic = isStatic_;
+	useGravity = useGravity;
+};
+
 bool PhysicsComponent::OnCreate() {
 	if (isCreated) return isCreated;
 	isCreated = true;

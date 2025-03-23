@@ -23,6 +23,7 @@ public:
 	PhysicsComponent(Component* parent_, Vec3 pos_, Quaternion orientation_,
 		Vec3 vel_ = Vec3(0.0f, 0.0f, 0.0f), Vec3 accel_ = Vec3(0.0f, 0.0f, 0.0f),
 		Vec3 force_ = Vec3(0.0f, 0.0f, 0.0f), Vec3 scale_ = Vec3(1.0f, 1.0f, 1.0f));
+	PhysicsComponent(Component* parent_, Vec3 pos_, bool isStatic_ = true, bool useGravity_ = false);
 	bool OnCreate();
 	void ApplyForce(const Vec3 force_);
 	void UndoForce();

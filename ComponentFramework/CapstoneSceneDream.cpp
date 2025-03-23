@@ -378,7 +378,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 		for (auto transparentActor : transparentActors) {
 			glUseProgram(transparentActor->GetComponent<ShaderComponent>()->GetProgram());
 			glUniform1i(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("NPC_id"), transparentActor->NPCid);
-			glUniform1i(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("talking"), );
+			//glUniform1i(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("talking"), );
 			glUniform2f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("playeranimIndex"), animIndex, animIndex);
 			glUniform2f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("NPCanimIndex"), NPCanimIndex,1 );
 

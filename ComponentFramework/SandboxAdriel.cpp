@@ -64,7 +64,7 @@ bool SandboxAdriel::OnCreate() {
 	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("ChessBoard"));
 	player->AddComponent<CollisionComponent>(nullptr, 0.5f);
 	player->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	player->GetComponent<TriggerComponent>()->SetCallback(TriggerCallbackCreator::CreateTriggerCallback(this, &SandboxAdriel::AddItemToInventory));
+	player->GetComponent<TriggerComponent>()->SetCallback(this, &SandboxAdriel::PendTimeToInventory);
 	AddTransparentActor(player);
 
 	//Creating the camera
@@ -142,7 +142,6 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 		case SDL_SCANCODE_SPACE:
 			break;
 
-
 		case SDL_SCANCODE_Q:
 			cameraTC->SetTransform(cameraTC->GetPosition(), cameraTC->GetQuaternion() *
 				QMath::angleAxisRotation(2.0f, Vec3(0.0f, 1.0f, 0.0f)));
@@ -176,6 +175,14 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 			else drawOverlay = false;
 			break;
 
+
+		case SDL_SCANCODE_1:
+			if (inventoryButtonPressed) {
+				AddItemToInventory(inventory->pendingItem);
+			}
+			break;
+
+
 		default:
 			break;
 		}
@@ -202,11 +209,12 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 	}
 }
 
-void SandboxAdriel::Update(const float deltaTime) {
-	
-	
+void SandboxAdriel::Update(const float deltaTime) {	
 	DrawUI_imgui();
 	iTime += deltaTime;
+
+	//Clear the pending item on update so the player HAS to stay on the trigger for it to register
+	inventory->pendingItem = nullptr;
 
 	//change in angle 
 	if (rotatePlayerLeft) {
@@ -522,17 +530,45 @@ void SandboxAdriel::DrawMeshOverlay(const Vec4 color) const {
 void SandboxAdriel::DebugUI() {
 	float windowWidth = 1366;
 	float windowHeight = 768;
+	//ImGui::ShowDemoWindow();
 
-	//Inventory 
-	ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiCond_FirstUseEver;
+	//Inventory window
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiCond_FirstUseEver | ImGuiWindowFlags_NoCollapse;
 	ImGui::SetNextWindowPos(ImVec2(windowWidth / 2 - windowWidth * 0.3f, windowHeight / 2));
 	ImGui::SetNextWindowSize(ImVec2(200, 150));
 	ImGui::Begin("Inventory", nullptr, flags);
 
 	//Prints the item in the inventory
+	ImGui::SeparatorText("Pending Items");
+	ImGui::Text("%p", inventory->pendingItem);
+
+	ImGui::SeparatorText("Inventory Items");
 	ImGui::Text("%s", inventory->ToString().c_str());
 
 	ImGui::End();
+
+	//Prompt window
+	if (inventory->pendingItem != nullptr) {
+		//Normalizing coordinates
+		Vec2 screenPos = Vec2(1366/2, 768/2);
+		ImGui::SetNextWindowPos(ImVec2(screenPos.x - 25.0f, screenPos.y - 200.0f));
+		ImGui::SetNextWindowSize(ImVec2(50, 50));
+		ImGui::Begin(" ", nullptr, flags);
+		ImGui::Text("?????");
+		ImGui::End();
+	}
+}
+
+void SandboxAdriel::PendTimeToInventory(std::shared_ptr<Actor> other) {
+	if (std::dynamic_pointer_cast<PickableItem>(other) != nullptr) {
+
+		//Originally I wanted to add a check to see if the item is in the inventory before it's allowed to be Pend
+		//But removing it from the triggerSystem array should do the trick (hopefully)
+		//for(int i = 0; i < inventory->inventorySize; i++){}
+
+		inventory->pendingItem = nullptr;
+		inventory->pendingItem = other;
+	}
 }
 
 void SandboxAdriel::AddItemToInventory(std::shared_ptr<Actor> other) {
@@ -540,7 +576,6 @@ void SandboxAdriel::AddItemToInventory(std::shared_ptr<Actor> other) {
 	if (std::dynamic_pointer_cast<PickableItem>(other) != nullptr) {
 		//Add the item to the inventory
 		inventory->AddItem(std::dynamic_pointer_cast<PickableItem>(other));
-		std::cout << other << "Added to inventory" << "\n";
 
 		//Remove the item from the triggerSystem
 		int index = 0;
@@ -553,13 +588,13 @@ void SandboxAdriel::AddItemToInventory(std::shared_ptr<Actor> other) {
 		triggerSystem.triggeringActors.erase(triggerSystem.triggeringActors.begin() + index);
 
 		//Remove the item from the opaque actors
-		/*index = 0;
+		index = 0;
 		for (int i = 0; i < opaqueActors.size(); i++) {
 			if (opaqueActors[i] == other) {
 				index = i;
 				break;
 			}
 		}
-		opaqueActors.erase(opaqueActors.begin() + index);*/
+		opaqueActors.erase(opaqueActors.begin() + index);
 	}
 };

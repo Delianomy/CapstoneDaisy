@@ -122,7 +122,7 @@ public:
 
 	/// Inventory
 	void AddItemToInventory(std::shared_ptr<Actor> other);
-	void AddItemToInventoryPending(std::shared_ptr<Actor> other);
+	void PendTimeToInventory(std::shared_ptr<Actor> other);
 };
 
 #endif // CAPSTONESCENE_DREAM_H

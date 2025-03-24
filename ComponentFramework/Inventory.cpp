@@ -30,6 +30,13 @@ std::string Inventory::ToString() {
 	for (int i = 0; i < inventorySize; i++) {
 		if (items[i] == nullptr) { continue; }
 		result += items[i]->name;
+		result += " | ";
+
+		std::stringstream ss;
+		ss << items[i];
+		std::string itemAddress = ss.str();
+
+		result += itemAddress;
 		result += "\n";
 	}
 	return result;

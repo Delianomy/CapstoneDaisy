@@ -1,6 +1,7 @@
 #pragma once
 #include "PickableItem.h"
 #include <functional>
+#include <sstream>
 class Inventory{
 public:
 	//Temporary variable for when items are selected and being added to the inventory

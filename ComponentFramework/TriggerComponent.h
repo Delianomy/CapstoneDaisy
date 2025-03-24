@@ -79,6 +79,10 @@ public:
 	void Update(const float deltaTime_) {}
 	void Render()const {}
 	void SetCallback(TriggerCallback* c) { callback = c; }
+	template <typename T>
+	void SetCallback(T* obj, void(T::* function)(std::shared_ptr<Actor> other)){
+		SetCallback(TriggerCallbackCreator::CreateTriggerCallback(obj, function));
+	}
 	void Call(std::shared_ptr<Actor> other) const{
 		if (callback == nullptr) { return; }
 		callback->Call(other); 

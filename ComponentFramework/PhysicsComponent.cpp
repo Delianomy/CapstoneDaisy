@@ -17,14 +17,14 @@ PhysicsComponent::PhysicsComponent(Component* parent_, Vec3 pos_, Quaternion ori
 	useGravity = false;
 }
 
-PhysicsComponent::PhysicsComponent(Component* parent_, Vec3 pos_, bool isStatic_, bool useGravity_) :
+PhysicsComponent::PhysicsComponent(Component* parent_, Vec3 pos_, Vec3 scale_, bool isStatic_, bool useGravity_) :
 	TransformComponent(parent_) {
 	pos = pos_;
 	vel = Vec3();
 	accel = Vec3();
 	force = Vec3();
 	orientation = Quaternion();
-	scale = Vec3(1.0, 1.0, 1.0);
+	scale = scale_;
 	mass = 1.0f;
 	isStatic = isStatic_;
 	useGravity = useGravity;

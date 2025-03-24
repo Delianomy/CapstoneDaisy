@@ -104,10 +104,6 @@ public:
 	void DrawUI_imgui();
 
 	/// Adriel Territory
-	void PrintStatement(std::shared_ptr<Actor> a) {
-		std::cout << "I collided with ";
-		std::cout << a.get() << "\n";
-	}
 	/// <summary>
 	/// Draws a sphere actor that is in wireframe mode. Use this in the Render() only. Kind expensive, so don't use it as much
 	/// </summary>
@@ -124,7 +120,9 @@ public:
 	void DrawCube(AABB a) const;
 	void DebugUI();
 
-	void TryAddItem(std::shared_ptr<Actor> other);
+	/// Inventory
+	void AddItemToInventory(std::shared_ptr<Actor> other);
+	void AddItemToInventoryPending(std::shared_ptr<Actor> other);
 };
 
 #endif // CAPSTONESCENE_DREAM_H

@@ -1,14 +1,22 @@
 #include "Inventory.h"
 
-void Inventory::AddItem(PickableItem* item) {
+void Inventory::AddItem(Ref<PickableItem> item) {
+	//Check if the item is already in the inventory
 	for (int i = 0; i < inventorySize; i++) {
+		if (items[i] == item) return;
+	}
+
+	for (int i = 0; i < inventorySize; i++) {
+		//Check if there is free space
 		if (items[i] == nullptr) {
 			AddItem(item, i);
+			return;
 		}
+
 	}
 }
 
-void Inventory::AddItem(PickableItem* item, int index) {
+void Inventory::AddItem(Ref<PickableItem> item, int index) {
 	if (index >= inventorySize || index < 0) {
 		std::cout << "INVENTORY: Attempted to add an item with a non valid index";
 		return;
@@ -17,9 +25,13 @@ void Inventory::AddItem(PickableItem* item, int index) {
 	items[index] = item;
 }
 
-void Inventory::PrintInventory() {
-	std::cout << "Inventory items: \n";
+std::string Inventory::ToString() {
+	std::string result = "";
 	for (int i = 0; i < inventorySize; i++) {
-		std::cout << items[i]->name << "\n";
+		if (items[i] == nullptr) { continue; }
+		result += items[i]->name;
+		result += "\n";
 	}
+	return result;
 }
+

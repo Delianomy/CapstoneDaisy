@@ -1,4 +1,4 @@
-Sun Mar 23 04:23:59 2025
+Mon Mar 24 02:26:13 2025
 [INFO]: Starting the SceneManager
 [INFO]: OpenGL version: 4.6.0 - Build 31.0.101.2111
 [INFO]: Graphics card vendor Intel
@@ -80,14 +80,3 @@ Sun Mar 23 04:23:59 2025
 "viewMatrix" loc:1
 "skybox" loc:3
 
-[INFO]: Deleted Scene Dream: 
-[INFO]: Deleting Scene Dream: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting the SceneManager

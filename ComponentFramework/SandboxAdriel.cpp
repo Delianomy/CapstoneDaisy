@@ -64,7 +64,7 @@ bool SandboxAdriel::OnCreate() {
 	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("ChessBoard"));
 	player->AddComponent<CollisionComponent>(nullptr, 0.5f);
 	player->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	player->GetComponent<TriggerComponent>()->SetCallback(TriggerCallbackCreator::CreateTriggerCallback(this, &SandboxAdriel::TryAddItem));
+	player->GetComponent<TriggerComponent>()->SetCallback(TriggerCallbackCreator::CreateTriggerCallback(this, &SandboxAdriel::AddItemToInventory));
 	AddTransparentActor(player);
 
 	//Creating the camera
@@ -102,6 +102,7 @@ bool SandboxAdriel::OnCreate() {
 
 	Ref<PickableItem> newPickable = std::make_shared<PickableItem>(assetManager, "Item1", Vec3(5.0f,-1.0f,0.0f));
 	triggerSystem.AddActor(newPickable);
+	opaqueActors.push_back(newPickable);
 
 	physicsSystem.AddActor(player);
 	physicsSystem.AddActor(cube);
@@ -523,22 +524,42 @@ void SandboxAdriel::DebugUI() {
 	float windowHeight = 768;
 
 	//Inventory 
-	ImGui::SetNextWindowPos(ImVec2(windowWidth / 2 - windowWidth * 0.5f, windowHeight / 2), ImGuiCond_FirstUseEver);
-	ImGui::SetNextWindowSize(ImVec2(400, 300));
-	bool windowBool = false;
-	ImGui::Begin("Inventory", &windowBool, ImGuiWindowFlags_NoCollapse);
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiCond_FirstUseEver;
+	ImGui::SetNextWindowPos(ImVec2(windowWidth / 2 - windowWidth * 0.3f, windowHeight / 2));
+	ImGui::SetNextWindowSize(ImVec2(200, 150));
+	ImGui::Begin("Inventory", nullptr, flags);
 
-	for (int i = 0; i < 3; i++) {
-		if (inventory->items[i] == nullptr) continue;
-		ImGui::Text("itemName");
-	}
+	//Prints the item in the inventory
+	ImGui::Text("%s", inventory->ToString().c_str());
 
 	ImGui::End();
 }
 
-void SandboxAdriel::TryAddItem(std::shared_ptr<Actor> other) {
+void SandboxAdriel::AddItemToInventory(std::shared_ptr<Actor> other) {
+	//Check if it's a pickable item
 	if (std::dynamic_pointer_cast<PickableItem>(other) != nullptr) {
-		inventory->AddItem(std::dynamic_pointer_cast<PickableItem>(other).get());
-		std::cout << "I coolided with " << other << "\n";
+		//Add the item to the inventory
+		inventory->AddItem(std::dynamic_pointer_cast<PickableItem>(other));
+		std::cout << other << "Added to inventory" << "\n";
+
+		//Remove the item from the triggerSystem
+		int index = 0;
+		for (int i = 0; i < triggerSystem.triggeringActors.size(); i++) {
+			if (triggerSystem.triggeringActors[i] == other) {
+				index = i;
+				break;
+			}
+		}
+		triggerSystem.triggeringActors.erase(triggerSystem.triggeringActors.begin() + index);
+
+		//Remove the item from the opaque actors
+		/*index = 0;
+		for (int i = 0; i < opaqueActors.size(); i++) {
+			if (opaqueActors[i] == other) {
+				index = i;
+				break;
+			}
+		}
+		opaqueActors.erase(opaqueActors.begin() + index);*/
 	}
 };

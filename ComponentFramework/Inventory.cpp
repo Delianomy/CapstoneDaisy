@@ -25,6 +25,16 @@ void Inventory::AddItem(Ref<PickableItem> item, int index) {
 	items[index] = item;
 }
 
+/// <summary>
+/// Adds the pending item to the inventory at a specific situation \n
+/// Use this after you've removed the item from the arrays
+/// </summary>
+/// <param name="index"></param>
+void Inventory::AddPendingItem(int index) {
+	pendingItem = nullptr;
+	AddItem(pendingItem, index);
+}
+
 std::string Inventory::ToString() {
 	std::string result = "";
 	for (int i = 0; i < inventorySize; i++) {

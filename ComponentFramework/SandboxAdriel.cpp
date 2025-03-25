@@ -29,6 +29,7 @@ bool SandboxAdriel::OnCreate() {
 	Debug::Info("Loading assets Scene Dream: ", __FILE__, __LINE__);
 	assetManager = std::make_shared<AssetManager>();
 	inventory = new Inventory();
+	interactionManager = new InteractionManager();
 
 	//Main Shaders
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("TextureShader");
@@ -62,9 +63,9 @@ bool SandboxAdriel::OnCreate() {
 	player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
 	player->AddComponent<ShaderComponent>(shader);
 	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("ChessBoard"));
-	player->AddComponent<CollisionComponent>(nullptr, 0.5f);
-	player->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	player->GetComponent<TriggerComponent>()->SetCallback(this, &SandboxAdriel::PendTimeToInventory);
+	player->AddComponent<CollisionComponent>(player.get(), 0.5f);
+	player->AddComponent<TriggerComponent>(player.get(), 1.0f);
+	player->GetComponent<TriggerComponent>()->SetCallback(this, &SandboxAdriel::PlayerTriggerCallback);
 	AddTransparentActor(player);
 
 	//Creating the camera
@@ -104,6 +105,16 @@ bool SandboxAdriel::OnCreate() {
 	triggerSystem.AddActor(newPickable);
 	opaqueActors.push_back(newPickable);
 
+	newPickable = std::make_shared<PickableItem>(assetManager, "Item2", Vec3(-5.0f, -1.0f, 0.0f));
+	triggerSystem.AddActor(newPickable);
+	opaqueActors.push_back(newPickable);
+
+	Ref<InteractableActor> newInteractable = std::make_shared<InteractableActor>(assetManager, Vec3(-3.0f, -1.0f, 0.0f));
+	triggerSystem.AddActor(newInteractable);
+	newInteractable->Bind([this](){
+		std::cout << "Interacted with an actor";
+		});
+
 	physicsSystem.AddActor(player);
 	physicsSystem.AddActor(cube);
 	
@@ -132,6 +143,7 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 	static float flip = 1.0f;
 	Ref<TransformComponent> cameraTC;
 	Ref<TransformComponent> gameBoardTC;
+	Ref<InteractableActor> currentInteraction;
 	ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
 	/// Handle Camera movement 
 	switch (sdlEvent.type) {
@@ -148,6 +160,13 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 			break;
 		case SDL_SCANCODE_E:
 			inventoryButtonPressed = !inventoryButtonPressed;
+
+			//Add the item to the inventory pending pointer
+			currentInteraction = interactionManager->GetCurrentInteraction();
+			if (currentInteraction == nullptr) { break; }
+
+			PendTimeToInventory(currentInteraction);
+
 			break;
 
 		case SDL_SCANCODE_A:
@@ -177,11 +196,35 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 
 
 		case SDL_SCANCODE_1:
-			if (inventoryButtonPressed) {
-				AddItemToInventory(inventory->pendingItem);
+			if (!inventoryButtonPressed) {
+				AddItemToInventory(inventory->pendingItem, 0);
 			}
 			break;
 
+		case SDL_SCANCODE_2:
+			if (!inventoryButtonPressed) {
+				AddItemToInventory(inventory->pendingItem, 1);
+			}
+			break;
+
+		case SDL_SCANCODE_3:
+			if (!inventoryButtonPressed) {
+				AddItemToInventory(inventory->pendingItem, 2);
+			}
+			break;
+
+		case SDL_SCANCODE_F:
+			//Add the current interactable actor into the interactionManager
+			currentInteraction = interactionManager->GetCurrentInteraction();
+			if (currentInteraction == nullptr) { break; }
+
+			//Check if it's a pickable item
+			//Skip if that's the case
+			if (std::dynamic_pointer_cast<PickableItem>(currentInteraction) != nullptr) { break; }
+
+			//Calls the callback function
+			currentInteraction->Invoke();
+			break;
 
 		default:
 			break;
@@ -215,6 +258,7 @@ void SandboxAdriel::Update(const float deltaTime) {
 
 	//Clear the pending item on update so the player HAS to stay on the trigger for it to register
 	inventory->pendingItem = nullptr;
+	interactionManager->Reset();
 
 	//change in angle 
 	if (rotatePlayerLeft) {
@@ -538,6 +582,8 @@ void SandboxAdriel::DebugUI() {
 	ImGui::SetNextWindowSize(ImVec2(200, 150));
 	ImGui::Begin("Inventory", nullptr, flags);
 
+	ImGui::Text("Backpack open: %s", (!inventoryButtonPressed) ? "Open" : "Closed");
+
 	//Prints the item in the inventory
 	ImGui::SeparatorText("Pending Items");
 	ImGui::Text("%p", inventory->pendingItem);
@@ -560,22 +606,24 @@ void SandboxAdriel::DebugUI() {
 }
 
 void SandboxAdriel::PendTimeToInventory(std::shared_ptr<Actor> other) {
-	if (std::dynamic_pointer_cast<PickableItem>(other) != nullptr) {
+	Ref<PickableItem> item;
+	item = std::dynamic_pointer_cast<PickableItem>(other);
+	if (item != nullptr) {
 
 		//Originally I wanted to add a check to see if the item is in the inventory before it's allowed to be Pend
 		//But removing it from the triggerSystem array should do the trick (hopefully)
 		//for(int i = 0; i < inventory->inventorySize; i++){}
 
 		inventory->pendingItem = nullptr;
-		inventory->pendingItem = other;
+		inventory->pendingItem = item;
 	}
 }
 
-void SandboxAdriel::AddItemToInventory(std::shared_ptr<Actor> other) {
+void SandboxAdriel::AddItemToInventory(std::shared_ptr<Actor> other, int index) {
 	//Check if it's a pickable item
 	if (std::dynamic_pointer_cast<PickableItem>(other) != nullptr) {
 		//Add the item to the inventory
-		inventory->AddItem(std::dynamic_pointer_cast<PickableItem>(other));
+		inventory->AddItem(std::dynamic_pointer_cast<PickableItem>(other), index);
 
 		//Remove the item from the triggerSystem
 		int index = 0;
@@ -598,3 +646,18 @@ void SandboxAdriel::AddItemToInventory(std::shared_ptr<Actor> other) {
 		opaqueActors.erase(opaqueActors.begin() + index);
 	}
 };
+
+void SandboxAdriel::PlayerTriggerCallback(Ref<Actor> other) {
+	//Check if it's an interactable actor
+	Ref<InteractableActor> actor = std::dynamic_pointer_cast<InteractableActor>(other);
+	if (actor != nullptr) { 
+		interactionManager->SetCurrentInteraction(actor);
+		return; 
+	}
+
+	Ref<PickableItem> item = std::dynamic_pointer_cast<PickableItem>(other);
+	if (item != nullptr) {
+		PendTimeToInventory(other);
+	}
+
+}

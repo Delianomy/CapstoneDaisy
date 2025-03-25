@@ -13,6 +13,7 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "SceneManager.h"
 #include "Inventory.h"
+#include "InteractionManager.h"
 using namespace MATH;
 
 /// Forward declarations 
@@ -71,13 +72,16 @@ class SandboxAdriel : public Scene
 	float walkSpeed = 40.0f;
 
 	//invetory UI imput
-	bool inventoryButtonPressed = true;
+	bool inventoryButtonPressed = false;
 	bool select_item_1 = false;
 	bool select_item_2 = false;
 	bool select_item_3 = false;
 
 	//Inventory system
 	Inventory* inventory;
+
+	//Interaction manager
+	InteractionManager* interactionManager;
 
 	int animIndex = 0;
 	float currentTime = 0.0f;
@@ -121,8 +125,11 @@ public:
 	void DebugUI();
 
 	/// Inventory
-	void AddItemToInventory(std::shared_ptr<Actor> other);
+	void AddItemToInventory(std::shared_ptr<Actor> other, int index);
 	void PendTimeToInventory(std::shared_ptr<Actor> other);
+
+	/// Interactions
+	void PlayerTriggerCallback(Ref<Actor> other);
 };
 
 #endif // CAPSTONESCENE_DREAM_H

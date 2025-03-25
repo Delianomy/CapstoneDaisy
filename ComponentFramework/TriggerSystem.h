@@ -23,7 +23,7 @@ public:
 			Debug::Error("The Actor must have a Trigger - ignored ", __FILE__, __LINE__);
 			return;
 		}
-		if (actor_->GetComponent<PhysicsComponent>().get() == nullptr) {
+		if (actor_->GetComponent<TransformComponent>().get() == nullptr) {
 			Debug::Error("The Actor must have a PhysicsComponent - ignored ", __FILE__, __LINE__);
 			return;
 		}

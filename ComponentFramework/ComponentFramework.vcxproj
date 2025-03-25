@@ -164,6 +164,8 @@
     <ClCompile Include="include\imgui\imgui_draw.cpp" />
     <ClCompile Include="include\imgui\imgui_tables.cpp" />
     <ClCompile Include="include\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="InteractableActor.cpp" />
+    <ClCompile Include="InteractionManager.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="LightActor.cpp" />
     <ClCompile Include="MainMenu.cpp" />
@@ -214,6 +216,8 @@
     <ClInclude Include="include\imgui\imstb_rectpack.h" />
     <ClInclude Include="include\imgui\imstb_textedit.h" />
     <ClInclude Include="include\imgui\imstb_truetype.h" />
+    <ClInclude Include="InteractableActor.h" />
+    <ClInclude Include="InteractionManager.h" />
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="LightActor.h" />
     <ClInclude Include="MainMenu.h" />

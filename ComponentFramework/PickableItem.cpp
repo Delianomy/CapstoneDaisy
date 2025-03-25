@@ -6,18 +6,9 @@
 #include "PhysicsComponent.h"
 #include "MeshComponent.h"
 
-PickableItem::PickableItem(Ref<AssetManager> assMan, std::string name_, Vec3 pos, float triggerRadius, std::shared_ptr<MaterialComponent> material) : Actor(nullptr){
-	AddComponent<PhysicsComponent>(this, pos, Vec3(0.1f, 0.1f, 0.1f), true, false);
-	AddComponent<ShaderComponent>(assMan->GetComponent<ShaderComponent>("TextureShader"));
-	AddComponent<TriggerComponent>(this, triggerRadius);
-	AddComponent<MeshComponent>(assMan->GetComponent<MeshComponent>("Plane"));
-
-	if (material != nullptr) { AddComponent<MaterialComponent>(material); }
-	else { AddComponent<MaterialComponent>(assMan->GetComponent<MaterialComponent>("ChessBoard"));}
-
+PickableItem::PickableItem(Ref<AssetManager> assMan, std::string name_, Vec3 pos, float triggerRadius, std::shared_ptr<MaterialComponent> material) : 
+	InteractableActor(assMan, pos, triggerRadius, material) {
+	GetComponent<TransformComponent>()->SetScale(Vec3(0.1f, 0.1f, 0.1f));
 	name = name_;
-}
-
-void PickableItem::SetCallback(TriggerCallback* callback) {
-	GetComponent<TriggerComponent>()->SetCallback(callback);
+	locked = true;
 }

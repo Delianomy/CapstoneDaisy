@@ -22,14 +22,14 @@ void TriggerSystem::Update(const float deltaTime)
             //Getting the components
             //First actor
             Ref<TriggerComponent> TriggerCompA = triggeringActors[i]->GetComponent<TriggerComponent>();
-            Ref<PhysicsComponent> PhysicsCompA = triggeringActors[i]->GetComponent<PhysicsComponent>();
+            Ref<TransformComponent> PhysicsCompA = triggeringActors[i]->GetComponent<TransformComponent>();
 
             //Second actor
             Ref<TriggerComponent> TriggerCompB = triggeringActors[j]->GetComponent<TriggerComponent>();
-            Ref<PhysicsComponent> PhysicsCompB = triggeringActors[j]->GetComponent<PhysicsComponent>();
+            Ref<TransformComponent> PhysicsCompB = triggeringActors[j]->GetComponent<TransformComponent>();
 
-            Sphere S1 = Sphere(PhysicsCompA->pos, TriggerCompA->radius);
-            Sphere S2 = Sphere(PhysicsCompB->pos, TriggerCompB->radius);
+            Sphere S1 = Sphere(PhysicsCompA->GetPosition(), TriggerCompA->radius);
+            Sphere S2 = Sphere(PhysicsCompB->GetPosition(), TriggerCompB->radius);
 
             if (SphereSphereCollisionDetection(S1, S2) == true) {
                 TriggerCompA->Call(triggeringActors[j]);

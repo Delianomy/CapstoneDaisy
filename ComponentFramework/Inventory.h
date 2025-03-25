@@ -7,7 +7,7 @@ public:
 	//Temporary variable for when items are selected and being added to the inventory
 	//It's an actor because we still need to perform some operations in the scene
 	//Afterwards do we cast it into a PickableItem
-	Ref<Actor> pendingItem;
+	Ref<PickableItem> pendingItem;
 
 	//Inventory array
 	static const int inventorySize = 3;
@@ -34,10 +34,12 @@ public:
 	/// <param name="index">Index to add it to</param>
 	void AddItem(Ref<PickableItem> item, int index);
 
+	void AddPendingItem(int index);
+
 	/// <summary>
 	/// Prints the items inside of the inventory
 	/// </summary>
 	/// <returns></returns>
-	std::string ToString() ;
+	std::string ToString();
 };
 

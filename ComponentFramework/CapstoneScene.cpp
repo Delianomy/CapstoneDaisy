@@ -36,10 +36,6 @@ bool CapstoneScene::OnCreate() {
 	player = std::make_shared<Actor>(nullptr);
 	Quaternion orientation = QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f));
 	player->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, 0.0f), orientation);
-	//player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
-	//player->AddComponent<ShaderComponent>(shader);
-//	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Sprite_Sheet_JPG"));
-
 	AddActor(player);
 	
 	camera = std::make_shared<CameraActor>(player.get());
@@ -61,12 +57,6 @@ bool CapstoneScene::OnCreate() {
 
 
 
-	//doll = std::make_shared<Actor>(nullptr);
-	//doll->AddComponent<TransformComponent>(nullptr, Vec3(3.99f, 0.94f, -1.6f), QMath::angleAxisRotation(270.0f, Vec3(0.0f, 1.0f, 0.0f)));
-	//doll->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
-	//doll->AddComponent<ShaderComponent>(regularTextureShader);
-	//doll->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Doll"));
-	//AddTransparentActor(doll);
 	
 
 	room = std::make_shared<Room>(nullptr, "textures/Skyboxes/Room/1.png", "textures/Skyboxes/Room/2.png",

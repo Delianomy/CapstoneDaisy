@@ -156,6 +156,8 @@
     <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="DialogueManager.cpp" />
+    <ClCompile Include="DialogueSequence.cpp" />
     <ClCompile Include="EMath.cpp" />
     <ClCompile Include="include\imgui\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="include\imgui\backends\imgui_impl_sdl2.cpp" />
@@ -203,6 +205,8 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="coolWaterFrag.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="DialogueManager.h" />
+    <ClInclude Include="DialogueSequence.h" />
     <ClInclude Include="EMath.h" />
     <ClInclude Include="Euler.h" />
     <ClInclude Include="include\imgui\backends\imgui_impl_opengl3.h" />
@@ -214,6 +218,7 @@
     <ClInclude Include="include\imgui\imstb_rectpack.h" />
     <ClInclude Include="include\imgui\imstb_textedit.h" />
     <ClInclude Include="include\imgui\imstb_truetype.h" />
+    <ClInclude Include="Dialogue.h" />
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="LightActor.h" />
     <ClInclude Include="MainMenu.h" />

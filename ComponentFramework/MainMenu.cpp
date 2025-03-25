@@ -39,10 +39,6 @@ bool MainMenu::OnCreate() {
 	player = std::make_shared<Actor>(nullptr);
 	Quaternion orientation = QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f));
 	player->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, 0.0f), orientation);
-	//player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
-	//player->AddComponent<ShaderComponent>(shader);
-//	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Sprite_Sheet_JPG"));
-
 	AddActor(player);
 
 	camera = std::make_shared<CameraActor>(player.get());

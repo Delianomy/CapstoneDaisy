@@ -5,8 +5,8 @@
 #include "Matrix.h"
 #include "Component.h"
 #include "AssetManager.h"
-
-
+#include "Dialogue.h"
+#include "PickableItem.h"
 using namespace MATH;
 
 /// Forward declarations 
@@ -43,6 +43,10 @@ class CapstoneScene : public Scene
 	float frameSpeed = 0.1f;
 	bool drawNormals;
 	bool drawOverlay;
+
+	PickableItem bear_item;
+	Dialogue bear_dialogues;
+
 public:
 	Matrix4 orient;
 	explicit CapstoneScene();

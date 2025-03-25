@@ -1,30 +1,54 @@
 #include "Inventory.h"
 
-void Inventory::AddItem(PickableItem* item) {
+void Inventory::AddItem(Ref<PickableItem> item) {
+	//Check if the item is already in the inventory
 	for (int i = 0; i < inventorySize; i++) {
-		if (items[i] != nullptr) {
+		if (items[i] == item) return;
+	}
+
+	for (int i = 0; i < inventorySize; i++) {
+		//Check if there is free space
+		if (items[i] == nullptr) {
 			AddItem(item, i);
+			return;
 		}
+
 	}
 }
 
-void Inventory::AddItem(PickableItem* item, int index) {
+void Inventory::AddItem(Ref<PickableItem> item, int index) {
 	if (index >= inventorySize || index < 0) {
 		std::cout << "INVENTORY: Attempted to add an item with a non valid index";
 		return;
 	}
 
-	if (items[index] != nullptr) {
-		items[index] = item;
-	}
-	else {
-		DropCallback(item);
-	}
+	items[index] = item;
 }
 
-void Inventory::PrintInventory() {
-	std::cout << "Inventory items: \n";
-	for (int i = 0; i < inventorySize; i++) {
-		std::cout << items[i]->name << "\n";
-	}
+/// <summary>
+/// Adds the pending item to the inventory at a specific situation \n
+/// Use this after you've removed the item from the arrays
+/// </summary>
+/// <param name="index"></param>
+void Inventory::AddPendingItem(int index) {
+	pendingItem = nullptr;
+	AddItem(pendingItem, index);
 }
+
+std::string Inventory::ToString() {
+	std::string result = "";
+	for (int i = 0; i < inventorySize; i++) {
+		if (items[i] == nullptr) { continue; }
+		result += items[i]->name;
+		result += " | ";
+
+		std::stringstream ss;
+		ss << items[i];
+		std::string itemAddress = ss.str();
+
+		result += itemAddress;
+		result += "\n";
+	}
+	return result;
+}
+

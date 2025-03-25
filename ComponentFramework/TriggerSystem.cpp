@@ -17,25 +17,24 @@ void TriggerSystem::Update(const float deltaTime)
 {
     for (size_t i = 0; i < triggeringActors.size(); ++i) {
         for (size_t j = i + 1; j < triggeringActors.size(); ++j) {
+            if (triggeringActors[i] == triggeringActors[j]) { continue; }
 
             //Getting the components
             //First actor
             Ref<TriggerComponent> TriggerCompA = triggeringActors[i]->GetComponent<TriggerComponent>();
-            Ref<PhysicsComponent> PhysicsCompA = triggeringActors[i]->GetComponent<PhysicsComponent>();
+            Ref<TransformComponent> PhysicsCompA = triggeringActors[i]->GetComponent<TransformComponent>();
 
             //Second actor
             Ref<TriggerComponent> TriggerCompB = triggeringActors[j]->GetComponent<TriggerComponent>();
-            Ref<PhysicsComponent> PhysicsCompB = triggeringActors[j]->GetComponent<PhysicsComponent>();
+            Ref<TransformComponent> PhysicsCompB = triggeringActors[j]->GetComponent<TransformComponent>();
 
-            Sphere S1 = Sphere(PhysicsCompA->pos, TriggerCompA->radius);
-            Sphere S2 = Sphere(PhysicsCompB->pos, TriggerCompB->radius);
+            Sphere S1 = Sphere(PhysicsCompA->GetPosition(), TriggerCompA->radius);
+            Sphere S2 = Sphere(PhysicsCompB->GetPosition(), TriggerCompB->radius);
 
             if (SphereSphereCollisionDetection(S1, S2) == true) {
                 TriggerCompA->Call(triggeringActors[j]);
                 TriggerCompB->Call(triggeringActors[i]);
-                std::cout << "TRIGGERED" << std::endl;
             }
         }
-
     }
 }

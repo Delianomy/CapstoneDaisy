@@ -24,6 +24,12 @@ struct AABB {
 	Vec3 center;
 	float rx, ry, rz;
 	//make a cinstructore
+	AABB(Vec3 c = Vec3(), Vec3 r = Vec3()) {
+		center = c;
+		rx = r.x;
+		ry = r.y;
+		rz = r.z;
+	}
 };
 
 /*** Other definitions might be:

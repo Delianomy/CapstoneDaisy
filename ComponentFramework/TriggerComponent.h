@@ -68,20 +68,24 @@ class TriggerComponent : public Component
 
 protected:
 	TriggerType colliderType;
-	float radius; /// sphere collision
 
 
 public:
+	
+	float radius; /// sphere collision
 	TriggerComponent(Component* parent_, float radius_); /// Sphere 
 	bool OnCreate() { return true; }
 	void OnDestroy() {}
 	void Update(const float deltaTime_) {}
 	void Render()const {}
 	void SetCallback(TriggerCallback* c) { callback = c; }
+	template <typename T>
+	void SetCallback(T* obj, void(T::* function)(std::shared_ptr<Actor> other)){
+		SetCallback(TriggerCallbackCreator::CreateTriggerCallback(obj, function));
+	}
 	void Call(std::shared_ptr<Actor> other) const{
-		if (callback != nullptr) { 
-			callback->Call(other); 
-		}
+		if (callback == nullptr) { return; }
+		callback->Call(other); 
 	}
 }; 
 

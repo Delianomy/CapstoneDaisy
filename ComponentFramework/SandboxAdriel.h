@@ -13,6 +13,7 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "SceneManager.h"
 #include "Inventory.h"
+#include "InteractionManager.h"
 using namespace MATH;
 
 /// Forward declarations 
@@ -45,11 +46,16 @@ class SandboxAdriel : public Scene
 	Ref<Actor> sphere;
 	Ref<Actor> plane;
 
-
+	//Systems
 	PhysicsSystem physicsSystem;
 	CollisionSystem collisionSystem;
 	TriggerSystem triggerSystem;
 	SceneManager* sceneManagerRef;
+
+	//Debug Meshes
+	Ref<Actor> DebugSphere;
+	Ref<Actor> DebugCube;
+
 	float playerAngle;
 	float iTime = 0.0f;
 
@@ -66,7 +72,7 @@ class SandboxAdriel : public Scene
 	float walkSpeed = 40.0f;
 
 	//invetory UI imput
-	bool inventoryButtonPressed = true;
+	bool inventoryButtonPressed = false;
 	bool select_item_1 = false;
 	bool select_item_2 = false;
 	bool select_item_3 = false;
@@ -74,12 +80,15 @@ class SandboxAdriel : public Scene
 	//Inventory system
 	Inventory* inventory;
 
+	//Interaction manager
+	InteractionManager* interactionManager;
 
 	int animIndex = 0;
 	float currentTime = 0.0f;
 	float frameSpeed = 0.1f;
 	bool drawNormals;
 	bool drawOverlay;
+
 public:
 	Matrix4 orient;
 	explicit SandboxAdriel(SceneManager* scenemanager);
@@ -99,10 +108,6 @@ public:
 	void DrawUI_imgui();
 
 	/// Adriel Territory
-	void PrintStatement(std::shared_ptr<Actor> a) {
-		std::cout << "I collided with ";
-		std::cout << a.get() << "\n";
-	}
 	/// <summary>
 	/// Draws a sphere actor that is in wireframe mode. Use this in the Render() only. Kind expensive, so don't use it as much
 	/// </summary>
@@ -117,6 +122,14 @@ public:
 	/// <param name="radius">width, height, depth of the cube</param>
 	void DrawCube(Vec3 pos, Vec3 dimensions) const;
 	void DrawCube(AABB a) const;
+	void DebugUI();
+
+	/// Inventory
+	void AddItemToInventory(std::shared_ptr<Actor> other, int index);
+	void PendTimeToInventory(std::shared_ptr<Actor> other);
+
+	/// Interactions
+	void PlayerTriggerCallback(Ref<Actor> other);
 };
 
 #endif // CAPSTONESCENE_DREAM_H

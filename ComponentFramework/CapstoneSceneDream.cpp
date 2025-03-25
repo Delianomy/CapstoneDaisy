@@ -140,7 +140,7 @@ bool CapstoneSceneDream::OnCreate() {
 	printf("Available GPU Memory: %d KB\n", totalMemoryKB);
 
 	camera = std::make_shared<CameraActor>(player.get());
-	camera->isInMainMenu = false;
+	camera->sceneIndex = 2;
 	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -1.8f), Quaternion());
 	camera->OnCreate();
 	camera->GetProjectionMatrix().print("ProjectionMatrix");

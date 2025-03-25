@@ -61,7 +61,7 @@ bool SceneManager::Initialize(std::string name_, int width_, int height_) {
 	ImGui_ImplOpenGL3_Init();
 
 	/********************************   Default first scene   ***********************/
-	BuildNewScene(SCENE_NUMBER::SCENE_SANDBOX_ADRIEL);
+	BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE);
 	//bedroomScene = new CapstoneScene();
 	//bedroomScene->OnCreate();
 

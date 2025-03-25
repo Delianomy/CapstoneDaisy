@@ -43,6 +43,7 @@ bool CapstoneScene::OnCreate() {
 	AddActor(player);
 	
 	camera = std::make_shared<CameraActor>(player.get());
+	camera->sceneIndex = 3;
 	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -3.8f), Quaternion());
 	camera->OnCreate();
 	camera->GetProjectionMatrix().print("ProjectionMatrix");
@@ -68,9 +69,9 @@ bool CapstoneScene::OnCreate() {
 	//AddTransparentActor(doll);
 	
 
-	room = std::make_shared<Room>(nullptr, "textures/Wall5.png", "textures/Wall1.png",
-		"textures/Ceiling.png", "textures/Floor.png", "textures/Wall4_new.png",
-		"textures/Wall3_new.png", 4.0f);
+	room = std::make_shared<Room>(nullptr, "textures/Skyboxes/Room/1.png", "textures/Skyboxes/Room/2.png",
+		"textures/Skyboxes/Room/Ceiling.png", "textures/Skyboxes/Room/floor.png", "textures/Skyboxes/Room/3.png",
+		"textures/Skyboxes/Room/4.png", 4.0f);
 
 	room->OnCreate();
 
@@ -385,13 +386,13 @@ void CapstoneScene::Render() const {
 	}*/
 
 
-	for (auto transparentActor : transparentActors) {
-		glUseProgram(transparentActor->GetComponent<ShaderComponent>()->GetProgram());
-		glUniform1f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
-		glUniformMatrix4fv(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, transparentActor->GetModelMatrix());
-		glBindTexture(GL_TEXTURE_2D, transparentActor->GetComponent<MaterialComponent>()->getTextureID());
-		transparentActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
-	}
+	//for (auto transparentActor : transparentActors) {
+	//	glUseProgram(transparentActor->GetComponent<ShaderComponent>()->GetProgram());
+	//	glUniform1f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
+	//	glUniformMatrix4fv(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, transparentActor->GetModelMatrix());
+	//	glBindTexture(GL_TEXTURE_2D, transparentActor->GetComponent<MaterialComponent>()->getTextureID());
+	//	transparentActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+	//}
 
 
 

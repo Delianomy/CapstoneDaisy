@@ -23,12 +23,22 @@ bool CameraActor::OnCreate() {
 
 	glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, uboMatriciesID);
 
-	if (isInMainMenu == true) {
-		UpdateProjectionMatrix(90.0f, (16.0f / 9.0f), 0.5f, 100.0f); /// default projection
+	switch (sceneIndex) {
+	case 1:
+		//Main menu
+		UpdateProjectionMatrix(90.0f, (16.0f / 9.0f), 0.5f, 100.0f); /// mainMenu projection
+		break;
+	case 2:
+		UpdateProjectionMatrix(72.0f, (16.0f / 9.0f), 0.5f, 100.0f); /// overworld
+		break;
+	case 3:
+		UpdateProjectionMatrix(55.0f, (16.0f / 9.0f), 0.5f, 100.0f); /// room
+		break;
+	default:
+		UpdateProjectionMatrix(45.0f, (16.0f / 9.0f), 0.5f, 100.0f); /// default projection
+		break;
 	}
-	else {
-		UpdateProjectionMatrix(72.0f, (16.0f / 9.0f), 0.5f, 100.0f); /// default projection
-	}
+	
 
 	UpdateViewMatrix();
 	return isCreated;

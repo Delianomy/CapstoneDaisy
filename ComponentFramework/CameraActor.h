@@ -21,7 +21,7 @@ private:
 	const GLuint bindingPoint; /// This must be unique to the camera = 0, lights = 1
 
 public:
-	bool isInMainMenu = false;
+	unsigned int sceneIndex;
 	Matrix4 orient;
 	CameraActor(Component* parent_);
 	virtual ~CameraActor();

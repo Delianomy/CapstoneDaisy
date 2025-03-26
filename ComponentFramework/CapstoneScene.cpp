@@ -68,9 +68,9 @@ bool CapstoneScene::OnCreate() {
 	//AddTransparentActor(doll);
 	
 
-	room = std::make_shared<Room>(nullptr, "textures/Wall5.png", "textures/Wall1.png",
-		"textures/Ceiling.png", "textures/Floor.png", "textures/Wall4_new.png",
-		"textures/Wall3_new.png", 4.0f);
+	room = std::make_shared<Room>(nullptr, "textures/SkyBoxes/Room/1.png", "textures/SkyBoxes/Room/2.png",
+		"textures/SkyBoxes/Room/celling.png", "textures/SkyBoxes/Room/floor.png", "textures/SkyBoxes/Room/3.png",
+		"textures/SkyBoxes/Room/4.png", 4.0f);
 
 	room->OnCreate();
 
@@ -343,16 +343,6 @@ void CapstoneScene::Render() const {
 	glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
 	glBindBuffer(GL_UNIFORM_BUFFER, light->GetLightID());
 	
-	//Ref<ShaderComponent> skyboxShader = skybox->GetComponent<ShaderComponent>();
-
-	//glUseProgram(skyboxShader->GetProgram());
-	//glUniformMatrix4fv(skyboxShader->GetUniformID("modelMatrix"), 1, GL_FALSE, skybox->GetModelMatrix());
-	//glUniformMatrix4fv(skyboxShader->GetUniformID("viewMatrix"), 1, GL_FALSE, MMath::inverse(camera->orient));
-
-	////camera->orient.print("Camera orientation");
-	//glUniformMatrix4fv(skyboxShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
-	//std::dynamic_pointer_cast<SkyBox>(skybox)->Render();
-	//glUseProgram(0);
 
 	Ref<ShaderComponent> roomShader = room->GetComponent<ShaderComponent>();
 	glUseProgram(roomShader->GetProgram());
@@ -370,28 +360,16 @@ void CapstoneScene::Render() const {
 	glDepthFunc(GL_LESS);  // Only render if closer than existing geometry
 
 
-//	glUseProgram(doll->GetComponent<ShaderComponent>()->GetProgram());
-//	glUniformMatrix4fv(doll->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, doll->GetModelMatrix());
-//	glUniformMatrix4fv(doll->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
-////	glUniformMatrix4fv(roomShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
-//	glBindTexture(GL_TEXTURE_2D, doll->GetComponent<MaterialComponent>()->getTextureID());
-//	doll->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
-	/*for (auto opaqueActor : opaqueActors) {
-		glUseProgram(opaqueActor->GetComponent<ShaderComponent>()->GetProgram());
-		glUniform1f(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
-		glUniformMatrix4fv(opaqueActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, opaqueActor->GetModelMatrix());
-		glBindTexture(GL_TEXTURE_2D, opaqueActor->GetComponent<MaterialComponent>()->getTextureID());
-		opaqueActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
-	}*/
 
-
-	for (auto transparentActor : transparentActors) {
+	/*for (auto transparentActor : transparentActors) {
 		glUseProgram(transparentActor->GetComponent<ShaderComponent>()->GetProgram());
 		glUniform1f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
 		glUniformMatrix4fv(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, transparentActor->GetModelMatrix());
-		glBindTexture(GL_TEXTURE_2D, transparentActor->GetComponent<MaterialComponent>()->getTextureID());
-		transparentActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
-	}
+		if (transparentActor->GetComponent<MaterialComponent>()->getTextureID()) {
+			glBindTexture(GL_TEXTURE_2D, transparentActor->GetComponent<MaterialComponent>()->getTextureID());
+			transparentActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+		}
+	}*/
 
 
 

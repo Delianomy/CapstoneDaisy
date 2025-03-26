@@ -37,14 +37,44 @@ void main() {
      texCoord.y *= -1.0;
      texCoord.x = texCoord.x*0.077 + (playeranimIndex.x*0.077);
     }
-    if(NPC_id == 1){ //mermaid
-        texCoord.y *= -1.0;
-          texCoord.y = texCoord.y * 0.5;
-            texCoord.x = texCoord.x*0.05882 + (NPCanimIndex.x * 0.05882);
+    else if(NPC_id == 1){ //mermaid
+          texCoord.y = -texCoord.y;
+          //top row
+          texCoord.y = texCoord.y * 0.5 + 0.5;
+          texCoord.x = texCoord.x*0.05882 + (NPCanimIndex.x * 0.05882);
         if(talking){
-             texCoord.y *= -1.0;
-             texCoord.y = texCoord.y * 0.5 + (NPCanimIndex.y * 0.5);
-             texCoord.x = texCoord.x*0.058 + (NPCanimIndex.x *0.058);
+        //bottom row
+             texCoord.y = texCoord.y;
+        }
+    }
+    else if(NPC_id == 2){ //owl
+          texCoord.y = -texCoord.y;
+          //top row
+          texCoord.y = texCoord.y * 0.5 + 0.5;
+          texCoord.x = texCoord.x*0.11111 + (NPCanimIndex.x * 0.11111);
+        if(talking){
+        //bottom row
+             texCoord.y = texCoord.y;
+        }
+    }
+    else if(NPC_id == 3){ //mouse
+          texCoord.y = -texCoord.y;
+          //top row
+          texCoord.y = texCoord.y * 0.5 + 0.5;
+          texCoord.x = texCoord.x*0.125 + (NPCanimIndex.x * 0.125);
+        if(talking){
+        //bottom row
+             texCoord.y = texCoord.y;
+        }
+    }
+       else if(NPC_id == 4){ //Fairy
+          texCoord.y = -texCoord.y;
+          //top row
+          texCoord.y = texCoord.y * 0.5 + 0.5;
+          texCoord.x = texCoord.x*0.142857 + (NPCanimIndex.x * 0.142857);
+        if(talking){
+        //bottom row
+             texCoord.y = texCoord.y;
         }
     }
   

@@ -55,18 +55,11 @@ bool CapstoneScene::OnCreate() {
 	doll->GetComponent<TransformComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
 	doll->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
 	doll->AddComponent<ShaderComponent>(shader);
-	doll->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Sprite_Sheet_HEAVY"));
+	doll->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Daisy_spriteSheet"));
 	AddTransparentActor(doll);
 
+	InitializeDialogue();
 
-
-	//doll = std::make_shared<Actor>(nullptr);
-	//doll->AddComponent<TransformComponent>(nullptr, Vec3(3.99f, 0.94f, -1.6f), QMath::angleAxisRotation(270.0f, Vec3(0.0f, 1.0f, 0.0f)));
-	//doll->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
-	//doll->AddComponent<ShaderComponent>(regularTextureShader);
-	//doll->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Doll"));
-	//AddTransparentActor(doll);
-	
 
 	room = std::make_shared<Room>(nullptr, "textures/SkyBoxes/Room/1.png", "textures/SkyBoxes/Room/2.png",
 		"textures/SkyBoxes/Room/celling.png", "textures/SkyBoxes/Room/floor.png", "textures/SkyBoxes/Room/3.png",
@@ -228,11 +221,17 @@ void CapstoneScene::HandleEvents(const SDL_Event& sdlEvent) {
 		break;
 	}
 	}
+	ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
 }
 
 void CapstoneScene::Update(const float deltaTime) {
 
-	
+
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL2_NewFrame();
+	ImGui::NewFrame();
+
+	dialogueSystem.Render();
 	
 	if (goRight) {
 		currentTime += deltaTime;
@@ -281,10 +280,13 @@ void CapstoneScene::Update(const float deltaTime) {
 	}
 	camera->UpdateViewMatrix();
 	player->GetComponent<TransformComponent>()->Update(deltaTime);
+
+	
 }
 
 
 int CapstoneScene::Pick(int x, int y) {
+	int index = 0;
 	glDisable(GL_DEPTH_TEST);
 	glDepthFunc(GL_ALWAYS);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // White background with alpha=1
@@ -328,11 +330,16 @@ int CapstoneScene::Pick(int x, int y) {
 
 	// Check if background was clicked (white)
 	if (colorIndex == 0xFFFFFF) {
-		return -1;
+		index = -1;
 	}
 	else {
-		return colorIndex - 1; // Subtract 1 to get back to 0-based index
+		index= colorIndex - 1; // Subtract 1 to get back to 0-based index
 	}
+
+	dialogueSystem.OpenDialogue(index);
+
+	return index;
+	///HERE AFTER WE PICKED THEOBJECT START THE DIALOGUE
 }
 
 void CapstoneScene::Render() const {
@@ -353,7 +360,7 @@ void CapstoneScene::Render() const {
 	glUseProgram(0);
 
 
-
+	
 
 	// Then render player with proper depth testing
 	glEnable(GL_DEPTH_TEST);
@@ -361,7 +368,7 @@ void CapstoneScene::Render() const {
 
 
 
-	/*for (auto transparentActor : transparentActors) {
+	for (auto transparentActor : transparentActors) {
 		glUseProgram(transparentActor->GetComponent<ShaderComponent>()->GetProgram());
 		glUniform1f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("index"), animIndex);
 		glUniformMatrix4fv(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, transparentActor->GetModelMatrix());
@@ -369,20 +376,12 @@ void CapstoneScene::Render() const {
 			glBindTexture(GL_TEXTURE_2D, transparentActor->GetComponent<MaterialComponent>()->getTextureID());
 			transparentActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
 		}
-	}*/
-
-
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glUseProgram(0);
-
-	if (drawOverlay == true) {
-		DrawMeshOverlay(Vec4(1.0f, 1.0f, 1.0f, 0.5f));
 	}
 
-	if (drawNormals == true) {
-		DrawNormals(Vec4(1.0f, 1.0f, 0.0f, 0.05f));
-	}
+
+	ImGui::Render();
+
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 
@@ -419,3 +418,8 @@ void CapstoneScene::DrawMeshOverlay(const Vec4 color) const {
 }
 
 
+void CapstoneScene::InitializeDialogue() {
+	Dialogue teddy_bear = Dialogue("Teddy", "HA! Got em!");
+	dialogueSystem.AddDialogueToSequence(teddy_bear);
+
+}

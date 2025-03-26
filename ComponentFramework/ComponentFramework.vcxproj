@@ -156,6 +156,7 @@
     <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="DialogueSystem.cpp" />
     <ClCompile Include="EMath.cpp" />
     <ClCompile Include="include\imgui\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="include\imgui\backends\imgui_impl_sdl2.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="coolWaterFrag.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="DialogueSystem.h" />
     <ClInclude Include="EMath.h" />
     <ClInclude Include="Euler.h" />
     <ClInclude Include="include\imgui\backends\imgui_impl_opengl3.h" />

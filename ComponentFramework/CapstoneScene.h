@@ -6,6 +6,11 @@
 #include "Component.h"
 #include "AssetManager.h"
 
+#include "DialogueSystem.h"
+
+#include "imgui.h"
+#include "backends/imgui_impl_sdl2.h"
+#include "backends/imgui_impl_opengl3.h"
 
 using namespace MATH;
 
@@ -16,10 +21,13 @@ class LightActor;
 class Actor;
 class SkyBox;
 class Room;
+class DialogueSystem;
 
 #include "Scene.h"
 class CapstoneScene : public Scene 
 {
+	DialogueSystem dialogueSystem;
+
 	Ref<AssetManager> assetManager;
 	Ref<CameraActor> camera;
 	Ref<LightActor> light;
@@ -60,7 +68,7 @@ public:
 	void DrawNormals(const Vec4 color) const;
 
 	void DrawMeshOverlay(const Vec4 color) const;
-
+	void InitializeDialogue();
 };
 
 #endif // CAPSTONESCENE_H

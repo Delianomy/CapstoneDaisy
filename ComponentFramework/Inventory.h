@@ -34,7 +34,24 @@ public:
 	/// <param name="index">Index to add it to</param>
 	void AddItem(Ref<PickableItem> item, int index);
 
+	/// <summary>
+	/// A pending item is an item that is about to be added to the inventory but not yet.
+	/// That item is temporarily stored in the 'pendingItem' variable
+	/// </summary>
+	/// <param name="index">Spot in the inventory you want to add it to</param>
 	void AddPendingItem(int index);
+
+	/// <summary>
+	/// Removes an item from the inventory. Just sets the pointer to nullptr.
+	/// Might cause a memory leak it you're not careful
+	/// </summary>
+	/// <param name="item">The item to remove</param>
+	void RemoveItem(Ref<PickableItem> item);
+
+	void RemoveItem(int index) { 
+		if (index < 0 || index >= inventorySize) { return; }
+		items[index] = nullptr; 
+	}
 
 	/// <summary>
 	/// Prints the items inside of the inventory

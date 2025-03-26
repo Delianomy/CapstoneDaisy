@@ -169,11 +169,9 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 		case SDL_SCANCODE_E:
 			inventoryButtonPressed = !inventoryButtonPressed;
 
-			//Add the item to the inventory pending pointer
-			currentInteraction = interactionManager->GetCurrentInteraction();
-			if (currentInteraction == nullptr) { break; }
-
-			PendTimeToInventory(currentInteraction);
+			//Pend the item to the inventory
+			//The function already checks if it's nullptr so don't worry about it
+			PendTimeToInventory(interactionManager->GetCurrentInteraction());
 
 			break;
 
@@ -205,18 +203,36 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 
 		case SDL_SCANCODE_1:
 			if (!inventoryButtonPressed) {
+				std::shared_ptr<ItemInteractable> itemInteraction = std::dynamic_pointer_cast<ItemInteractable>(interactionManager->GetCurrentInteraction());
+				if(itemInteraction != nullptr){
+					itemInteraction->TryItem(inventory->items[0]);
+					break;
+				}
+
 				AddItemToInventory(inventory->pendingItem, 0);
 			}
 			break;
 
 		case SDL_SCANCODE_2:
 			if (!inventoryButtonPressed) {
+				std::shared_ptr<ItemInteractable> itemInteraction = std::dynamic_pointer_cast<ItemInteractable>(interactionManager->GetCurrentInteraction());
+				if (itemInteraction != nullptr) {
+					itemInteraction->TryItem(inventory->items[1]);
+					break;
+				}
+
 				AddItemToInventory(inventory->pendingItem, 1);
 			}
 			break;
 
 		case SDL_SCANCODE_3:
 			if (!inventoryButtonPressed) {
+				std::shared_ptr<ItemInteractable> itemInteraction = std::dynamic_pointer_cast<ItemInteractable>(interactionManager->GetCurrentInteraction());
+				if (itemInteraction != nullptr) {
+					itemInteraction->TryItem(inventory->items[2]);
+					break;
+				}
+
 				AddItemToInventory(inventory->pendingItem, 2);
 			}
 			break;
@@ -608,8 +624,9 @@ void SandboxAdriel::DebugUI() {
 	//}
 
 	//Prints the item in the inventory
-	ImGui::SeparatorText("Pending Items");
-	ImGui::Text("%p", inventory->pendingItem);
+	ImGui::SeparatorText("Interactions");
+	ImGui::Text("Curr Interact: %p", interactionManager->GetCurrentInteraction());
+	ImGui::Text("Pending item: %p", inventory->pendingItem);
 
 	ImGui::SeparatorText("Inventory Items");
 	ImGui::Text("%s", inventory->ToString().c_str());

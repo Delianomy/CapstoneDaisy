@@ -444,5 +444,11 @@
     <None Include="shaders\skyBoxVert.glsl">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="simpleTextureVert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="simpleTextureFrag.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

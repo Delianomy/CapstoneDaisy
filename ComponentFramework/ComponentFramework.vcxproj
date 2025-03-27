@@ -282,6 +282,8 @@
     <None Include="shaders\wireFrameFrag.glsl" />
     <None Include="shaders\wireFrameGeom.glsl" />
     <None Include="shaders\wireFrameVert.glsl" />
+    <None Include="simpleTextureFrag.glsl" />
+    <None Include="simpleTextureVert.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

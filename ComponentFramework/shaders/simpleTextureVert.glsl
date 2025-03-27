@@ -25,7 +25,10 @@ layout(location = 1) out vec3 lightDir;
 layout(location = 2) out vec3 eyeDir; 
 layout(location = 3) out vec2 texCoord; 
 
-uniform float index;
+uniform vec2 playeranimIndex;
+uniform vec2 NPCanimIndex;
+uniform int NPC_id;
+uniform bool talking;
 
 void main() {
     texCoord = uvCoord;

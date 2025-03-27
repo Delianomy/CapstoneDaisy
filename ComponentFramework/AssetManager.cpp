@@ -33,7 +33,10 @@ AssetManager::AssetManager() {
 	AddComponent<ShaderComponent>("RegularTextureShader", nullptr, "shaders/textureVertRegular.glsl", "shaders/textureFragRegular.glsl");
 	AddComponent<ShaderComponent>("SimpleWavesShader", nullptr, "shaders/waveVert.glsl", "shaders/waveFrag.glsl");
 	AddComponent<ShaderComponent>("CoolWaveShader", nullptr, "shaders/prettyWaterVert.glsl", "shaders/prettyWaterFrag.glsl");
-	AddComponent<ShaderComponent>("ColorPicker", nullptr,  "shaders/colorPickingVert.glsl", "shaders/colorPickingFrag.glsl");
+	
+
+	AddComponent<ShaderComponent>("SimpleTextureShader", nullptr, "shaders/simpleTextureVert.glsl", "shaders/simpleTextureFrag.glsl");
+	AddComponent<ShaderComponent>("ColorPicker", nullptr, "shaders/colorPickingVert.glsl", "shaders/colorPickingFrag.glsl");
 
 
 	//SPRITE SHEETS
@@ -68,8 +71,15 @@ AssetManager::AssetManager() {
 
 	//Dialogue pfps
 	//AddComponent<MaterialComponent>("Game Title", nullptr, "textures/UI_elements/Game Title.png");
-	//AddComponent<MaterialComponent>("Game Title", nullptr, "textures/UI_elements/Game Title.png");
+	AddComponent<MaterialComponent>("Player_question", nullptr, "textures/UI_elements/pfps/player_2.png");
 	AddComponent<MaterialComponent>("Player_smile", nullptr, "textures/UI_elements/pfps/player_4.png");
+
+
+	//Pickable objects ROOM
+	AddComponent<MaterialComponent>("Books", nullptr, "textures/Items/books.png");
+	AddComponent<MaterialComponent>("Bear", nullptr, "textures/Items/item_bear.png");
+	AddComponent<MaterialComponent>("MoonTrinket", nullptr, "textures/Items/moon_trinket.png");
+
 
 	//AddComponent<MaterialComponent>("Doll", nullptr, "textures/doll.png");
 	OnCreate();

@@ -31,15 +31,13 @@ bool CapstoneScene::OnCreate() {
 	assetManager = std::make_shared<AssetManager>();
 
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("TextureShader");
-	Ref<ShaderComponent> regularTextureShader = assetManager->GetComponent<ShaderComponent>("RefularTexture");
+	Ref<ShaderComponent> simpleTextureShader = assetManager->GetComponent<ShaderComponent>("SimpleTextureShader");
+
+	
 
 	player = std::make_shared<Actor>(nullptr);
 	Quaternion orientation = QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f));
 	player->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, 0.0f), orientation);
-	//player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
-	//player->AddComponent<ShaderComponent>(shader);
-//	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Sprite_Sheet_JPG"));
-
 	AddActor(player);
 	
 	camera = std::make_shared<CameraActor>(player.get());
@@ -48,15 +46,23 @@ bool CapstoneScene::OnCreate() {
 	camera->GetProjectionMatrix().print("ProjectionMatrix");
 	camera->GetViewMatrix().print("ViewMatrix");
 
-	
 	Quaternion dollRot = QMath::angleAxisRotation(90.0f, Vec3(0.0f, 1.0f, 0.0f));
 	doll = std::make_shared<Actor>(nullptr);
 	doll->AddComponent<TransformComponent>(nullptr, Vec3(3.99f, 0.94f, -1.6f), dollRot);
 	doll->GetComponent<TransformComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
 	doll->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
-	doll->AddComponent<ShaderComponent>(shader);
-	doll->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Daisy_spriteSheet"));
+	doll->AddComponent<ShaderComponent>(simpleTextureShader);
+	doll->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Bear"));
 	AddTransparentActor(doll);
+
+
+	books = std::make_shared<Actor>(nullptr);
+	books->AddComponent<TransformComponent>(nullptr, Vec3(5.99f, 0.94f, -1.6f), QMath::angleAxisRotation(90.0f, Vec3(0.0f, 1.0f, 0.0f)));
+	books->GetComponent<TransformComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
+	books->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
+	books->AddComponent<ShaderComponent>(simpleTextureShader);
+	books->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Books"));
+	AddTransparentActor(books);
 
 	InitializeDialogue();
 
@@ -289,6 +295,7 @@ int CapstoneScene::Pick(int x, int y) {
 	int index = 0;
 	glDisable(GL_DEPTH_TEST);
 	glDepthFunc(GL_ALWAYS);
+	glDisable(GL_BLEND);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // White background with alpha=1
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -329,6 +336,8 @@ int CapstoneScene::Pick(int x, int y) {
 		pixel[0], pixel[1], pixel[2], colorIndex);
 
 	// Check if background was clicked (white)
+
+	
 	if (colorIndex == 0xFFFFFF) {
 		index = -1;
 	}
@@ -337,6 +346,7 @@ int CapstoneScene::Pick(int x, int y) {
 	}
 
 	dialogueSystem.OpenDialogue(index);
+	glEnable(GL_BLEND);
 
 	return index;
 	///HERE AFTER WE PICKED THEOBJECT START THE DIALOGUE
@@ -360,12 +370,12 @@ void CapstoneScene::Render() const {
 	glUseProgram(0);
 
 
-	
 
 	// Then render player with proper depth testing
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);  // Only render if closer than existing geometry
-
+	/*glEnable(GL_DEPTH_TEST);*/
+	//glDepthFunc(GL_LESS);  // Only render if closer than existing geometry
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
 	for (auto transparentActor : transparentActors) {
@@ -423,5 +433,9 @@ void CapstoneScene::InitializeDialogue() {
 
 	Dialogue teddy_bear = Dialogue("Daisy", "HA! Got em!hdasdasjsdashdjashdhasjdashdhasjdasjhdasjdhasjdashdjshadahashjdahd", textureID);
 	dialogueSystem.AddDialogueToSequence(teddy_bear);
+
+	textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
+	Dialogue books = Dialogue("Daisy", "zamn", textureID);
+	dialogueSystem.AddDialogueToSequence(books);
 
 }

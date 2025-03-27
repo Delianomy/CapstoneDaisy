@@ -1,4 +1,4 @@
-Wed Mar 26 21:30:13 2025
+Thu Mar 27 14:08:52 2025
 [INFO]: Starting the SceneManager
 [INFO]: OpenGL version: 4.6.0 NVIDIA 546.80
 [INFO]: Graphics card vendor NVIDIA Corporation
@@ -6,6 +6,12 @@ Wed Mar 26 21:30:13 2025
 [INFO]: GLSL Version 4.60 NVIDIA
 [INFO]: Created Scene Bedroom: 
 [INFO]: Loading assets Scene Dream: 
+[INFO]: Uniforms:
+"colorID" loc:4
+"modelMatrix" loc:1
+"projectionMatrix" loc:3
+"viewMatrix" loc:2
+
 [INFO]: Uniforms:
 "modelMatrix" loc:0
 "projectionMatrix" loc:1
@@ -66,12 +72,13 @@ Wed Mar 26 21:30:13 2025
 "view" loc:-1
 
 [INFO]: Uniforms:
-"colorID" loc:4
-"modelMatrix" loc:1
-"projectionMatrix" loc:3
-"viewMatrix" loc:2
+"colour" loc:-1
+"modelMatrix" loc:2
+"myTexture" loc:0
+"position" loc:-1
+"projection" loc:-1
+"view" loc:-1
 
-[ERROR]: Can't fint requested component in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 31
 [INFO]: Creating values for CameraActor: 
 [INFO]: Uniforms:
 "modelMatrix" loc:0
@@ -81,6 +88,7 @@ Wed Mar 26 21:30:13 2025
 
 [INFO]: Deleted Scene Bedroom: 
 [INFO]: Deleting assets Scene Bedroom: 
+[INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 

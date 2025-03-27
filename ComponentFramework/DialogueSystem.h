@@ -80,48 +80,50 @@ public:
         ImGui::PopFont();
 
 
-        // Display NPC name
-        if (!dialogues.empty()) {
-            
+        //// Display NPC name
+        //if (!dialogues.empty()) {
+        //    
 
-            ImGui::Columns(2, nullptr, false);  
-            ImGui::SetColumnWidth(1, 180); // Set fixed width for the profile picture
-            if (currentDialogue.textureID) {
-                ImGui::Image(
-                    (intptr_t)dialogues[currentDialogueIndex].textureID,
-                    ImVec2(200, 200));
-            
+        //    ImGui::Columns(2, nullptr, false);  
+        //    ImGui::SetColumnWidth(1, 180); // Set fixed width for the profile picture
+        //    if (currentDialogue.textureID) {
+        //        ImGui::Image(
+        //            (intptr_t)dialogues[currentDialogueIndex].textureID,
+        //            ImVec2(200, 200));
+        //    
+        //    }
+
+        //    ImGui::SetCursorPosX(150);
+        //    ImGui::SetCursorPosY(10); // Adjust vertical position
+        //    ImGui::TextColored(ImVec4(1, 1, 0, 1), "%s", currentDialogue.NPCname); // Yellow name
+
+
+        //    ImGui::NextColumn();
+        //    ImGui::Separator(); // Add a line separator
+        //    ImGui::TextWrapped(currentDialogue.dialogueText);
+
+
+        //    ImGui::Columns(1); // Reset columns
+
+
+        ImGui::SetCursorPosX(dialogueWidth - 80); // Position button to the right
+        if (ImGui::Button("Next")) {
+            if (currentDialogueIndex < dialogues.size() - 1) {
+                currentDialogueIndex++;
             }
-
-            ImGui::SetCursorPosX(150);
-            ImGui::SetCursorPosY(10); // Adjust vertical position
-            ImGui::TextColored(ImVec4(1, 1, 0, 1), "%s", currentDialogue.NPCname); // Yellow name
-
-
-            ImGui::NextColumn();
-            ImGui::Separator(); // Add a line separator
-            ImGui::TextWrapped(currentDialogue.dialogueText);
-
-
-            ImGui::Columns(1); // Reset columns
-
-
-            ImGui::SetCursorPosX(dialogueWidth - 80); // Position button to the right
-            if (ImGui::Button("Next")) {
-                if (currentDialogueIndex < dialogues.size() - 1) {
-                    currentDialogueIndex++;
-                }
-                else {
-                    isDialogueOpen = false;
-                }
+            else {
+                 isDialogueOpen = false;
             }
-
-   
-            ImGui::End();
-            ImGui::PopStyleVar();
-            ImGui::PopStyleColor();
         }
 
+   
+        //    ImGui::End();
+        //    ImGui::PopStyleVar();
+        //    ImGui::PopStyleColor();
+        //}
+        ImGui::End();
+            ImGui::PopStyleVar();
+            ImGui::PopStyleColor();
     }
 
 

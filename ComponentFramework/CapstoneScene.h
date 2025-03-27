@@ -33,6 +33,7 @@ class CapstoneScene : public Scene
 	Ref<LightActor> light;
 	Ref<Actor> player;
 	Ref<Actor> doll;
+	Ref<Actor> books;
 	Ref<Actor> room;
 	//Ref<Actor> doll;
 	float playerAngle;

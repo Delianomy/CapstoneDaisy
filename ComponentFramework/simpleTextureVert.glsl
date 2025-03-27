@@ -25,7 +25,6 @@ layout(location = 1) out vec3 lightDir;
 layout(location = 2) out vec3 eyeDir; 
 layout(location = 3) out vec2 texCoord; 
 
-uniform float index;
 
 void main() {
     texCoord = uvCoord;

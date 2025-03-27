@@ -65,6 +65,12 @@ AssetManager::AssetManager() {
 
 	AddComponent<MaterialComponent>("Game Title", nullptr, "textures/UI_elements/Game Title.png");
 
+
+	//Dialogue pfps
+	//AddComponent<MaterialComponent>("Game Title", nullptr, "textures/UI_elements/Game Title.png");
+	//AddComponent<MaterialComponent>("Game Title", nullptr, "textures/UI_elements/Game Title.png");
+	AddComponent<MaterialComponent>("Player_smile", nullptr, "textures/UI_elements/pfps/player_4.png");
+
 	//AddComponent<MaterialComponent>("Doll", nullptr, "textures/doll.png");
 	OnCreate();
 	ListAllComponents();

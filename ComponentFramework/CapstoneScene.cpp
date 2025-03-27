@@ -419,7 +419,9 @@ void CapstoneScene::DrawMeshOverlay(const Vec4 color) const {
 
 
 void CapstoneScene::InitializeDialogue() {
-	Dialogue teddy_bear = Dialogue("Teddy", "HA! Got em!");
+	unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
+
+	Dialogue teddy_bear = Dialogue("Daisy", "HA! Got em!hdasdasjsdashdjashdhasjdashdhasjdasjhdasjdhasjdashdjshadahashjdahd", textureID);
 	dialogueSystem.AddDialogueToSequence(teddy_bear);
 
 }

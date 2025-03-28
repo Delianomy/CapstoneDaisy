@@ -46,14 +46,13 @@ bool CapstoneSceneDream::OnCreate() {
 	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
 	player->AddComponent<CollisionComponent>(nullptr, 0.8f);
 	player->GetComponent<PhysicsComponent>()->isStatic = false;
-	//player->GetComponent<PhysicsComponent>()->useGravity = true;
-	player->GetComponent<PhysicsComponent>()->mass = 5.0f;
+	player->GetComponent<PhysicsComponent>()->useGravity = true;
+	player->GetComponent<PhysicsComponent>()->mass = 1.0f;
 	player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
 	player->AddComponent<ShaderComponent>(shader);
 	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Daisy_spriteSheet"));
 	player->AddComponent<TriggerComponent>(nullptr, 1.0f);
 	player->GetComponent<TriggerComponent>()->SetCallback(TriggerCallbackCreator::CreateTriggerCallback(this, &CapstoneSceneDream::PrintStatement));
-
 	AddTransparentActor(player);
 
 
@@ -391,7 +390,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	}
 
 
-	void CapstoneSceneDream::Render() const {
+void CapstoneSceneDream::Render() const {
 		glEnable(GL_DEPTH_TEST);
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

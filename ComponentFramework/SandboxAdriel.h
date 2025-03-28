@@ -127,7 +127,7 @@ public:
 
 	/// Inventory
 	void AddItemToInventory(std::shared_ptr<Actor> other, int index);
-	void PendTimeToInventory(std::shared_ptr<Actor> other);
+	void PendItemToInventory(std::shared_ptr<Actor> other);
 	void DropItemFromInventory(std::shared_ptr<Actor> other, int index);
 
 	/// Interactions

@@ -1,38 +1,39 @@
-Thu Mar 27 14:08:52 2025
+Fri Mar 28 19:07:04 2025
 [INFO]: Starting the SceneManager
-[INFO]: OpenGL version: 4.6.0 NVIDIA 546.80
-[INFO]: Graphics card vendor NVIDIA Corporation
-[INFO]: Graphics card name NVIDIA GeForce RTX 3050 Laptop GPU/PCIe/SSE2
-[INFO]: GLSL Version 4.60 NVIDIA
-[INFO]: Created Scene Bedroom: 
+[INFO]: OpenGL version: 4.6.0 - Build 31.0.101.2111
+[INFO]: Graphics card vendor Intel
+[INFO]: Graphics card name Intel(R) UHD Graphics 630
+[INFO]: GLSL Version 4.60 - Build 31.0.101.2111
+[INFO]: Created Scene Dream: 
 [INFO]: Loading assets Scene Dream: 
 [INFO]: Uniforms:
-"colorID" loc:4
 "modelMatrix" loc:1
 "projectionMatrix" loc:3
 "viewMatrix" loc:2
-
-[INFO]: Uniforms:
-"modelMatrix" loc:0
-"projectionMatrix" loc:1
-"viewMatrix" loc:2
-
-[INFO]: Uniforms:
 "colorID" loc:4
-"modelMatrix" loc:1
-"projectionMatrix" loc:3
-"viewMatrix" loc:2
 
 [INFO]: Uniforms:
-"NPC_id" loc:0
-"NPCanimIndex" loc:1
-"colour" loc:-1
 "modelMatrix" loc:2
-"myTexture" loc:3
-"playeranimIndex" loc:4
-"position" loc:-1
+"projectionMatrix" loc:0
+"viewMatrix" loc:1
+
+[INFO]: Uniforms:
+"modelMatrix" loc:1
+"projectionMatrix" loc:3
+"viewMatrix" loc:2
+"colorID" loc:4
+
+[INFO]: Uniforms:
 "projection" loc:-1
 "view" loc:-1
+"position" loc:-1
+"colour" loc:-1
+"NPC_id" loc:7
+"NPCanimIndex" loc:9
+"modelMatrix" loc:2
+"playeranimIndex" loc:8
+"talking" loc:1
+"myTexture" loc:0
 
 [INFO]: Uniforms:
 "depthProjectionMatrix" loc:0
@@ -40,58 +41,50 @@ Thu Mar 27 14:08:52 2025
 "modelMatrix" loc:2
 
 [INFO]: Uniforms:
+"projection" loc:-1
+"view" loc:-1
+"modelMatrix" loc:1
 "color" loc:2
-"modelMatrix" loc:1
-"projection" loc:-1
-"view" loc:-1
 
 [INFO]: Uniforms:
-"modelMatrix" loc:1
 "projection" loc:-1
 "view" loc:-1
+"modelMatrix" loc:1
 
 [INFO]: Uniforms:
+"projection" loc:-1
+"view" loc:-1
+"position" loc:-1
 "colour" loc:-1
 "modelMatrix" loc:2
 "myTexture" loc:0
-"position" loc:-1
-"projection" loc:-1
-"view" loc:-1
 
 [INFO]: Uniforms:
-"iTime" loc:0
-"modelMatrix" loc:1
 "projection" loc:-1
 "view" loc:-1
-
-[INFO]: Uniforms:
-"iResolution" loc:0
+"modelMatrix" loc:0
 "iTime" loc:1
-"modelMatrix" loc:2
-"projection" loc:-1
-"view" loc:-1
 
 [INFO]: Uniforms:
+"projection" loc:-1
+"view" loc:-1
+"modelMatrix" loc:0
+"iResolution" loc:2
+"iTime" loc:1
+
+[INFO]: Uniforms:
+"projection" loc:-1
+"view" loc:-1
+"position" loc:-1
 "colour" loc:-1
 "modelMatrix" loc:2
 "myTexture" loc:0
-"position" loc:-1
-"projection" loc:-1
-"view" loc:-1
 
+[ERROR]: Can't fint requested component in file: C:\Adriel\School\Humber\Sem 6\Capstone-Diana\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 31
 [INFO]: Creating values for CameraActor: 
 [INFO]: Uniforms:
-"modelMatrix" loc:0
-"projectionMatrix" loc:1
-"skybox" loc:2
-"viewMatrix" loc:3
+"modelMatrix" loc:2
+"projectionMatrix" loc:0
+"viewMatrix" loc:1
+"skybox" loc:3
 
-[INFO]: Deleted Scene Bedroom: 
-[INFO]: Deleting assets Scene Bedroom: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting the SceneManager

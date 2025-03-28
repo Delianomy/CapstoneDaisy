@@ -30,6 +30,7 @@ bool SandboxAdriel::OnCreate() {
 	assetManager = std::make_shared<AssetManager>();
 	inventory = new Inventory();
 	interactionManager = new InteractionManager();
+	inventoryButtonPressed = false;
 
 	//Main Shaders
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("TextureShader");
@@ -159,9 +160,6 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 		cameraTC = camera->GetComponent<TransformComponent>();
 		switch (sdlEvent.key.keysym.scancode) {
 
-		case SDL_SCANCODE_SPACE:
-			break;
-
 		case SDL_SCANCODE_Q:
 			cameraTC->SetTransform(cameraTC->GetPosition(), cameraTC->GetQuaternion() *
 				QMath::angleAxisRotation(2.0f, Vec3(0.0f, 1.0f, 0.0f)));
@@ -171,7 +169,7 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 
 			//Pend the item to the inventory
 			//The function already checks if it's nullptr so don't worry about it
-			PendTimeToInventory(interactionManager->GetCurrentInteraction());
+			PendItemToInventory(interactionManager->GetCurrentInteraction());
 
 			break;
 
@@ -202,7 +200,7 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 
 
 		case SDL_SCANCODE_1:
-			if (!inventoryButtonPressed) {
+			if (inventoryButtonPressed) {
 				std::shared_ptr<ItemInteractable> itemInteraction = std::dynamic_pointer_cast<ItemInteractable>(interactionManager->GetCurrentInteraction());
 				if(itemInteraction != nullptr){
 					itemInteraction->TryItem(inventory->items[0]);
@@ -214,7 +212,7 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 			break;
 
 		case SDL_SCANCODE_2:
-			if (!inventoryButtonPressed) {
+			if (inventoryButtonPressed) {
 				std::shared_ptr<ItemInteractable> itemInteraction = std::dynamic_pointer_cast<ItemInteractable>(interactionManager->GetCurrentInteraction());
 				if (itemInteraction != nullptr) {
 					itemInteraction->TryItem(inventory->items[1]);
@@ -226,7 +224,7 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 			break;
 
 		case SDL_SCANCODE_3:
-			if (!inventoryButtonPressed) {
+			if (inventoryButtonPressed) {
 				std::shared_ptr<ItemInteractable> itemInteraction = std::dynamic_pointer_cast<ItemInteractable>(interactionManager->GetCurrentInteraction());
 				if (itemInteraction != nullptr) {
 					itemInteraction->TryItem(inventory->items[2]);
@@ -257,6 +255,10 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 
 	case SDL_KEYUP:
 		switch (sdlEvent.key.keysym.scancode) {
+		case SDL_SCANCODE_SPACE:
+			player->GetComponent<PhysicsComponent>()->ApplyForce(Vec3(0.0f, 5.0f, 0.0f));
+			break;
+
 		case SDL_SCANCODE_A:
 			goLeft = false;
 			break;
@@ -401,11 +403,15 @@ void SandboxAdriel::Render() const{
 
 void SandboxAdriel::DrawUI_imgui()
 {
+	//note: 
+	//inventoryButtonPressed = true -> inventory is open
+	//inventoryButtonPressed = false -> inventory is closed
+
 	int windowHeight = sceneManagerRef->getWindowHeight();
 	int windowWidth = sceneManagerRef->getWindowWidth();
 
 	GLuint inventoryTextureID;
-	if (inventoryButtonPressed) {
+	if (!inventoryButtonPressed) {
 		inventoryTextureID = assetManager->GetComponent<MaterialComponent>("inventory_closed")->getTextureID();
 	}
 	else {
@@ -435,7 +441,7 @@ void SandboxAdriel::DrawUI_imgui()
 
 
 
-	if (inventoryButtonPressed) {
+	if (!inventoryButtonPressed) {
 		//E - button
 		ImGui::SetNextWindowPos(ImVec2(360, 860)); // Set the window position here (x, y)
 		ImGui::SetNextWindowSize(ImVec2(120, 120)); // Set the window size
@@ -450,7 +456,7 @@ void SandboxAdriel::DrawUI_imgui()
 		ImGui::PopStyleColor();
 
 	}
-	if (!inventoryButtonPressed) {
+	if (inventoryButtonPressed) {
 	
 		/// ---------------------------INVENTORY SLOT 1 ----------------------------------------------------------------------
 		ImGui::SetNextWindowPos(ImVec2(250, 590)); // Set the window position here (x, y)
@@ -463,7 +469,19 @@ void SandboxAdriel::DrawUI_imgui()
 		ImGui::PopStyleVar();
 		ImGui::PopStyleColor();
 
-		ImGui::SetNextWindowPos(ImVec2(330, 660)); // Set the window position here (x, y)
+		/// Drawing the object texture on top
+		if (inventory->items[0] != nullptr) {
+			ImGui::SetNextWindowPos(ImVec2(285, 625)); // Window position + 35
+			ImGui::SetNextWindowSize(ImVec2(150, 150)); // Set the window size
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+			ImGui::Begin("Item slot 1", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoDecoration);
+			ImGui::Image((intptr_t)inventory->items[0]->GetComponent<MaterialComponent>()->getTextureID(), ImVec2(80, 80));
+			ImGui::End();
+			ImGui::PopStyleVar();
+			ImGui::PopStyleColor();
+		}
+		ImGui::SetNextWindowPos(ImVec2(285 + 35, 625 + 35)); // Set the window position here (x, y)
 		ImGui::SetNextWindowSize(ImVec2(80, 80)); // Set the window size
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -488,6 +506,18 @@ void SandboxAdriel::DrawUI_imgui()
 		ImGui::PopStyleVar();
 		ImGui::PopStyleColor();
 
+		if (inventory->items[1] != nullptr) {
+			ImGui::SetNextWindowPos(ImVec2(395 + 35, 665 + 35)); 
+			ImGui::SetNextWindowSize(ImVec2(150, 150)); 
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+			ImGui::Begin("Item slot 2", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoDecoration);
+			ImGui::Image((intptr_t)inventory->items[1]->GetComponent<MaterialComponent>()->getTextureID(), ImVec2(80, 80));
+			ImGui::End();
+			ImGui::PopStyleVar();
+			ImGui::PopStyleColor();
+		}
+
 		ImGui::SetNextWindowPos(ImVec2(475, 735)); // Set the window position here (x, y)
 		ImGui::SetNextWindowSize(ImVec2(80, 80)); // Set the window size
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
@@ -510,6 +540,17 @@ void SandboxAdriel::DrawUI_imgui()
 		ImGui::PopStyleVar();
 		ImGui::PopStyleColor();
 
+		if (inventory->items[2] != nullptr) {
+			ImGui::SetNextWindowPos(ImVec2(465 + 35, 815 + 35)); // Set the window position here (x, y)
+			ImGui::SetNextWindowSize(ImVec2(150, 150)); // Set the window size
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+			ImGui::Begin("Item slot 3", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoDecoration);
+			ImGui::Image((intptr_t)inventory->items[2]->GetComponent<MaterialComponent>()->getTextureID(), ImVec2(80, 80));
+			ImGui::End();
+			ImGui::PopStyleVar();
+			ImGui::PopStyleColor();
+		}
 
 		ImGui::SetNextWindowPos(ImVec2(545, 885)); // Set the window position here (x, y)
 		ImGui::SetNextWindowSize(ImVec2(80, 80)); // Set the window size
@@ -522,11 +563,6 @@ void SandboxAdriel::DrawUI_imgui()
 		ImGui::PopStyleColor();
 
 	}
-
-
-
-
-	
 }
 
 void SandboxAdriel::DrawSphere(Vec3 pos, float radius) const{
@@ -596,8 +632,7 @@ void SandboxAdriel::DrawMeshOverlay(const Vec4 color) const {
 }
 
 void SandboxAdriel::DebugUI() {
-	float windowWidth = 1366;
-	float windowHeight = 768;
+	Vec2 screenSize = Vec2(sceneManagerRef->getWindowWidth(), sceneManagerRef->getWindowHeight());
 	//ImGui::ShowDemoWindow();
 
 	//Inventory window
@@ -606,7 +641,7 @@ void SandboxAdriel::DebugUI() {
 	ImGui::SetNextWindowSize(ImVec2(200, 150));
 	ImGui::Begin("Inventory", nullptr, flags);
 
-	ImGui::Text("Backpack open: %s", (!inventoryButtonPressed) ? "Open" : "Closed");
+	ImGui::Text("Backpack open: %s", (inventoryButtonPressed) ? "Open" : "Closed");
 	//Vec3 worldPos = Vec3();
 	//if (inventory->pendingItem != nullptr) {
 	//	worldPos = inventory->pendingItem->GetComponent<TransformComponent>()->GetPosition();
@@ -638,9 +673,8 @@ void SandboxAdriel::DebugUI() {
 		//Normalizing coordinates
 		Vec3 worldPos = inventory->pendingItem->GetComponent<TransformComponent>()->GetPosition();
 		worldPos += Vec3(0.0, -1.0, 0.0);
-		Vec2 screenSize = Vec2(1366, 768);
 		Vec2 windowSize = Vec2(50, 50);
-		Vec4 screenPos = camera->GetProjectionMatrix() * camera->GetViewMatrix() * inventory->pendingItem->GetComponent<TransformComponent>()->GetTransformMatrix() * Vec4(worldPos, 1.0f);
+		Vec4 screenPos = camera->GetProjectionMatrix() * camera->GetViewMatrix() * Vec4(worldPos, 1.0f);
 		Vec4 NDC = screenPos * (1 / screenPos.w);
 		Vec2 screenSpaceCoords = Vec2((NDC.x + 1) / 2 * screenSize.x, (1 - NDC.y) / 2 * screenSize.y);
 
@@ -652,7 +686,7 @@ void SandboxAdriel::DebugUI() {
 	}
 }
 
-void SandboxAdriel::PendTimeToInventory(std::shared_ptr<Actor> other) {
+void SandboxAdriel::PendItemToInventory(std::shared_ptr<Actor> other) {
 	Ref<PickableItem> item;
 	item = std::dynamic_pointer_cast<PickableItem>(other);
 	if (item != nullptr) {
@@ -707,7 +741,7 @@ void SandboxAdriel::PlayerTriggerCallback(Ref<Actor> other) {
 	//Check if it's an item
 	Ref<PickableItem> item = std::dynamic_pointer_cast<PickableItem>(other);
 	if (item != nullptr) {
-		PendTimeToInventory(other);
+		PendItemToInventory(other);
 		return;
 	}
 

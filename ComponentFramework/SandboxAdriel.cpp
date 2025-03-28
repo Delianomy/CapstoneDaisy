@@ -703,6 +703,11 @@ void SandboxAdriel::PendItemToInventory(std::shared_ptr<Actor> other) {
 void SandboxAdriel::AddItemToInventory(std::shared_ptr<Actor> other, int index) {
 	//Check if it's a pickable item
 	if (std::dynamic_pointer_cast<PickableItem>(other) != nullptr) {
+		//Drops the item
+		if (inventory->items[index] != nullptr) {
+			DropItemFromInventory(index);
+		}
+
 		//Add the item to the inventory
 		inventory->AddItem(std::dynamic_pointer_cast<PickableItem>(other), index);
 
@@ -728,10 +733,10 @@ void SandboxAdriel::AddItemToInventory(std::shared_ptr<Actor> other, int index) 
 	}
 };
 
-void SandboxAdriel::DropItemFromInventory(std::shared_ptr<Actor> other, int index) {
+void SandboxAdriel::DropItemFromInventory(int index) {
 	//Add the object back into the actor vectors
-	opaqueActors.push_back(other);
-	triggerSystem.AddActor(other);
+	opaqueActors.push_back(inventory->items[index]);
+	triggerSystem.AddActor(inventory->items[index]);
 
 	//Remove the item from the inventory
 	inventory->RemoveItem(index);

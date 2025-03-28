@@ -128,7 +128,7 @@ public:
 	/// Inventory
 	void AddItemToInventory(std::shared_ptr<Actor> other, int index);
 	void PendItemToInventory(std::shared_ptr<Actor> other);
-	void DropItemFromInventory(std::shared_ptr<Actor> other, int index);
+	void DropItemFromInventory(int index);
 
 	/// Interactions
 	void PlayerTriggerCallback(Ref<Actor> other);

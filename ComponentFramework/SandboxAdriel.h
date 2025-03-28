@@ -14,6 +14,7 @@
 #include "SceneManager.h"
 #include "Inventory.h"
 #include "InteractionManager.h"
+#include "ItemInteractable.h"
 using namespace MATH;
 
 /// Forward declarations 
@@ -127,6 +128,7 @@ public:
 	/// Inventory
 	void AddItemToInventory(std::shared_ptr<Actor> other, int index);
 	void PendTimeToInventory(std::shared_ptr<Actor> other);
+	void DropItemFromInventory(std::shared_ptr<Actor> other, int index);
 
 	/// Interactions
 	void PlayerTriggerCallback(Ref<Actor> other);

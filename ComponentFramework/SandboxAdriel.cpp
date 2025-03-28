@@ -82,10 +82,10 @@ bool SandboxAdriel::OnCreate() {
 		Quaternion(), //Rotation
 		Vec3(0.0f, 0.0f, 0.0f) //velocity
 	);
-	cube->GetComponent<PhysicsComponent>()->SetScale(Vec3(4.0f, 0.5f, 1.0f));
+	cube->GetComponent<PhysicsComponent>()->SetScale(Vec3(20.0f, 0.5f, 1.0f));
 	cube->GetComponent<PhysicsComponent>()->isStatic = true;
 	cube->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
-	AABB col = AABB(cube->GetComponent<PhysicsComponent>()->GetPosition(), Vec3(4.0f, 0.5f, 1.0f));
+	AABB col = AABB(cube->GetComponent<PhysicsComponent>()->GetPosition(), Vec3(20.0f, 0.5f, 1.0f));
 	cube->AddComponent<CollisionComponent>(nullptr, col);
 	cube->AddComponent<ShaderComponent>(CubeShader);
 	cube->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("ChessBoard"));
@@ -110,10 +110,18 @@ bool SandboxAdriel::OnCreate() {
 	opaqueActors.push_back(newPickable);
 
 	Ref<InteractableActor> newInteractable = std::make_shared<InteractableActor>(assetManager, Vec3(-3.0f, -1.0f, 0.0f));
-	triggerSystem.AddActor(newInteractable);
 	newInteractable->Bind([this](){
+		inventoryButtonPressed = !inventoryButtonPressed;
 		std::cout << "Interacted with an actor";
-		});
+	});
+	triggerSystem.AddActor(newInteractable);
+	opaqueActors.push_back(newInteractable);
+
+	Ref<ItemInteractable> newItemInteractable = std::make_shared<ItemInteractable>(assetManager, "Item2", Vec3(-10.0f, -1.0f, 0.0f));
+	newItemInteractable->BindToOnCorrect([]() {std::cout << "Correct item" << std::endl; });
+	newItemInteractable->BindToOnReject([]() {std::cout << "Incorrect item" << std::endl; });
+	triggerSystem.AddActor(newItemInteractable);
+	opaqueActors.push_back(newItemInteractable);
 
 	physicsSystem.AddActor(player);
 	physicsSystem.AddActor(cube);
@@ -161,11 +169,9 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 		case SDL_SCANCODE_E:
 			inventoryButtonPressed = !inventoryButtonPressed;
 
-			//Add the item to the inventory pending pointer
-			currentInteraction = interactionManager->GetCurrentInteraction();
-			if (currentInteraction == nullptr) { break; }
-
-			PendTimeToInventory(currentInteraction);
+			//Pend the item to the inventory
+			//The function already checks if it's nullptr so don't worry about it
+			PendTimeToInventory(interactionManager->GetCurrentInteraction());
 
 			break;
 
@@ -197,18 +203,36 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 
 		case SDL_SCANCODE_1:
 			if (!inventoryButtonPressed) {
+				std::shared_ptr<ItemInteractable> itemInteraction = std::dynamic_pointer_cast<ItemInteractable>(interactionManager->GetCurrentInteraction());
+				if(itemInteraction != nullptr){
+					itemInteraction->TryItem(inventory->items[0]);
+					break;
+				}
+
 				AddItemToInventory(inventory->pendingItem, 0);
 			}
 			break;
 
 		case SDL_SCANCODE_2:
 			if (!inventoryButtonPressed) {
+				std::shared_ptr<ItemInteractable> itemInteraction = std::dynamic_pointer_cast<ItemInteractable>(interactionManager->GetCurrentInteraction());
+				if (itemInteraction != nullptr) {
+					itemInteraction->TryItem(inventory->items[1]);
+					break;
+				}
+
 				AddItemToInventory(inventory->pendingItem, 1);
 			}
 			break;
 
 		case SDL_SCANCODE_3:
 			if (!inventoryButtonPressed) {
+				std::shared_ptr<ItemInteractable> itemInteraction = std::dynamic_pointer_cast<ItemInteractable>(interactionManager->GetCurrentInteraction());
+				if (itemInteraction != nullptr) {
+					itemInteraction->TryItem(inventory->items[2]);
+					break;
+				}
+
 				AddItemToInventory(inventory->pendingItem, 2);
 			}
 			break;
@@ -578,15 +602,31 @@ void SandboxAdriel::DebugUI() {
 
 	//Inventory window
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiCond_FirstUseEver | ImGuiWindowFlags_NoCollapse;
-	ImGui::SetNextWindowPos(ImVec2(windowWidth / 2 - windowWidth * 0.3f, windowHeight / 2));
+	ImGui::SetNextWindowPos(ImVec2());
 	ImGui::SetNextWindowSize(ImVec2(200, 150));
 	ImGui::Begin("Inventory", nullptr, flags);
 
 	ImGui::Text("Backpack open: %s", (!inventoryButtonPressed) ? "Open" : "Closed");
+	//Vec3 worldPos = Vec3();
+	//if (inventory->pendingItem != nullptr) {
+	//	worldPos = inventory->pendingItem->GetComponent<TransformComponent>()->GetPosition();
+	//	ImGui::Text("Pending Item Pos(%.3f, %.3f, %.3f)", worldPos.x, worldPos.y, worldPos.z);
+
+	//	Vec2 screenSize = Vec2(1366, 768);
+
+	//	Vec4 screenPos = camera->GetProjectionMatrix() * camera->GetViewMatrix() * Vec4(worldPos, 1.0f);
+	//	Vec4 NDC = screenPos * (1 / screenPos.w);
+
+	//	ImGui::Text("NDC Pos(%.3f, %.3f)", NDC.x, NDC.y);
+
+	//	Vec2 screenSpaceCoords = Vec2((NDC.x + 1) / 2 * screenSize.x, (1 - NDC.y) / 2 * screenSize.y);
+	//	ImGui::Text("Screen Space Pos(%.3f, %.3f)", screenSpaceCoords.x, screenSpaceCoords.y);
+	//}
 
 	//Prints the item in the inventory
-	ImGui::SeparatorText("Pending Items");
-	ImGui::Text("%p", inventory->pendingItem);
+	ImGui::SeparatorText("Interactions");
+	ImGui::Text("Curr Interact: %p", interactionManager->GetCurrentInteraction());
+	ImGui::Text("Pending item: %p", inventory->pendingItem);
 
 	ImGui::SeparatorText("Inventory Items");
 	ImGui::Text("%s", inventory->ToString().c_str());
@@ -596,9 +636,16 @@ void SandboxAdriel::DebugUI() {
 	//Prompt window
 	if (inventory->pendingItem != nullptr) {
 		//Normalizing coordinates
-		Vec2 screenPos = Vec2(1366/2, 768/2);
-		ImGui::SetNextWindowPos(ImVec2(screenPos.x - 25.0f, screenPos.y - 200.0f));
-		ImGui::SetNextWindowSize(ImVec2(50, 50));
+		Vec3 worldPos = inventory->pendingItem->GetComponent<TransformComponent>()->GetPosition();
+		worldPos += Vec3(0.0, -1.0, 0.0);
+		Vec2 screenSize = Vec2(1366, 768);
+		Vec2 windowSize = Vec2(50, 50);
+		Vec4 screenPos = camera->GetProjectionMatrix() * camera->GetViewMatrix() * inventory->pendingItem->GetComponent<TransformComponent>()->GetTransformMatrix() * Vec4(worldPos, 1.0f);
+		Vec4 NDC = screenPos * (1 / screenPos.w);
+		Vec2 screenSpaceCoords = Vec2((NDC.x + 1) / 2 * screenSize.x, (1 - NDC.y) / 2 * screenSize.y);
+
+		ImGui::SetNextWindowPos(ImVec2(screenSpaceCoords.x, screenSpaceCoords.y));
+		ImGui::SetNextWindowSize(ImVec2(1,1));
 		ImGui::Begin(" ", nullptr, flags);
 		ImGui::Text("?????");
 		ImGui::End();
@@ -647,17 +694,27 @@ void SandboxAdriel::AddItemToInventory(std::shared_ptr<Actor> other, int index) 
 	}
 };
 
+void SandboxAdriel::DropItemFromInventory(std::shared_ptr<Actor> other, int index) {
+	//Add the object back into the actor vectors
+	opaqueActors.push_back(other);
+	triggerSystem.AddActor(other);
+
+	//Remove the item from the inventory
+	inventory->RemoveItem(index);
+}
+
 void SandboxAdriel::PlayerTriggerCallback(Ref<Actor> other) {
+	//Check if it's an item
+	Ref<PickableItem> item = std::dynamic_pointer_cast<PickableItem>(other);
+	if (item != nullptr) {
+		PendTimeToInventory(other);
+		return;
+	}
+
 	//Check if it's an interactable actor
 	Ref<InteractableActor> actor = std::dynamic_pointer_cast<InteractableActor>(other);
 	if (actor != nullptr) { 
 		interactionManager->SetCurrentInteraction(actor);
 		return; 
 	}
-
-	Ref<PickableItem> item = std::dynamic_pointer_cast<PickableItem>(other);
-	if (item != nullptr) {
-		PendTimeToInventory(other);
-	}
-
 }

@@ -168,6 +168,7 @@
     <ClCompile Include="InteractableActor.cpp" />
     <ClCompile Include="InteractionManager.cpp" />
     <ClCompile Include="Inventory.cpp" />
+    <ClCompile Include="ItemInteractable.cpp" />
     <ClCompile Include="LightActor.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="MaterialComponent.cpp" />
@@ -221,6 +222,7 @@
     <ClInclude Include="InteractableActor.h" />
     <ClInclude Include="InteractionManager.h" />
     <ClInclude Include="Inventory.h" />
+    <ClInclude Include="ItemInteractable.h" />
     <ClInclude Include="LightActor.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MaterialComponent.h" />

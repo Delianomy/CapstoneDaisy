@@ -15,7 +15,6 @@
 #include "Inventory.h"
 #include "InteractionManager.h"
 #include "ItemInteractable.h"
-#include "MEW.h"
 using namespace MATH;
 
 /// Forward declarations 
@@ -79,6 +78,7 @@ class SandboxAdriel : public Scene
 
 	//NewInput
 	Vec3 movementInput = Vec3();
+	bool playerIsGrounded = false;
 
 	//invetory UI imput
 	bool inventoryButtonPressed = false;
@@ -131,6 +131,12 @@ public:
 	/// <param name="radius">width, height, depth of the cube</param>
 	void DrawCube(Vec3 pos, Vec3 dimensions) const;
 	void DrawCube(AABB a) const;
+	/// <summary>
+	/// Draws a cube that is transformed to look like a line. Use this in Render() only. Kind of expensive, so don't use it as much
+	/// </summary>
+	/// <param name="ray"></param>
+	void DrawRay(Ray ray) const;
+
 	void DebugUI();
 
 	/// Inventory
@@ -140,6 +146,8 @@ public:
 
 	/// Interactions
 	void PlayerTriggerCallback(Ref<Actor> other);
+
+	void PlayerGroundCheck();
 };
 
 #endif // CAPSTONESCENE_DREAM_H

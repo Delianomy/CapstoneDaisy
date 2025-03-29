@@ -67,6 +67,7 @@ bool SandboxAdriel::OnCreate() {
 	player->AddComponent<CollisionComponent>(player.get(), 0.5f);
 	player->AddComponent<TriggerComponent>(player.get(), 1.0f);
 	player->GetComponent<TriggerComponent>()->SetCallback(this, &SandboxAdriel::PlayerTriggerCallback);
+	player->tag = TAGS::PLAYER;
 	AddTransparentActor(player);
 
 	//Creating the camera
@@ -90,6 +91,7 @@ bool SandboxAdriel::OnCreate() {
 	cube->AddComponent<CollisionComponent>(nullptr, col);
 	cube->AddComponent<ShaderComponent>(CubeShader);
 	cube->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("ChessBoard"));
+	cube->tag = TAGS::GROUND;
 	AddOpaqueActor(cube);
 
 
@@ -131,12 +133,6 @@ bool SandboxAdriel::OnCreate() {
 	collisionSystem.AddActor(cube);
 
 	triggerSystem.AddActor(player);
-
-
-	//Ray and AABB test
-	Ray r = Ray(Vec3(0, 0, 0), Vec3(4, 0, 6));
-	Sphere a = Sphere(Vec3(3, 0, 3), 2);
-	std::cout << "Ray intersect? " << MEW::RaySphereIntersection(r, a) << "\n";
 
 	return true;
 }
@@ -306,6 +302,8 @@ void SandboxAdriel::Update(const float deltaTime) {
 	inventory->pendingItem = nullptr;
 	interactionManager->Reset();
 
+	PlayerGroundCheck();
+
 	//change in angle 
 	if (rotatePlayerLeft) {
 		playerAngle -= 0.4f;
@@ -416,6 +414,11 @@ void SandboxAdriel::Render() const{
 	for (auto trigger : triggerSystem.triggeringActors) {
 		DrawSphere(trigger->GetComponent<TransformComponent>()->GetPosition(), trigger->GetComponent<TriggerComponent>()->radius);
 	}
+
+	float length = 0.3f;
+	Vec3 playerPos = player->GetComponent<TransformComponent>()->GetPosition();
+	Ray ray = Ray(playerPos + Vec3(0, -0.5, 0), Vec3(0, -1, 0) * length);
+	DrawRay(ray);
 
 
 	for (auto transparentActor : transparentActors) {
@@ -634,6 +637,29 @@ void SandboxAdriel::DrawCube(AABB a) const {
 	DrawCube(a.center, Vec3(a.rx, a.ry, a.rz));
 }
 
+void SandboxAdriel::DrawRay(Ray ray) const {
+	Vec3 center = ray.start + (ray.direction * 0.5f);
+	float length = VMath::mag(ray.direction);
+	Vec3 dimensions = Vec3(length, 0.05, 0.05);
+
+	Vec3 angleAxis = VMath::cross(Vec3(1, 0, 0), VMath::normalize(ray.direction));
+	float angle = acos(VMath::dot(Vec3(1, 0, 0), VMath::normalize(ray.direction))) * RADIANS_TO_DEGREES;
+
+	Quaternion rotation = QMath::angleAxisRotation(angle, angleAxis);
+	Matrix4 modelMatrix = MMath::translate(center) * MMath::toMatrix4(rotation) * MMath::scale(dimensions);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	glUseProgram(DebugCube->GetComponent<ShaderComponent>()->GetProgram());
+	glUniformMatrix4fv(DebugCube->GetComponent<ShaderComponent>()->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
+	glUniformMatrix4fv(DebugCube->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
+	glUniformMatrix4fv(DebugCube->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, modelMatrix);
+
+	DebugCube->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
 void SandboxAdriel::DrawNormals(const Vec4 color) const {
 	glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("DrawNormalsShader");
@@ -786,5 +812,23 @@ void SandboxAdriel::PlayerTriggerCallback(Ref<Actor> other) {
 	if (actor != nullptr) { 
 		interactionManager->SetCurrentInteraction(actor);
 		return; 
+	}
+}
+
+void SandboxAdriel::PlayerGroundCheck() {
+	playerIsGrounded = false;
+	float length = 0.3f;
+
+	Vec3 playerPos = player->GetComponent<TransformComponent>()->GetPosition();
+	Ray ray = Ray(playerPos + Vec3(0, -0.5f, 0), Vec3(0, -1, 0) * length);
+
+	std::vector<Ref<Actor>> collidedActors = collisionSystem.Raycast(ray);
+
+	for (auto actor : collidedActors) {
+		if (actor->tag == TAGS::GROUND) {
+			playerIsGrounded = true;
+			std::cout << "Player is grounded \n";
+			return;
+		}
 	}
 }

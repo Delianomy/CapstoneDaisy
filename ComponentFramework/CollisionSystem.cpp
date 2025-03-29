@@ -242,3 +242,38 @@ void CollisionSystem::SphereAABBCollisionResponce(Sphere s, Ref<PhysicsComponent
         }
     }
 }
+
+std::vector<Ref<Actor>> CollisionSystem::Raycast(Ray ray) {
+    std::vector<Ref<Actor>> collidedActors;
+    CollisionComponent* collider;
+    TransformComponent* transform;
+
+    for (auto actor : collidingActors) {
+        collider = actor->GetComponent<CollisionComponent>().get();
+
+        switch (collider->colliderType) {
+
+        case ColliderType::Sphere:
+            transform = actor->GetComponent<TransformComponent>().get();
+            if (MEW::RaySphereIntersection(ray, Sphere(transform->GetPosition(), collider->radius))) {
+                collidedActors.push_back(actor);
+                continue;
+            }
+            break;
+
+        case ColliderType::AABB:
+            if (MEW::RayBoxIntersection(ray, collider->aabb)) {
+                collidedActors.push_back(actor);
+                continue;
+            }
+            break;
+
+        default:
+            continue;
+            break;
+        }
+
+    }
+
+    return collidedActors;
+}

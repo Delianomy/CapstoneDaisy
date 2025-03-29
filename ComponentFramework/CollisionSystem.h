@@ -5,6 +5,7 @@
 #include "Actor.h"
 #include "Debug.h"
 #include <Sphere.h>
+#include "MEW.h"
 using namespace MATH;
 using namespace MATHEX;
 
@@ -26,8 +27,6 @@ public:
 		collidingActors.push_back(actor_);
 	}
 
-
-
 	bool SpherePlaneCollisionDetection(const Sphere& s1, const Plane& p1) const;
 	bool SphereSphereCollisionDetection(const Sphere& s1, const Sphere& s2) const;
 	bool AABBAABBCollisionDetection(const AABB& bb1, const AABB& bb2) const;
@@ -37,4 +36,10 @@ public:
 	void SphereAABBCollisionResponce(Sphere s, Ref<PhysicsComponent> pc1, AABB box, Ref<PhysicsComponent> pc2);
 	void Update(const float deltaTime);
 
+	/// <summary>
+	/// Does a ray check comparison with all of the actors in the collision system and returns all colliding actors
+	/// </summary>
+	/// <param name="ray">The ray</param>
+	/// <returns></returns>
+	std::vector<Ref<Actor>> Raycast(Ray ray);
 };

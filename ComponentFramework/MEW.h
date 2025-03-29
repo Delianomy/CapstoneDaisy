@@ -7,6 +7,7 @@
 #include <Ray.h>
 #include "CollisionComponent.h"
 #include <Sphere.h>
+#include <cmath> 
 using namespace MATH;
 
 
@@ -88,9 +89,12 @@ public:
         // ref: https://gdbooks.gitbooks.io/3dcollisions/content/Chapter3/raycast_aabb.html
         Vec3 point = RayAABCollisionPoint(ray, box);
 
-        if (point.x != NAN) { return true; }
+        //If the vector is NAN (Not a number) then no intersection exists
+        if (std::isnan(point.x)) { 
+            return false; 
+        }
         
-        return false;
+        return true;
     }
 
     static bool RaySphereIntersection(Ray ray, Sphere sphere) {
@@ -109,7 +113,7 @@ public:
     //Printing a vector list
     static void PrintVecList(std::vector<Vec3>& list) {
         for (Vec3 &v : list) {
-            v.print();
+            v.print();  
         }
     }
 

@@ -51,7 +51,7 @@ class CollisionComponent : public Component {
 	CollisionComponent& operator = (const CollisionComponent&) = delete;
 	CollisionComponent& operator = (CollisionComponent&&) = delete;
 protected:
-	ColliderType colliderType;
+	ColliderType colliderType; 
 	float radius; /// sphere collision
 	Plane plane;
 	AABB aabb; /// AABB data

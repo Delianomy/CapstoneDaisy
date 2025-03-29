@@ -60,7 +60,7 @@ bool SandboxAdriel::OnCreate() {
 	player->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
 	player->GetComponent<PhysicsComponent>()->isStatic = false;
 	player->GetComponent<PhysicsComponent>()->useGravity = true;
-	player->GetComponent<PhysicsComponent>()->mass = 5.0f;
+	player->GetComponent<PhysicsComponent>()->mass = 1.0f;
 	player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
 	player->AddComponent<ShaderComponent>(shader);
 	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("ChessBoard"));
@@ -132,6 +132,12 @@ bool SandboxAdriel::OnCreate() {
 
 	triggerSystem.AddActor(player);
 
+
+	//Ray and AABB test
+	Ray r = Ray(Vec3(0, 0, 0), Vec3(4, 0, 6));
+	AABB a = AABB(Vec3(3, 0, 3), Vec3(2, 2, 2));
+	std::cout << "Ray intersect? " << MEW::RayBoxIntersection(r, a) << "\n";
+
 	return true;
 }
 
@@ -150,9 +156,11 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 	static Vec2 currentMousePos;
 	static Vec2	lastMousePos;
 	static float flip = 1.0f;
+
 	Ref<TransformComponent> cameraTC;
 	Ref<TransformComponent> gameBoardTC;
 	Ref<InteractableActor> currentInteraction;
+
 	ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
 	/// Handle Camera movement 
 	switch (sdlEvent.type) {
@@ -174,16 +182,19 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 			break;
 
 		case SDL_SCANCODE_A:
-			goLeft = true;
+			movementInput += Vec3(-1.0, 0.0, 0.0);
 			break;
+
 		case SDL_SCANCODE_W:
-			goBackwards = true;
+			movementInput += Vec3(0.0, 0.0, -1.0);
 			break;
+
 		case SDL_SCANCODE_D:
-			goRight = true;
+			movementInput += Vec3(1.0, 0.0, 0.0);
 			break;
+
 		case SDL_SCANCODE_S:
-			goForward = true;
+			movementInput += Vec3(0.0, 0.0, 1.0);
 			break;
 
 
@@ -197,7 +208,6 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 			if (drawOverlay == false) drawOverlay = true;
 			else drawOverlay = false;
 			break;
-
 
 		case SDL_SCANCODE_1:
 			if (inventoryButtonPressed) {
@@ -248,6 +258,16 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 			currentInteraction->Invoke();
 			break;
 
+		case SDL_SCANCODE_0:
+			std::cout << "Pressed 0" << std::endl;
+			break;
+
+		case SDL_SCANCODE_9:
+			std::cout << "Pressed 9" << std::endl;
+			movementInput += Vec3(0.0, 0.0, -1.0);
+			break;
+
+
 		default:
 			break;
 		}
@@ -256,20 +276,20 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 	case SDL_KEYUP:
 		switch (sdlEvent.key.keysym.scancode) {
 		case SDL_SCANCODE_SPACE:
-			player->GetComponent<PhysicsComponent>()->ApplyForce(Vec3(0.0f, 5.0f, 0.0f));
+			movementInput += Vec3(0.0, 1.0, 0.0);
 			break;
 
 		case SDL_SCANCODE_A:
-			goLeft = false;
+			movementInput.x = 0.0f;
 			break;
 		case SDL_SCANCODE_W:
-			goBackwards = false;
+			movementInput.z = 0.0f;
 			break;
 		case SDL_SCANCODE_D:
-			goRight = false;
+			movementInput.x = 0.0f;
 			break;
 		case SDL_SCANCODE_S:
-			goForward = false;
+			movementInput.z = 0.0f;
 			break;
 		default:
 			break;
@@ -305,49 +325,60 @@ void SandboxAdriel::Update(const float deltaTime) {
 
 
 
-	Vec3 movement(0.0f, 0.0f, 0.0f);
-	if (goRight) {
-		
-		movement.x += 1.0f;
-	}
-	if (goLeft) {
-		movement.x -= 1.0f;
-	}
-	if (goForward) {
-		movement.z += 1.0f;
-	}
-	if (goBackwards) {
-		movement.z -= 1.0f;
+	//Vec3 movement(0.0f, 0.0f, 0.0f);
+	//if (goRight) {
+	//	
+	//	movement.x += 1.0f;
+	//}
+	//if (goLeft) {
+	//	movement.x -= 1.0f;
+	//}
+	//if (goForward) {
+	//	movement.z += 1.0f;
+	//}
+	//if (goBackwards) {
+	//	movement.z -= 1.0f;
+	//}
+
+	////normalize the movement to remove the diagonal speed up
+	//if (VMath::mag(movement) > 0.0f) {
+	//	VMath::normalize(movement);
+	//	currentTime += deltaTime;
+	//	animIndex = static_cast<int>(currentTime / frameSpeed) % 13;
+	//	Quaternion currentRot = playerPhysics->GetQuaternion();
+	//	Matrix4 currentRotMatrix = MMath::toMatrix4(currentRot);
+	//	Vec3 moveDirection = Vec3();
+
+	//	if (movement.x != 0) {
+	//		moveDirection += currentRotMatrix * lefr_right_Vector * movement.x * walkSpeed;
+	//	}
+	//	if (movement.z != 0.0f) {
+	//		moveDirection += currentRotMatrix * forwardVector * movement.z * walkSpeed;
+	//	}
+
+	//	playerPhysics->SetVel(moveDirection);
+	//}
+	//else {
+	//	playerPhysics->SetVel(Vec3());
+	//	animIndex = 0;
+	//}
+	//	
+	Vec3 moveDir = Vec3();
+	if (VMath::mag(movementInput) > 0.0f) {
+		//Capping the x & z directional movement
+		moveDir = VMath::normalize(movementInput);
+
+		//Y is the exceptions because you are jumping there
+		moveDir.y = movementInput.y;
 	}
 
-	//normalize the movement to remove the diagonal speed up
-	if (VMath::mag(movement) > 0.0f) {
-		VMath::normalize(movement);
-		currentTime += deltaTime;
-		animIndex = static_cast<int>(currentTime / frameSpeed) % 13;
-		Quaternion currentRot = playerPhysics->GetQuaternion();
-		Matrix4 currentRotMatrix = MMath::toMatrix4(currentRot);
-		Vec3 moveDirection = Vec3();
-		if (movement.x != 0) {
-			moveDirection += currentRotMatrix * lefr_right_Vector * movement.x * walkSpeed;
-		}
-		if (movement.z != 0.0f) {
-			moveDirection += currentRotMatrix * forwardVector * movement.z * walkSpeed;
-		}
-		playerPhysics->SetVel(moveDirection);
-	}
-	else {
-		playerPhysics->SetVel(Vec3());
-		animIndex = 0;
-	}
-		
+	playerPhysics->ApplyForce(moveDir * walkSpeed);
 
 
 	camera->UpdateViewMatrix();
 	collisionSystem.Update(deltaTime);
 	physicsSystem.Update(deltaTime);
 	triggerSystem.Update(deltaTime);
-
 }
 
 void SandboxAdriel::Render() const{

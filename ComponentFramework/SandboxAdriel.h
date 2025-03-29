@@ -15,6 +15,7 @@
 #include "Inventory.h"
 #include "InteractionManager.h"
 #include "ItemInteractable.h"
+#include "MEW.h"
 using namespace MATH;
 
 /// Forward declarations 
@@ -60,6 +61,8 @@ class SandboxAdriel : public Scene
 	float playerAngle;
 	float iTime = 0.0f;
 
+	//This hurts to see :(
+	// -Adriel 
 	//player controls imput
 	bool goLeft = false;
 	bool goRight = false;
@@ -70,7 +73,12 @@ class SandboxAdriel : public Scene
 	bool rotatePlayerLeft = false;
 	Vec3 forwardVector = Vec3(0.0f, 0.0f, 0.1f);
 	Vec3 lefr_right_Vector = Vec3(0.1f, 0.0f, 0.0f);
-	float walkSpeed = 40.0f;
+	float walkSpeed = 60.0f;
+	float jumpSpeed = 100.0f;
+
+
+	//NewInput
+	Vec3 movementInput = Vec3();
 
 	//invetory UI imput
 	bool inventoryButtonPressed = false;

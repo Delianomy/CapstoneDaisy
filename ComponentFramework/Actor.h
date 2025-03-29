@@ -5,6 +5,15 @@
 #include "TransformComponent.h" 
 
 
+/// <summary>
+/// Tags are used to sort actors into specific categories. In this case I'm just using it to check for the ground before jumping
+/// </summary>
+enum TAGS {
+	NONE = 0,
+	PLAYER = 1,
+	GROUND = 2
+};
+
 class Actor: public Component {
 	/// Unless you know what these do don't allow them to be created implicitly 
 	Actor(const Actor&) = delete;
@@ -19,6 +28,7 @@ private:
 	Matrix4 modelMatrix; 
 public:
 	int NPCid;
+	TAGS tag = TAGS::NONE;
 	Actor(Component* parent_);
 	~Actor();
 	bool OnCreate();

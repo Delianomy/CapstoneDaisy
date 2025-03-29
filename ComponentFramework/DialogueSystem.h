@@ -22,10 +22,22 @@ class DialogueSystem
 	int currentDialogueIndex = 0;
 	bool isDialogueOpen = false;
 public:
+
+    void ClearDialogues() {
+        dialogues.clear();
+        currentDialogueIndex = 0;
+    }
+
+
 	void AddDialogueToSequence(Dialogue dialogue_) {
 		dialogues.push_back(dialogue_);
 	}
 	void OpenDialogue(int index) {
+        if (isDialogueOpen) {
+            ClearDialogues();
+            CloseDialogue();
+        }
+
 		if (index >= 0 && index < dialogues.size()) {
 			currentDialogueIndex = index;
 			isDialogueOpen = true;
@@ -113,6 +125,7 @@ public:
             }
             else {
                  isDialogueOpen = false;
+                 ClearDialogues();
             }
         }
 

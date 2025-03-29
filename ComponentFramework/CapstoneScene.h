@@ -38,6 +38,9 @@ class CapstoneScene : public Scene
 	//Ref<Actor> doll;
 	float playerAngle;
 	
+	std::vector<std::vector<Dialogue>> dialogueSequences;
+
+
 	bool goLeft = false;
 	bool goRight = false;
 	bool goForward = false;
@@ -65,10 +68,6 @@ public:
 	virtual void HandleEvents(const SDL_Event& sdlEvent);
 
 	
-	/// The w component holds the scale of the normal
-	void DrawNormals(const Vec4 color) const;
-
-	void DrawMeshOverlay(const Vec4 color) const;
 	void InitializeDialogue();
 };
 

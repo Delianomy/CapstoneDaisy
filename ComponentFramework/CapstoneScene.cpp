@@ -345,7 +345,19 @@ int CapstoneScene::Pick(int x, int y) {
 		index= colorIndex - 1; // Subtract 1 to get back to 0-based index
 	}
 
-	dialogueSystem.OpenDialogue(index);
+	if (index >= 0 && index < dialogueSequences.size()) {
+		// Clear any existing dialogues
+		dialogueSystem.ClearDialogues();
+
+		// Add the dialogues for this object
+		for (const auto& dialogue : dialogueSequences[index]) {
+			dialogueSystem.AddDialogueToSequence(dialogue);
+		}
+
+		dialogueSystem.OpenDialogue(0);
+	}
+
+
 	glEnable(GL_BLEND);
 
 	return index;
@@ -396,46 +408,27 @@ void CapstoneScene::Render() const {
 
 
 
-void CapstoneScene::DrawNormals(const Vec4 color) const {
-	glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
-	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("DrawNormalsShader");
-	glUseProgram(shader->GetProgram());
-	glUniform4fv(shader->GetUniformID("color"), 1, color);
-	for (auto actor : actors) {
-		glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, actor->GetModelMatrix());
-		actor->GetComponent<MeshComponent>()->Render();
-	}
-	glUseProgram(0);
-}
-
-
-
-void CapstoneScene::DrawMeshOverlay(const Vec4 color) const {
-	glDisable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
-	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("DefaultShader");
-	glUseProgram(shader->GetProgram());
-	glUniform4fv(shader->GetUniformID("color"), 1, color);
-
-	for (auto actor : actors) {
-		glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, actor->GetModelMatrix());
-		actor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
-	}
-	glUseProgram(0);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-}
-
 
 void CapstoneScene::InitializeDialogue() {
-	unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
 
+	dialogueSequences.resize(transparentActors.size());
+
+
+	//Teddy Bear
+	unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
 	Dialogue teddy_bear = Dialogue("Daisy", "HA! Got em!hdasdasjsdashdjashdhasjdashdhasjdasjhdasjdhasjdashdjshadahashjdahd", textureID);
-	dialogueSystem.AddDialogueToSequence(teddy_bear);
+	dialogueSequences[0].push_back(teddy_bear);
 
 	textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
-	Dialogue books = Dialogue("Daisy", "zamn", textureID);
-	dialogueSystem.AddDialogueToSequence(books);
+	teddy_bear = Dialogue("Daisy", "Dio 2", textureID);
+	dialogueSequences[0].push_back(teddy_bear);
+
+
+	//Books
+	textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
+	Dialogue books = Dialogue("Daisy", "Object 2", textureID);
+	dialogueSequences[1].push_back(books);
+
+
 
 }

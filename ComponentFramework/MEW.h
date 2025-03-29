@@ -6,13 +6,14 @@
 #include <algorithm>
 #include <Ray.h>
 #include "CollisionComponent.h"
+#include <Sphere.h>
 using namespace MATH;
 
 
 class MEW {
 private:
 
-#pragma region "Code I stole from sem 2"
+#pragma region "Code I Stole From Sem 2, Thanks Rashida"
     static bool RayAABCollisionDetected(const Ray& ray, const AABB& box) {
         if (ray.direction.x == 0 && ray.direction.y == 0 && ray.direction.z == 0) {
             return false;
@@ -90,6 +91,19 @@ public:
         if (point.x != NAN) { return true; }
         
         return false;
+    }
+
+    static bool RaySphereIntersection(Ray ray, Sphere sphere) {
+        Vec3 V = ray.direction; //The ray's directions
+        Vec3 S = ray.start; //The ray's starting position
+
+        float a = VMath::mag(V) * VMath::mag(V);
+        float b = 2 * VMath::dot(S, V);
+        float c = (VMath::mag(S) * VMath::mag(S)) - (sphere.r * sphere.r);
+        float D = (b * b) - (4 * a * c);
+
+        if (D < 0) { return false; } //If D < 0 collision is not possible
+        return true;
     }
 
     //Printing a vector list

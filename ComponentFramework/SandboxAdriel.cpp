@@ -135,8 +135,8 @@ bool SandboxAdriel::OnCreate() {
 
 	//Ray and AABB test
 	Ray r = Ray(Vec3(0, 0, 0), Vec3(4, 0, 6));
-	AABB a = AABB(Vec3(3, 0, 3), Vec3(2, 2, 2));
-	std::cout << "Ray intersect? " << MEW::RayBoxIntersection(r, a) << "\n";
+	Sphere a = Sphere(Vec3(3, 0, 3), 2);
+	std::cout << "Ray intersect? " << MEW::RaySphereIntersection(r, a) << "\n";
 
 	return true;
 }

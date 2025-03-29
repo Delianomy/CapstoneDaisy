@@ -95,9 +95,9 @@ bool SandboxAdriel::OnCreate() {
 	AddOpaqueActor(cube);
 
 
-	skybox = std::make_shared<SkyBox>(nullptr, "textures/px.png", "textures/nx.png",
-		"textures/py.png", "textures/ny.png", "textures/pz.png",
-		"textures/nz.png");
+	skybox = std::make_shared<SkyBox>(nullptr, "textures/Skyboxes/Overworld/px.png", "textures/Skyboxes/Overworld/nx.png",
+		"textures/Skyboxes/Overworld/py.png", "textures/Skyboxes/Overworld/ny.png", "textures/Skyboxes/Overworld/pz.png",
+		"textures/Skyboxes/Overworld/nz.png");
 
 	skybox->OnCreate();
 

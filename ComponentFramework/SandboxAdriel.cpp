@@ -177,6 +177,12 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 
 			break;
 
+		case SDL_SCANCODE_SPACE:
+			if (playerIsGrounded) {
+				movementInput.y = 1.0f;
+			}
+			break;
+
 		case SDL_SCANCODE_A:
 			movementInput += Vec3(-1.0, 0.0, 0.0);
 			break;
@@ -272,7 +278,9 @@ void SandboxAdriel::HandleEvents(const SDL_Event& sdlEvent) {
 	case SDL_KEYUP:
 		switch (sdlEvent.key.keysym.scancode) {
 		case SDL_SCANCODE_SPACE:
-			movementInput += Vec3(0.0, 1.0, 0.0);
+			if (playerIsGrounded) {
+				movementInput.y = 1.0f;
+			}
 			break;
 
 		case SDL_SCANCODE_A:
@@ -320,9 +328,6 @@ void SandboxAdriel::Update(const float deltaTime) {
 		playerPhysics->SetQuaternion(newQuat);
 	}
 	
-
-
-
 	//Vec3 movement(0.0f, 0.0f, 0.0f);
 	//if (goRight) {
 	//	
@@ -370,8 +375,9 @@ void SandboxAdriel::Update(const float deltaTime) {
 		moveDir.y = movementInput.y;
 	}
 
-	playerPhysics->ApplyForce(moveDir * walkSpeed);
-
+	Vec3 resultingForce = moveDir * walkSpeed;
+	playerPhysics->ApplyForce(Vec3(resultingForce.x, moveDir.y * jumpSpeed, resultingForce.z));
+	movementInput.y = 0; //Reseting the jumping input
 
 	camera->UpdateViewMatrix();
 	collisionSystem.Update(deltaTime);
@@ -417,8 +423,12 @@ void SandboxAdriel::Render() const{
 
 	float length = 0.3f;
 	Vec3 playerPos = player->GetComponent<TransformComponent>()->GetPosition();
-	Ray ray = Ray(playerPos + Vec3(0, -0.5, 0), Vec3(0, -1, 0) * length);
+	Vec3 origin = playerPos + Vec3(0, -0.5f, 0);
+	Ray ray = Ray(origin, origin + Vec3(0, -1, 0) * length);
 	DrawRay(ray);
+
+	//Drawing the floor
+	DrawCube(Vec3(0.0f, -2.0f, 0.0f), Vec3(20.0f, 0.5f, 1.0f));
 
 
 	for (auto transparentActor : transparentActors) {
@@ -638,12 +648,13 @@ void SandboxAdriel::DrawCube(AABB a) const {
 }
 
 void SandboxAdriel::DrawRay(Ray ray) const {
-	Vec3 center = ray.start + (ray.direction * 0.5f);
-	float length = VMath::mag(ray.direction);
-	Vec3 dimensions = Vec3(length, 0.05, 0.05);
+	float length = VMath::mag(ray.direction - ray.start);
+	Vec3 rayDir = ray.direction - ray.start;
+	Vec3 center = ray.getPos(0.5f);
+	Vec3 dimensions = Vec3(length, 0.01, 0.01);
 
-	Vec3 angleAxis = VMath::cross(Vec3(1, 0, 0), VMath::normalize(ray.direction));
-	float angle = acos(VMath::dot(Vec3(1, 0, 0), VMath::normalize(ray.direction))) * RADIANS_TO_DEGREES;
+	Vec3 angleAxis = VMath::cross(Vec3(1, 0, 0), VMath::normalize(rayDir));
+	float angle = acos(VMath::dot(Vec3(1, 0, 0), VMath::normalize(rayDir))) * RADIANS_TO_DEGREES;
 
 	Quaternion rotation = QMath::angleAxisRotation(angle, angleAxis);
 	Matrix4 modelMatrix = MMath::translate(center) * MMath::toMatrix4(rotation) * MMath::scale(dimensions);
@@ -695,7 +706,7 @@ void SandboxAdriel::DebugUI() {
 	//Inventory window
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiCond_FirstUseEver | ImGuiWindowFlags_NoCollapse;
 	ImGui::SetNextWindowPos(ImVec2());
-	ImGui::SetNextWindowSize(ImVec2(200, 150));
+	ImGui::SetNextWindowSize(ImVec2(200, 400));
 	ImGui::Begin("Inventory", nullptr, flags);
 
 	ImGui::Text("Backpack open: %s", (inventoryButtonPressed) ? "Open" : "Closed");
@@ -820,7 +831,8 @@ void SandboxAdriel::PlayerGroundCheck() {
 	float length = 0.3f;
 
 	Vec3 playerPos = player->GetComponent<TransformComponent>()->GetPosition();
-	Ray ray = Ray(playerPos + Vec3(0, -0.5f, 0), Vec3(0, -1, 0) * length);
+	Vec3 origin = playerPos + Vec3(0, -0.5f, 0);
+	Ray ray = Ray(origin, origin + Vec3(0, -1, 0 * length));
 
 	std::vector<Ref<Actor>> collidedActors = collisionSystem.Raycast(ray);
 
@@ -831,4 +843,5 @@ void SandboxAdriel::PlayerGroundCheck() {
 			return;
 		}
 	}
+	std::cout << "Player is NOT grounded \n";
 }

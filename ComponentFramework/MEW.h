@@ -110,6 +110,64 @@ public:
         return true;
     }
 
+    /// Apperently Umer's ray has Start as the origin and 'Direction' as the end
+    static bool RayAABBIntersection(Ray ray, AABB box) {
+        Vec3 rayDir = ray.direction - ray.start;
+
+        Vec3 boxMin = box.center - Vec3(box.rx, box.ry, box.rz);
+        Vec3 boxMax = box.center + Vec3(box.rx, box.ry, box.rz);
+
+        //TX
+        float tx1 = (boxMin.x - ray.start.x) / rayDir.x;
+        float tx2 = (boxMax.x - ray.start.x) / rayDir.x;
+        float tNearX = std::min(tx1, tx2);
+        float tFarX = std::max(tx1, tx2);
+        if (rayDir.x == 0.0f) {
+            tNearX = 0.0f;
+            tFarX = 0.0f;
+        }
+
+        //TY
+        float ty1 = (boxMin.y - ray.start.y) / rayDir.y;
+        float ty2 = (boxMax.y - ray.start.y) / rayDir.y;
+        float tNearY = std::min(ty1, ty2);
+        float tFarY = std::max(ty1, ty2);
+        if (rayDir.y == 0.0f) {
+            tNearY = 0.0f;
+            tFarY = 0.0f;
+        }
+
+        //TZ
+        float tz1 = (boxMin.z - ray.start.z) / rayDir.z;
+        float tz2 = (boxMax.z - ray.start.z) / rayDir.z;
+        float tNearZ = std::min(tz1, tz2);
+        float tFarZ = std::max(tz1, tz2);
+        if (rayDir.z == 0.0f) {
+            tNearZ = 0.0f;
+            tFarZ = 0.0f;
+        }
+
+        //Finding the biggest TNear value
+        float tmin = std::max(std::max(tNearX, tNearY), tNearZ);
+
+        //Finding the smallest Tmax value
+        float tmax = std::min(std::min(tFarX, tFarY), tFarZ);
+
+        if (tmin < 0 || tmin > 1) {
+            return false;
+        }
+
+        if (tmax < 0 || tmax > 1) {
+            return false;
+        }
+
+        if (tmin > tmax) { 
+            return false; 
+        }
+
+        return true;
+    }
+
     //Printing a vector list
     static void PrintVecList(std::vector<Vec3>& list) {
         for (Vec3 &v : list) {

@@ -262,7 +262,7 @@ std::vector<Ref<Actor>> CollisionSystem::Raycast(Ray ray) {
             break;
 
         case ColliderType::AABB:
-            if (MEW::RayBoxIntersection(ray, collider->aabb)) {
+            if (MEW::RayAABBIntersection(ray, collider->aabb)) {
                 collidedActors.push_back(actor);
                 continue;
             }

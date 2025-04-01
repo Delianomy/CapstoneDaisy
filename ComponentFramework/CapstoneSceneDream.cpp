@@ -451,8 +451,7 @@ void CapstoneSceneDream::Render() const {
 
 void CapstoneSceneDream::DrawUI_imgui()
 {
-	int windowHeight = sceneManagerRef->getWindowHeight();
-	int windowWidth = sceneManagerRef->getWindowWidth();
+	
 
 	GLuint inventoryTextureID;
 	if (inventoryButtonPressed) {

@@ -72,8 +72,11 @@ AssetManager::AssetManager() {
 
 	//Dialogue pfps
 	//AddComponent<MaterialComponent>("Game Title", nullptr, "textures/UI_elements/Game Title.png");
+	AddComponent<MaterialComponent>("Player_surprise", nullptr, "textures/UI_elements/pfps/player_1.png");
 	AddComponent<MaterialComponent>("Player_question", nullptr, "textures/UI_elements/pfps/player_2.png");
+	AddComponent<MaterialComponent>("Player_laugh", nullptr, "textures/UI_elements/pfps/player_3.png");
 	AddComponent<MaterialComponent>("Player_smile", nullptr, "textures/UI_elements/pfps/player_4.png");
+
 
 
 	//Pickable objects ROOM

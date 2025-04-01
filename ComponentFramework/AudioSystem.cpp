@@ -3,50 +3,114 @@
 
 AudioManager::AudioManager():system(nullptr),channelGroup(nullptr)
 {
-    FMOD_RESULT result;
-    // Create the main system object.
-    result = FMOD::System_Create(&system);
-    succeededOrWarn("FMOD: Failed to create system object", result);
+    OnCreate();
+}
 
-    // Initialize FMOD.
-    result = system->init(512, FMOD_INIT_NORMAL, nullptr);
-    succeededOrWarn("FMOD: Failed to initialise system object", result);
+bool AudioManager::OnCreate()
+{
+    FMOD_RESULT result = System_Create(&system);
+    if (result != FMOD_OK) {
+        std::cerr << "FMOD system creation failed: " << FMOD_ErrorString(result) << std::endl;
+        return false;
+    }
 
-    // Create the channel group.
-    FMOD::ChannelGroup* channelGroup = nullptr;
-    result = system->createChannelGroup("inGameSoundEffects", &channelGroup);
-    succeededOrWarn("FMOD: Failed to create in-game sound effects channel group", result);
-        
+    result = system->init(32, FMOD_INIT_NORMAL, nullptr);  // Initialize FMOD with 32 channels
+    if (result != FMOD_OK) {
+        std::cerr << "FMOD system initialization failed: " << FMOD_ErrorString(result) << std::endl;
+        return false;
+    }
+    //LOAD ALL THE AUDIO HERE
+
+    //0
+    if (LoadAudio("ost/UI_sounds/Zipper_open.mp3") == false) {
+        return false;
+    }
+    //1
+    if (LoadAudio("ost/UI_sounds/Zipper_close.wav") == false) {
+        return false;
+    }
+    //2
+    if (LoadAudio("ost/UI_sounds/Nature_13_4.wav") == false) {
+        return false;
+    }
+    //3
+    if (LoadAudio("ost/UI_sounds/Abstract1.mp3") == false) {
+        return false;
+    }
+    //4
+    if (LoadAudio("ost/UI_sounds/Nature_13_6.wav") == false) {
+        return false;
+    }
+    //5
+    if (LoadAudio("ost/1.mp3") == false) {
+        return false;
+    }
+
+    return true;
 }
 
 AudioManager::~AudioManager()
 {
     channelGroup->release();
+
+    for (auto& sound : sounds) {
+        sound->release();
+    }
+    system->close();
     system->release();
 }
 
-bool AudioManager::PlaySound(const std::string& filePath)
+bool AudioManager::LoadAudio(const char* filePath)
 {
-    FMOD::Sound* sound = nullptr;
-    FMOD_RESULT result = system->createSound(filePath.c_str(), FMOD_DEFAULT, nullptr, &sound);
-    if (!succeededOrWarn("FMOD: Failed to create sound", result))
-        return false;
-
-    FMOD::Channel* channel = nullptr;
-    result = system->playSound(sound, nullptr, false, &channel);
-    if (!succeededOrWarn("FMOD: Failed to play sound", result)) {
-        sound->release(); // Cleanup
+    Sound* sound{};
+    FMOD_RESULT result = system->createStream(filePath, FMOD_DEFAULT, nullptr, &sound);
+    if (result != FMOD_OK) {
+        std::cerr << "Failed to load sound: " << FMOD_ErrorString(result) << std::endl;
         return false;
     }
-
-    if (channelGroup) {
-        result = channel->setChannelGroup(channelGroup);
-        if (!succeededOrWarn("FMOD: Failed to set channel group", result))
-            return false;
-    }
-
+    sounds.push_back(sound);
     return true;
+ 
 }
+
+
+void AudioManager::Play(int trackIndex, float volume) {
+    if (trackIndex >= 0 && trackIndex < sounds.size()) {
+        Channel* channel = nullptr;
+
+        // Play the sound first
+        FMOD_RESULT result = system->playSound(sounds[trackIndex], nullptr, false, &channel);
+        if (result != FMOD_OK) {
+            std::cerr << "Failed to play sound: " << FMOD_ErrorString(result) << std::endl;
+            return;
+        }
+
+        // Check if channel is valid
+        if (channel == nullptr) {
+            std::cerr << "Channel is null after playSound" << std::endl;
+            return;
+        }
+
+        // Set volume and check result
+        result = channel->setVolume(volume);
+        if (result != FMOD_OK) {
+            std::cerr << "Failed to set volume: " << FMOD_ErrorString(result) << std::endl;
+        }
+
+        // Verify the volume was set correctly
+        float actualVolume = -1.0f;
+        result = channel->getVolume(&actualVolume);
+        if (result != FMOD_OK) {
+            std::cerr << "Failed to get volume: " << FMOD_ErrorString(result) << std::endl;
+        }
+
+        std::cout << "Audio: " << trackIndex << " Volume: " << actualVolume << std::endl;
+    }
+    else {
+        std::cerr << "No such audio track: " << trackIndex << std::endl;
+    }
+}
+
 
 bool AudioManager::succeededOrWarn(const std::string& message, FMOD_RESULT result)
 {

@@ -199,6 +199,13 @@ void CapstoneScene::HandleEvents(const SDL_Event& sdlEvent) {
 		switch (sdlEvent.key.keysym.scancode) {
 		case SDL_SCANCODE_E:
 			inventoryButtonPressed = !inventoryButtonPressed;
+			if (inventoryButtonPressed) {
+				audioManager->Play(0, 0.1f);
+			}
+			else {
+				audioManager->Play(1, 0.1f);
+			}
+			
 			break;
 
 		case SDL_SCANCODE_Q:

@@ -50,8 +50,7 @@ public:
 	void OpenDialogue(int index) {
         if (audioManager) {
             std::cout << "Playing opening sound..." << std::endl;
-            bool success = audioManager->PlaySound("ost/UI_sounds/Nature_13_4.wav");
-            std::cout << "Sound played successfully: " << (success ? "yes" : "no") << std::endl;
+            audioManager->Play(2, 1.0f);
         }
         else {
             std::cout << "Audio manager not initialized in OpenDialogue!" << std::endl;
@@ -124,7 +123,7 @@ public:
         ImGui::SetCursorPosY( 160 );// Position button to the right
         if (ImGui::Button("Next")) {
             if (audioManager) {
-                audioManager->PlaySound("ost/UI_sounds/Abstract1.mp3");
+                audioManager->Play(3, 1.0f);
             }
             if (currentDialogueIndex < dialogues.size() - 1) {
                 currentDialogueIndex++;
@@ -139,8 +138,7 @@ public:
         ImGui::PopStyleColor();
         if (wasDialogueOpen && !isDialogueOpen && audioManager) {
             std::cout << "Playing closing sound..." << std::endl;
-            bool success = audioManager->PlaySound("ost/UI_sounds/Nature_13_6.wav");
-            std::cout << "Sound played successfully: " << (success ? "yes" : "no") << std::endl;
+            audioManager->Play(4, 1.0f);
         }
     }
 

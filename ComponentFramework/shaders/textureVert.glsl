@@ -61,7 +61,7 @@ void main() {
           texCoord.y = -texCoord.y;
           //top row
           texCoord.y = texCoord.y * 0.5 + 0.5;
-          texCoord.x = texCoord.x*0.125 + (NPCanimIndex.x * 0.125);
+          texCoord.x = -texCoord.x*0.125 - (NPCanimIndex.x * 0.125);
         if(talking){
         //bottom row
              texCoord.y = texCoord.y;

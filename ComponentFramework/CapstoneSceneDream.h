@@ -39,12 +39,19 @@ class CapstoneSceneDream : public Scene
 	Ref<Actor> fairy;
 
 	//Middle part
-	Ref<Actor> RightIsland;
-	Ref<Actor> MiddleIsland;
-	Ref<Actor> LeftIsland;
+	Ref<Actor> Island1;
+	Ref<Actor> Island2;
+	Ref<Actor> Island3;
 	Ref<Actor> House;
-	Ref<Actor> Flower_One;
-
+	Ref<Actor> Flower_1;
+	Ref<Actor> Flower_2;
+	Ref<Actor> Flower_3;
+	Ref<Actor> Flower_4;
+	Ref<Actor> Beanstalk1;
+	Ref<Actor> Leaf1;
+	Ref<Actor> Leaf2;
+	Ref<Actor> Flower_5; 
+	Ref<Actor> Flower_6;
 
 	//Test collisions
 	Ref<Actor> sphere;
@@ -105,7 +112,7 @@ public:
 
 	void DrawMeshOverlay(const Vec4 color) const;
 	void DrawUI_imgui();
-	Plane CalculatePlaneCollider(Ref<Actor> obj);
+	
 
 	void PrintStatement(std::shared_ptr<Actor> a) {
 		std::cout << "I collided with ";

@@ -110,7 +110,7 @@ bool CapstoneScene::OnCreate() {
 
 	room->OnCreate();
 
-	light = std::make_shared<LightActor>(camera.get(), LightStyle::DirectionLight, Vec3(0.0f, 5.0f, 1.0f), Vec4(0.85f, 0.6, 0.6f, 0.0f));
+	light = std::make_shared<LightActor>(nullptr, LightStyle::DirectionLight, Vec3(0.0f, 5.0f, 1.0f), Vec4(0.85f, 0.6, 0.6f, 0.0f));
 	light->OnCreate();
 
 	return true;
@@ -200,7 +200,7 @@ void CapstoneScene::HandleEvents(const SDL_Event& sdlEvent) {
 		case SDL_SCANCODE_E:
 			inventoryButtonPressed = !inventoryButtonPressed;
 			if (inventoryButtonPressed) {
-				audioManager->Play(0, 0.1f);
+				audioManager->Play(0, 0.5f);
 			}
 			else {
 				audioManager->Play(1, 0.1f);
@@ -640,6 +640,20 @@ void CapstoneScene::DrawUI_imgui()
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		ImGui::Begin("3 button", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoDecoration);
 		ImGui::Image((intptr_t)assetManager->GetComponent<MaterialComponent>("number 3")->getTextureID(), ImVec2(80, 80));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		ImGui::End();
 		ImGui::PopStyleVar();
 		ImGui::PopStyleColor();

@@ -70,7 +70,7 @@ class CapstoneScene : public Scene
 	float frameSpeed = 0.1f;
 	bool drawNormals;
 	bool drawOverlay;
-	bool inventoryButtonPressed = false;
+	bool inventoryButtonPressed = true;
 public:
 	Matrix4 orient;
 	explicit CapstoneScene();

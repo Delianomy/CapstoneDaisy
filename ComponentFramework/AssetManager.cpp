@@ -19,11 +19,31 @@ AssetManager::AssetManager() {
 	AddComponent<MeshComponent>("Plane", nullptr,"meshes/Plane8x8.obj");
 	AddComponent<MeshComponent>("Island", nullptr, "meshes/Island.obj");
 	AddComponent<MeshComponent>("QuirkyCube", nullptr, "meshes/CubeCore.obj");
-	AddComponent<MeshComponent>("House", nullptr, "meshes/House.obj");
+	
 
 
+	//Actual level MODELS
+	AddComponent<MeshComponent>("Island1_obj", nullptr, "meshes/Island_1.obj");
+	AddComponent<MaterialComponent>("Island1_mat", nullptr, "textures/Environment/Island_1_test.png");
+
+	AddComponent<MeshComponent>("Island2_obj", nullptr, "meshes/Island_2.obj");
+	AddComponent<MaterialComponent>("Island2_mat", nullptr, "textures/Environment/island_2_test_2.png");
+
+	AddComponent<MeshComponent>("House_obj", nullptr, "meshes/House.obj");
+	AddComponent<MaterialComponent>("House_mat", nullptr, "textures/Environment/house_test.png");
+	
+	AddComponent<MeshComponent>("Flower_obj", nullptr, "meshes/Flower.obj");
+	AddComponent<MaterialComponent>("Flower_v1_mat", nullptr, "textures/Environment/flower_v1.png");
+
+	AddComponent<MeshComponent>("Beanstalk_obj", nullptr, "meshes/Beanstalk.obj");
+	AddComponent<MaterialComponent>("Beanstalk_mat", nullptr, "textures/Environment/beanstalk.png");
+
+
+	AddComponent<MeshComponent>("Leaf_obj", nullptr, "meshes/Leaf.obj");
+	AddComponent<MaterialComponent>("Leaf_mat", nullptr, "textures/Environment/leaf.png");
 
 	
+
 	AddComponent<ShaderComponent>("DefaultShader",nullptr,"shaders/defaultVert.glsl", "shaders/defaultFrag.glsl");
 	AddComponent<ShaderComponent>("ColorPickingShader",nullptr,"shaders/colorPickingVert.glsl", "shaders/colorPickingFrag.glsl");
 	AddComponent<ShaderComponent>("TextureShader",nullptr,"shaders/textureVert.glsl", "shaders/textureFrag.glsl");
@@ -53,7 +73,7 @@ AssetManager::AssetManager() {
 
 
 	//House:
-	AddComponent<MaterialComponent>("house", nullptr, "textures/Environment/house.png");
+
 
 
 	//UI elements:
@@ -69,6 +89,14 @@ AssetManager::AssetManager() {
 
 	AddComponent<MaterialComponent>("Game Title", nullptr, "textures/UI_elements/Game Title.png");
 
+	//Dialogue design
+	AddComponent<MaterialComponent>("Dialogue_profileFrame", nullptr, "textures/UI_elements/frame.png");
+	AddComponent<MaterialComponent>("Dialogue_profileBackground", nullptr, "textures/UI_elements/frame_bg.png");
+	AddComponent<MaterialComponent>("Dialogue_background", nullptr, "textures/UI_elements/text_tablet.png");
+
+
+
+
 
 	//Dialogue pfps
 	//AddComponent<MaterialComponent>("Game Title", nullptr, "textures/UI_elements/Game Title.png");
@@ -79,6 +107,7 @@ AssetManager::AssetManager() {
 
 
 
+	
 	//Pickable objects ROOM
 	AddComponent<MaterialComponent>("Books", nullptr, "textures/Items/books.png");
 	AddComponent<MaterialComponent>("Bear", nullptr, "textures/Items/item_bear.png");

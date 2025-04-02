@@ -511,6 +511,21 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	Flower_5->AddComponent<TriggerComponent>(nullptr, 1.0f);
 	AddOpaqueActor(Flower_5);
 
+
+	Tower1 = std::make_shared<Actor>(nullptr);
+	Tower1->AddComponent<PhysicsComponent>(nullptr, Vec3(-5.3f, -5.0f, 0.3f),/// pos
+		QMath::angleAxisRotation(0.0f, Vec3(-1.0f, 1.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	Tower1->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.5f, 0.5f, 0.5f));
+	Tower1->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Tower_obj"));
+	Tower1->GetComponent<PhysicsComponent>()->isStatic = true;
+	Tower1->AddComponent<ShaderComponent>(CubeShader);
+	Tower1->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Tower_mat"));
+	Tower1->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	AddOpaqueActor(Tower1);
+
+
 	return true;
 }
 

@@ -52,6 +52,7 @@ class CapstoneSceneDream : public Scene
 	Ref<Actor> Leaf2;
 	Ref<Actor> Flower_5; 
 	Ref<Actor> Flower_6;
+	Ref<Actor> Tower1;
 
 	//Test collisions
 	Ref<Actor> sphere;

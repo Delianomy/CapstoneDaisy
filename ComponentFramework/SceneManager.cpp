@@ -32,6 +32,7 @@ SceneManager::~SceneManager() {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
+
 	Debug::Info("Deleting the SceneManager", __FILE__, __LINE__);
 }
 
@@ -61,7 +62,7 @@ bool SceneManager::Initialize(std::string name_, int width_, int height_) {
 	ImGui_ImplOpenGL3_Init();
 
 	/********************************   Default first scene   ***********************/
-	BuildNewScene(SCENE_NUMBER::SCENE_SANDBOX_ADRIEL);
+	BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE_DREAM);
 	//bedroomScene = new CapstoneScene();
 	//bedroomScene->OnCreate();
 

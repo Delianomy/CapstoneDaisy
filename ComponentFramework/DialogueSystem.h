@@ -5,6 +5,7 @@
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "AssetManager.h"
+#include "AudioSystem.h"
 class Dialogue {
 public:
 	const char* NPCname;
@@ -17,11 +18,25 @@ public:
 
 class DialogueSystem
 {
+    ImGuiIO& io = ImGui::GetIO();
+    ImFont* customFont;
     Ref<AssetManager> assetMan;
+    Ref<AudioManager> audioManager;
+
+
 	std::vector<Dialogue> dialogues;
 	int currentDialogueIndex = 0;
 	bool isDialogueOpen = false;
+    bool wasDialogueOpen = false;
 public:
+
+    DialogueSystem() {
+        customFont = io.Fonts->AddFontFromFileTTF("fonts/lunchds.ttf", 20.0f);
+      
+    }
+    void SetAudioManager(Ref<AudioManager> audio) {
+        audioManager = audio;
+    }
 
     void ClearDialogues() {
         dialogues.clear();
@@ -33,6 +48,13 @@ public:
 		dialogues.push_back(dialogue_);
 	}
 	void OpenDialogue(int index) {
+        if (audioManager) {
+            std::cout << "Playing opening sound..." << std::endl;
+            audioManager->Play(2, 1.0f);
+        }
+        else {
+            std::cout << "Audio manager not initialized in OpenDialogue!" << std::endl;
+        }
         if (isDialogueOpen) {
             ClearDialogues();
             CloseDialogue();
@@ -41,7 +63,9 @@ public:
 		if (index >= 0 && index < dialogues.size()) {
 			currentDialogueIndex = index;
 			isDialogueOpen = true;
+            //audioManager->PlaySound("ost/UI_sounds/Retro8.wav");
 		}
+       
 	}
 
 
@@ -50,8 +74,11 @@ public:
         int screenHeight = 1080;
         int dialogueWidth = 600; // Full width
         int dialogueHeight = 700; // 
-
+        wasDialogueOpen = isDialogueOpen;
         if (!isDialogueOpen || dialogues.empty()) {
+            if (wasDialogueOpen && !isDialogueOpen) {
+               
+            }
             return;
         }
 
@@ -86,40 +113,18 @@ public:
         ImGui::NextColumn();
 
         // **Right Column: Dialogue Text (Starts Lower & Is Larger)**
-        ImGui::SetCursorPosY(40); // Push the text a bit lower
-        ImGui::PushFont(ImGui::GetFont()->Scale > 1.2f ? ImGui::GetFont() : ImGui::GetFont()); // Make text bigger if possible
+        ImGui::SetCursorPosY(40); 
+       // ImGui::PushFont(ImGui::GetFont()->Scale > 1.2f ? ImGui::GetFont() : ImGui::GetFont()); /
+        ImGui::PushFont(customFont);
         ImGui::TextWrapped(currentDialogue.dialogueText);
         ImGui::PopFont();
 
-
-        //// Display NPC name
-        //if (!dialogues.empty()) {
-        //    
-
-        //    ImGui::Columns(2, nullptr, false);  
-        //    ImGui::SetColumnWidth(1, 180); // Set fixed width for the profile picture
-        //    if (currentDialogue.textureID) {
-        //        ImGui::Image(
-        //            (intptr_t)dialogues[currentDialogueIndex].textureID,
-        //            ImVec2(200, 200));
-        //    
-        //    }
-
-        //    ImGui::SetCursorPosX(150);
-        //    ImGui::SetCursorPosY(10); // Adjust vertical position
-        //    ImGui::TextColored(ImVec4(1, 1, 0, 1), "%s", currentDialogue.NPCname); // Yellow name
-
-
-        //    ImGui::NextColumn();
-        //    ImGui::Separator(); // Add a line separator
-        //    ImGui::TextWrapped(currentDialogue.dialogueText);
-
-
-        //    ImGui::Columns(1); // Reset columns
-
-
-        ImGui::SetCursorPosX(dialogueWidth - 80); // Position button to the right
+        ImGui::SetCursorPosX(dialogueWidth - 130);
+        ImGui::SetCursorPosY( 160 );// Position button to the right
         if (ImGui::Button("Next")) {
+            if (audioManager) {
+                audioManager->Play(3, 1.0f);
+            }
             if (currentDialogueIndex < dialogues.size() - 1) {
                 currentDialogueIndex++;
             }
@@ -128,15 +133,13 @@ public:
                  ClearDialogues();
             }
         }
-
-   
-        //    ImGui::End();
-        //    ImGui::PopStyleVar();
-        //    ImGui::PopStyleColor();
-        //}
         ImGui::End();
-            ImGui::PopStyleVar();
-            ImGui::PopStyleColor();
+        ImGui::PopStyleVar();
+        ImGui::PopStyleColor();
+        if (wasDialogueOpen && !isDialogueOpen && audioManager) {
+            std::cout << "Playing closing sound..." << std::endl;
+            audioManager->Play(4, 1.0f);
+        }
     }
 
 

@@ -11,6 +11,8 @@
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_opengl3.h"
+#include <SDL_image.h>
+#include "AudioSystem.h" 
 
 using namespace MATH;
 
@@ -26,14 +28,27 @@ class DialogueSystem;
 #include "Scene.h"
 class CapstoneScene : public Scene 
 {
-	DialogueSystem dialogueSystem;
+	SDL_Cursor* defaultCursor;
+	SDL_Cursor* hoveredCursor;
+	bool isHovering = false;
+	bool hovering = false;
+	int mouseX, mouseY;
+	GLuint hoveredActorHiglightTexture;
+
+
+
+	
 
 	Ref<AssetManager> assetManager;
 	Ref<CameraActor> camera;
 	Ref<LightActor> light;
 	Ref<Actor> player;
-	Ref<Actor> doll;
+	Ref<Actor> bear;
 	Ref<Actor> books;
+	Ref<Actor> moonTrinket;
+	Ref<AudioManager> audioManager;
+	Ref<DialogueSystem> dialogueSystem;
+
 	Ref<Actor> room;
 	//Ref<Actor> doll;
 	float playerAngle;
@@ -55,6 +70,7 @@ class CapstoneScene : public Scene
 	float frameSpeed = 0.1f;
 	bool drawNormals;
 	bool drawOverlay;
+	bool inventoryButtonPressed = true;
 public:
 	Matrix4 orient;
 	explicit CapstoneScene();
@@ -67,8 +83,9 @@ public:
 	virtual void Render() const;
 	virtual void HandleEvents(const SDL_Event& sdlEvent);
 
-	
+	bool isCursoreOnObject(int x, int y);
 	void InitializeDialogue();
+	void DrawUI_imgui();
 };
 
 #endif // CAPSTONESCENE_H

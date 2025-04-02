@@ -61,7 +61,7 @@ bool MainMenu::OnCreate() {
 	light = std::make_shared<LightActor>(camera.get(), LightStyle::DirectionLight, Vec3(0.0f, 5.0f, 1.0f), Vec4(0.85f, 0.6, 0.6f, 0.0f));
 	light->OnCreate();
 
-	audioManager.PlaySound("ost/1.mp3");
+	audioManager.Play(5, 1.0f);
 
 	return true;
 }

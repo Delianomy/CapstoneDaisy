@@ -66,7 +66,9 @@ public:
 	void OnDestroy() {}
 	void Update(const float deltaTime_) {}
 	void Render()const {}
-	
+	ColliderType GetColliderType() const { return colliderType; }
+	AABB GetAABB() const { return aabb; }
+	float GetRadisu() const { return radius; }
 };
 
 

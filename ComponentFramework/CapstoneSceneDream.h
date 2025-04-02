@@ -77,6 +77,10 @@ class CapstoneSceneDream : public Scene
 	Vec3 lefr_right_Vector = Vec3(0.1f, 0.0f, 0.0f);
 	float walkSpeed = 40.0f;
 
+	//NewInput
+	Vec3 movementInput = Vec3();
+	bool playerIsGrounded = false;
+
 	//invetory UI imput
 	bool inventoryButtonPressed = true;
 	bool select_item_1 = false;
@@ -86,6 +90,11 @@ class CapstoneSceneDream : public Scene
 	//Inventory system
 	Inventory* inventory;
 
+	//Debug Meshes
+	Ref<Actor> DebugSphere;
+	Ref<Actor> DebugCube;
+	void AdrielMagik();
+	void RenderAdrielMagik() const;
 
 	int animIndex = 0;
 	int NPCanimIndex = 0;
@@ -118,6 +127,12 @@ public:
 		std::cout << "I collided with ";
 		std::cout << a.get() << "\n";
 	}
+
+	void DrawSphere(Vec3 pos, float radius) const;
+	void DrawSphere(Sphere s) const;
+	void DrawCube(Vec3 pos, Vec3 dimensions) const;
+	void DrawCube(AABB a) const;
+	void DrawRay(Ray ray) const;
 };
 
 #endif // CAPSTONESCENE_DREAM_H

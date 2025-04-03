@@ -59,7 +59,7 @@ bool SandboxAdriel::OnCreate() {
 	);
 	player->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
 	player->GetComponent<PhysicsComponent>()->isStatic = false;
-	player->GetComponent<PhysicsComponent>()->useGravity = true;
+	player->GetComponent<PhysicsComponent>()->useGravity = false;
 	player->GetComponent<PhysicsComponent>()->mass = 1.0f;
 	player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
 	player->AddComponent<ShaderComponent>(shader);
@@ -94,6 +94,17 @@ bool SandboxAdriel::OnCreate() {
 	cube->tag = TAGS::GROUND;
 	AddOpaqueActor(cube);
 
+	//Creating a simple obstacle
+	std::shared_ptr<Actor> Wall = std::make_shared<Actor>(nullptr);
+	Wall->AddComponent<PhysicsComponent>(nullptr, Vec3(5.0f, 0.0f, 0.0f), Vec3(1,1,1), true, false);
+	col = AABB(Vec3(5.0f, 0.0f, 0.0f), Vec3(1, 1, 1));
+	Wall->AddComponent<CollisionComponent>(nullptr, col);
+	Wall->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
+	Wall->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("ChessBoard"));
+	Wall->AddComponent<ShaderComponent>(CubeShader);
+	AddOpaqueActor(Wall);
+	physicsSystem.AddActor(Wall);
+	collisionSystem.AddActor(Wall);
 
 	skybox = std::make_shared<SkyBox>(nullptr, "textures/Skyboxes/Overworld/px.png", "textures/Skyboxes/Overworld/nx.png",
 		"textures/Skyboxes/Overworld/py.png", "textures/Skyboxes/Overworld/ny.png", "textures/Skyboxes/Overworld/pz.png",
@@ -366,6 +377,16 @@ void SandboxAdriel::Update(const float deltaTime) {
 	//	animIndex = 0;
 	//}
 	//	
+
+	camera->UpdateViewMatrix();
+	collisionSystem.Update(deltaTime);
+	physicsSystem.Update(deltaTime);
+	triggerSystem.Update(deltaTime);
+
+	playerPhysics->GetAcc().print("Player old accel: ");
+	playerPhysics->GetVel().print("Player old vel: ");
+	playerPhysics->GetPosition().print("Player old Pos: ");
+
 	Vec3 moveDir = Vec3();
 	if (VMath::mag(movementInput) > 0.0f) {
 		//Capping the x & z directional movement
@@ -379,10 +400,9 @@ void SandboxAdriel::Update(const float deltaTime) {
 	playerPhysics->ApplyForce(Vec3(resultingForce.x, moveDir.y * jumpSpeed, resultingForce.z));
 	movementInput.y = 0; //Reseting the jumping input
 
-	camera->UpdateViewMatrix();
-	collisionSystem.Update(deltaTime);
-	physicsSystem.Update(deltaTime);
-	triggerSystem.Update(deltaTime);
+	playerPhysics->GetAcc().print("Player new accel: ");
+	playerPhysics->GetVel().print("Player new vel: ");
+	playerPhysics->GetPosition().print("Player new Pos: ");
 }
 
 void SandboxAdriel::Render() const{
@@ -839,9 +859,9 @@ void SandboxAdriel::PlayerGroundCheck() {
 	for (auto actor : collidedActors) {
 		if (actor->tag == TAGS::GROUND) {
 			playerIsGrounded = true;
-			std::cout << "Player is grounded \n";
+			//std::cout << "Player is grounded \n";
 			return;
 		}
 	}
-	std::cout << "Player is NOT grounded \n";
+	//std::cout << "Player is NOT grounded \n";
 }

@@ -29,6 +29,8 @@ public:
 	void UndoForce();
 	void SetScale(const Vec3 scale_) { scale = scale_; }
 	void SetVel(const Vec3 vel_) { vel = vel_; }
+	Vec3 GetVel()const { return vel; }
+	Vec3 GetAcc()const { return accel; }
 };
 
 

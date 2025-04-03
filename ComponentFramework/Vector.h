@@ -187,7 +187,7 @@ namespace  MATH {
 		}
 
 		inline void print(const char* comment = nullptr) const {
-			if (comment) printf("%s\n", comment);
+			if (comment) printf("%s", comment);
 			printf("%1.8f %1.8f %1.8f\n", x,y,z);		  
 		}
 

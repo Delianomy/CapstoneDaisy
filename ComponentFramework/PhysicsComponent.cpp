@@ -27,7 +27,7 @@ PhysicsComponent::PhysicsComponent(Component* parent_, Vec3 pos_, Vec3 scale_, b
 	scale = scale_;
 	mass = 1.0f;
 	isStatic = isStatic_;
-	useGravity = useGravity;
+	useGravity = useGravity_;
 };
 
 bool PhysicsComponent::OnCreate() {

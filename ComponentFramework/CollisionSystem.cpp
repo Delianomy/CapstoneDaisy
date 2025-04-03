@@ -65,12 +65,8 @@ void CollisionSystem::Update(const float deltaTime) {
                     SphereAABBCollisionResponce(s, pc1, box, pc2);
                 }
             }
-
              else if (collidingActors[i]->GetComponent<CollisionComponent>()->colliderType == ColliderType::AABB &&
                      collidingActors[j]->GetComponent<CollisionComponent>()->colliderType == ColliderType::AABB) {
-                    
-
-
                  }
         }
     }
@@ -184,6 +180,7 @@ void CollisionSystem::SphereAABBCollisionResponce(Sphere s, Ref<PhysicsComponent
     Vec3 n = VMath::normalize(L);
     float overlap = s.r - distance;
 
+    /// This only applies when colliding with the floor for some reason
     //Static box and dynamic sphere (player character)
     if (pc2->isStatic && !pc1->isStatic) {
         // Position correction - move the sphere out of the box
@@ -201,9 +198,14 @@ void CollisionSystem::SphereAABBCollisionResponce(Sphere s, Ref<PhysicsComponent
             // Optionally apply some friction along the surface
             float friction = 0.8f; // 1.0 = no friction, 0.0 = full stop
             pc1->vel = pc1->vel * friction;
+            
+            return;
         }
+
+        pc1->vel = pc1->vel * dot_product;
     }
     // For other cases (dynamic box, or both dynamic objects)
+    /// Not really lmao
     else {
         // Original physics response - only if we need it
         if (!pc1->isStatic || !pc2->isStatic) {
@@ -215,15 +217,25 @@ void CollisionSystem::SphereAABBCollisionResponce(Sphere s, Ref<PhysicsComponent
             float v1p = VMath::dot(v1, n);
             float v2p = VMath::dot(v2, n);
 
+            /// But what if only one of them is moving towards the other?
+            /// This means that the velocity will not change at all
+            /// Anyways through long math issues
+            /// since the reference point is the sphere to the box
+            /// most scenarios where a physics response is appropriate 
+            /// has v1p - v2p be positive 
+            /// only IF v1 is the sphere and n  
             // Only apply physics response if objects are moving toward each other
-            if (v1p - v2p <= 0.0f) {
+            
+            if (v1p - v2p >= 0.0f) {
                 float v1p_new = ((m1 - e * m2) * v1p + ((1.0f + e) * m2 * v2p)) / (m1 + m2);
                 float v2p_new = ((m2 - e * m1) * v2p + ((1.0f + e) * m1 * v1p)) / (m1 + m2);
 
-                if (!pc1->isStatic) pc1->vel = v1 + (v1p_new - v1p) * n;
+                if (!pc1->isStatic) {
+                    pc1->vel = v1 + (v1p_new - v1p) * n;
+                }
                 if (!pc2->isStatic) pc2->vel = v2 + (v2p_new - v2p) * n;
             }
-
+          
             // Position correction
             if (!pc1->isStatic && !pc2->isStatic) {
                 // Share displacement between objects based on inverse mass ratio

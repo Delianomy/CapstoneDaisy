@@ -340,29 +340,46 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 
 	Island2 = std::make_shared<Actor>(nullptr);
-	Island2->AddComponent<PhysicsComponent>(nullptr, Vec3(18.0f, -2.0f, 0.0f),/// pos
+	Island2->AddComponent<PhysicsComponent>(nullptr, Vec3(11.0f, -2.0f, 0.0f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
 	Island2->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 0.7f, 1.0f));
 	Island2->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
-	cubeCollider;
-	cubeCollider.center = Island2->GetComponent<PhysicsComponent>()->GetPosition();
-	//Problem, this looks a bit weird cause Y goes very deep in the bottom comparing to the top side, leadingfor stuff to look sketchy 
-	cubeCollider.rx = 3.18f;
-	cubeCollider.ry = 0.51f;
-	cubeCollider.rz = 0.904f;
-
-
-	//cube->AddComponent<CollisionComponent>(nullptr, cubeCollider);
 	Island2->GetComponent<PhysicsComponent>()->isStatic = true;
-
 	Island2->AddComponent<ShaderComponent>(CubeShader);
 	Island2->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
 	Island2->AddComponent<CollisionComponent>(nullptr, 1.0f);
 	AddOpaqueActor(Island2);
 	physicsSystem.AddActor(Island2);
 	collisionSystem.AddActor(Island2);
+
+
+
+
+	BottomOfTheOcean = std::make_shared<Actor>(nullptr);
+	BottomOfTheOcean->AddComponent<PhysicsComponent>(nullptr, Vec3(18.0f, -10.0f, 0.0f),/// pos
+		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	BottomOfTheOcean->GetComponent<PhysicsComponent>()->SetScale(Vec3(10.0f, 0.1f, 10.0f));
+	BottomOfTheOcean->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
+	cubeCollider;
+	cubeCollider.center = BottomOfTheOcean->GetComponent<PhysicsComponent>()->GetPosition();
+	//Problem, this looks a bit weird cause Y goes very deep in the bottom comparing to the top side, leadingfor stuff to look sketchy 
+	cubeCollider.rx = 3.18f;
+	cubeCollider.ry = 0.51f;
+	cubeCollider.rz = 0.904f;
+	//cube->AddComponent<CollisionComponent>(nullptr, cubeCollider);
+	BottomOfTheOcean->GetComponent<PhysicsComponent>()->isStatic = true;
+	BottomOfTheOcean->AddComponent<ShaderComponent>(CubeShader);
+	BottomOfTheOcean->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
+	//BottomOfTheOcean->AddComponent<CollisionComponent>(nullptr, 1.0f);
+	AddOpaqueActor(BottomOfTheOcean);
+	physicsSystem.AddActor(BottomOfTheOcean);
+	collisionSystem.AddActor(BottomOfTheOcean);
+
+
 
 
 	House = std::make_shared<Actor>(nullptr);
@@ -524,6 +541,22 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	Tower1->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Tower_mat"));
 	Tower1->AddComponent<TriggerComponent>(nullptr, 1.0f);
 	AddOpaqueActor(Tower1);
+
+
+	Bridge = std::make_shared<Actor>(nullptr);
+	Bridge->AddComponent<PhysicsComponent>(nullptr, Vec3(-6.3f, -5.5f, 0.3f),/// pos
+		QMath::angleAxisRotation(0.0f, Vec3(-1.0f, 1.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	Bridge->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.3f, 0.3f, 0.3f));
+	Bridge->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Bridge_obj"));
+	Bridge->GetComponent<PhysicsComponent>()->isStatic = true;
+	Bridge->AddComponent<ShaderComponent>(CubeShader);
+	Bridge->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Bridge_mat"));
+	Bridge->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	AddOpaqueActor(Bridge);
+
+
 
 
 	return true;

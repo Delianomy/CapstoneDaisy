@@ -44,6 +44,12 @@ AssetManager::AssetManager() {
 	AddComponent<MeshComponent>("Tower_obj", nullptr, "meshes/Tower.obj");
 	AddComponent<MaterialComponent>("Tower_mat", nullptr, "textures/Environment/tower_test.png");
 
+	AddComponent<MeshComponent>("Bridge_obj", nullptr, "meshes/Bridge.obj");
+	AddComponent<MaterialComponent>("Bridge_mat", nullptr, "textures/Environment/bridge_test.png");
+
+	AddComponent<MeshComponent>("Bush_obj", nullptr, "meshes/bush.obj");
+	AddComponent<MaterialComponent>("Bush_mat", nullptr, "textures/Environment/bush.png");
+
 	
 
 	AddComponent<ShaderComponent>("DefaultShader",nullptr,"shaders/defaultVert.glsl", "shaders/defaultFrag.glsl");

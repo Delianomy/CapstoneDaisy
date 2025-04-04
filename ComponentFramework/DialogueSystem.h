@@ -31,7 +31,7 @@ class DialogueSystem
 public:
 
     DialogueSystem() {
-        customFont = io.Fonts->AddFontFromFileTTF("fonts/lunchds.ttf", 20.0f);
+       /// customFont = io.Fonts->AddFontFromFileTTF("fonts/lunchds.ttf", 20.0f);
       
     }
     void SetAudioManager(Ref<AudioManager> audio) {
@@ -114,8 +114,8 @@ public:
 
         // **Right Column: Dialogue Text (Starts Lower & Is Larger)**
         ImGui::SetCursorPosY(40); 
-       // ImGui::PushFont(ImGui::GetFont()->Scale > 1.2f ? ImGui::GetFont() : ImGui::GetFont()); /
-        ImGui::PushFont(customFont);
+        ImGui::PushFont(ImGui::GetFont()->Scale > 1.2f ? ImGui::GetFont() : ImGui::GetFont()); 
+        //ImGui::PushFont(customFont);
         ImGui::TextWrapped(currentDialogue.dialogueText);
         ImGui::PopFont();
 

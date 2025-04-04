@@ -32,7 +32,7 @@ bool CapstoneSceneDream::OnCreate() {
 	assetManager = std::make_shared<AssetManager>();
 
 
-
+	//SDL_SetCursor(SDL_GetDefaultCursor());
 
 
 
@@ -188,6 +188,8 @@ CapstoneSceneDream::~CapstoneSceneDream() {
 
 void CapstoneSceneDream::OnDestroy() {
 	Debug::Info("Deleting Scene Dream: ", __FILE__, __LINE__);
+
+	//SDL_SetCursor(SDL_GetDefaultCursor());
 }
 
 void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
@@ -299,37 +301,20 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	Ref<ShaderComponent> CubeShader = assetManager->GetComponent<ShaderComponent>("RegularTextureShader");
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("TextureShader");
 
-
-	//Randomizer of positions and rotations of greenery
-	std::random_device randomGenerator;
-	std::mt19937 gen(randomGenerator());
-	std::uniform_real_distribution<float> xDist(4.0f, 13.0f);
-	std::uniform_real_distribution<float> yDist(-2.0f, -1.0f);
-	std::uniform_real_distribution<float> zDist(-1.0f, 1.0f);
-
-	std::uniform_real_distribution<float> angleDist(0.0f, 90.0f);
-
-	for (int i = 0; i < 10; i++) {
-		Ref<Actor> bush = std::make_shared<Actor>(nullptr);
-
-		Vec3 generatedPos = Vec3(xDist(randomGenerator), yDist(randomGenerator), zDist(randomGenerator));
-		float angle = angleDist(randomGenerator);
-		Quaternion rotation = QMath::angleAxisRotation(angle, Vec3(0.0, 0.0f, 0.0f));
-
-
-		bush->AddComponent<PhysicsComponent>(nullptr, generatedPos,/// pos
-			rotation,
+	Ref<Actor> bush1 = std::make_shared<Actor>(nullptr);
+	bush1->AddComponent<PhysicsComponent>(nullptr, Vec3(10.0f, -1.0f, 1.0f),/// pos
+		QMath::angleAxisRotation(20, Vec3(1.0, 0.0f, 0.0f)),
 			Vec3(0.0f, 0.0f, 0.0f) ///velocity
-		);
-		bush->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
-		bush->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Bush_obj"));
-		bush->GetComponent<PhysicsComponent>()->isStatic = true;
+	);
+	bush1->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
+	bush1->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Bush_obj"));
+	bush1->GetComponent<PhysicsComponent>()->isStatic = true;
 
-		bush->AddComponent<ShaderComponent>(shader);
-		bush->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Bush_mat"));
-		bush->AddComponent<TriggerComponent>(nullptr, 1.0f);
-		AddTransparentActor(bush);
-	}
+	bush1->AddComponent<ShaderComponent>(shader);
+	bush1->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Bush_mat"));
+	bush1->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	AddTransparentActor(bush1);
+
 
 
 	Island1 = std::make_shared<Actor>(nullptr);

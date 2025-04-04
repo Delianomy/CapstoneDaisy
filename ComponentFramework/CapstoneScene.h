@@ -28,6 +28,8 @@ class DialogueSystem;
 #include "Scene.h"
 class CapstoneScene : public Scene 
 {
+	SDL_Surface* defaultCursorTexture;
+	SDL_Surface* hoveredCursorTexture;
 	SDL_Cursor* defaultCursor;
 	SDL_Cursor* hoveredCursor;
 	bool isHovering = false;

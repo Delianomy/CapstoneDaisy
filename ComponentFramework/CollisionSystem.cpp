@@ -163,6 +163,7 @@ void CollisionSystem::SphereSphereCollisionResponse(Sphere s1, Ref<PhysicsCompon
 
 void CollisionSystem::SphereAABBCollisionResponce(Sphere s, Ref<PhysicsComponent> pc1, AABB box, Ref<PhysicsComponent> pc2)
 {
+    /// PC2 IS THE SPHERE????
     // Find the closest point on the AABB to the sphere
     Vec3 aabb_half_extents = Vec3(box.rx, box.ry, box.rz);
     Vec3 difference = s.center - box.center;
@@ -182,27 +183,25 @@ void CollisionSystem::SphereAABBCollisionResponce(Sphere s, Ref<PhysicsComponent
 
     /// This only applies when colliding with the floor for some reason
     //Static box and dynamic sphere (player character)
-    if (pc2->isStatic && !pc1->isStatic) {
+    if (!pc2->isStatic && pc1->isStatic) {
         // Position correction - move the sphere out of the box
-        pc1->pos = pc1->pos + n * (overlap + 0.001f);
+        pc2->pos = pc2->pos + n * (overlap + 0.001f);
 
         // Project current velocity onto the collision plane instead of full bounce
-        Vec3 v1 = pc1->vel;
+        Vec3 v1 = pc2->vel;
         float dot_product = VMath::dot(v1, n);
 
         // If moving into the surface
         if (dot_product < 0) {
             // Remove the normal component from velocity (slide along the surface)
-            pc1->vel = v1 - n * dot_product;
+            pc2->vel = v1 - n * dot_product;
 
             // Optionally apply some friction along the surface
             float friction = 0.8f; // 1.0 = no friction, 0.0 = full stop
-            pc1->vel = pc1->vel * friction;
+            pc2->vel = pc2->vel * friction;
             
             return;
         }
-
-        pc1->vel = pc1->vel * dot_product;
     }
     // For other cases (dynamic box, or both dynamic objects)
     /// Not really lmao
@@ -233,7 +232,9 @@ void CollisionSystem::SphereAABBCollisionResponce(Sphere s, Ref<PhysicsComponent
                 if (!pc1->isStatic) {
                     pc1->vel = v1 + (v1p_new - v1p) * n;
                 }
-                if (!pc2->isStatic) pc2->vel = v2 + (v2p_new - v2p) * n;
+                if (!pc2->isStatic) {
+                    pc2->vel = v2 + (v2p_new - v2p) * n;
+                }
             }
           
             // Position correction
@@ -245,12 +246,8 @@ void CollisionSystem::SphereAABBCollisionResponce(Sphere s, Ref<PhysicsComponent
                 s.center = s.center + n * (overlap * ratio1);
                 box.center = box.center - n * (overlap * ratio2);
             }
-            else if (!pc1->isStatic) {
-                s.center = s.center + n * overlap;
-            }
-            else if (!pc2->isStatic) {
-                box.center = box.center - n * overlap;
-            }
+            else if (!pc1->isStatic) { s.center = s.center + n * overlap;}
+            else if (!pc2->isStatic) { box.center = box.center - n * overlap; }
         }
     }
 }

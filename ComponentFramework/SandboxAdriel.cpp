@@ -97,7 +97,7 @@ bool SandboxAdriel::OnCreate() {
 	//Creating a simple obstacle
 	std::shared_ptr<Actor> Wall = std::make_shared<Actor>(nullptr);
 	Wall->AddComponent<PhysicsComponent>(nullptr, Vec3(5.0f, 0.0f, 0.0f), Vec3(1,1,1), true, false);
-	col = AABB(Vec3(5.0f, 0.0f, 0.0f), Vec3(1, 1, 1));
+	col = AABB(Vec3(5.0f, 0.0f, 0.0f), Vec3(1.5, 1.5, 1.5));
 	Wall->AddComponent<CollisionComponent>(nullptr, col);
 	Wall->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
 	Wall->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("ChessBoard"));
@@ -382,11 +382,7 @@ void SandboxAdriel::Update(const float deltaTime) {
 	collisionSystem.Update(deltaTime);
 	physicsSystem.Update(deltaTime);
 	triggerSystem.Update(deltaTime);
-
-	playerPhysics->GetAcc().print("Player old accel: ");
-	playerPhysics->GetVel().print("Player old vel: ");
-	playerPhysics->GetPosition().print("Player old Pos: ");
-
+	 
 	Vec3 moveDir = Vec3();
 	if (VMath::mag(movementInput) > 0.0f) {
 		//Capping the x & z directional movement
@@ -397,12 +393,8 @@ void SandboxAdriel::Update(const float deltaTime) {
 	}
 
 	Vec3 resultingForce = moveDir * walkSpeed;
-	playerPhysics->ApplyForce(Vec3(resultingForce.x, moveDir.y * jumpSpeed, resultingForce.z));
+	playerPhysics->ApplyForce(resultingForce);
 	movementInput.y = 0; //Reseting the jumping input
-
-	playerPhysics->GetAcc().print("Player new accel: ");
-	playerPhysics->GetVel().print("Player new vel: ");
-	playerPhysics->GetPosition().print("Player new Pos: ");
 }
 
 void SandboxAdriel::Render() const{
@@ -753,6 +745,15 @@ void SandboxAdriel::DebugUI() {
 
 	ImGui::SeparatorText("Inventory Items");
 	ImGui::Text("%s", inventory->ToString().c_str());
+
+	//Player debugging
+	ImGui::SeparatorText("PlayerInfo");
+	Vec3 temp;
+	Ref<PhysicsComponent> playerPhysics = player->GetComponent<PhysicsComponent>();
+	temp = playerPhysics->GetAcc();
+	ImGui::Text("Accel: (%.3f, %.3f, %.3f)", temp.x, temp.y, temp.z);
+	temp = playerPhysics->GetVel();
+	ImGui::Text("Vel: (%.3f, %.3f, %.3f)", temp.x, temp.y, temp.z);
 
 	ImGui::End();
 

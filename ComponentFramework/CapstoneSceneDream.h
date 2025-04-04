@@ -13,6 +13,7 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "SceneManager.h"
 #include "Inventory.h"
+#include <algorithm>
 using namespace MATH;
 
 /// Forward declarations 
@@ -55,7 +56,7 @@ class CapstoneSceneDream : public Scene
 	Ref<Actor> Tower1;
 	Ref<Actor> Bridge;
 	Ref<Actor> BottomOfTheOcean;
-	
+	Ref<Actor> Bush;
 	
 
 	//Test collisions

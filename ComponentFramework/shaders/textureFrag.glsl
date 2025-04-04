@@ -21,6 +21,8 @@ void main() {
 	vec4 ka = 0.01 * kd;
 
 	vec4 textureColor = texture(myTexture,texCoord);
+    if(textureColor.a < 0.01)
+        discard;
 
 	float diff = max(dot(vertNormal, lightDir), 0.0);
 	/// Reflection is based incedent which means a vector from the light source
@@ -29,7 +31,6 @@ void main() {
 	float spec = max(dot(eyeDir, reflection), 0.0);
 	spec = pow(spec,14.0);
 	vec4 outColor = ka + (textureColor * kd * diff) + (ks * spec);
-	outColor.a = 0.5;
 	fragColor = vec4 (textureColor.rgb, textureColor.a);	
    
 }

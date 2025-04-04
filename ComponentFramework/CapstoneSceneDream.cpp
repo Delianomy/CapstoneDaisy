@@ -14,7 +14,7 @@
 #include "PhysicsComponent.h"
 #include "CollisionComponent.h"
 #include "TriggerComponent.h"
-
+#include <random>
 
 #include "SkyBox.h"
 #include <string>
@@ -31,6 +31,12 @@ bool CapstoneSceneDream::OnCreate() {
 	Debug::Info("Loading assets Scene Dream: ", __FILE__, __LINE__);
 	assetManager = std::make_shared<AssetManager>();
 
+
+
+
+
+
+	//Shaders used in the scene
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("TextureShader");
 	Ref<ShaderComponent> WaveShader = assetManager->GetComponent<ShaderComponent>("WaveShader");
 	Ref<ShaderComponent> CubeShader = assetManager->GetComponent<ShaderComponent>("RegularTextureShader");
@@ -108,6 +114,21 @@ bool CapstoneSceneDream::OnCreate() {
 	fairy->AddComponent<TriggerComponent>(nullptr, 1.0f);
 	AddTransparentActor(fairy);
 
+
+
+	//now technically it would mean that out player now has a collider
+	GLint maxTextureSize;
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
+	printf("Max Texture Size: %d\n", maxTextureSize);
+
+	GLint totalMemoryKB;
+	glGetIntegerv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX, &totalMemoryKB);
+	printf("Available GPU Memory: %d KB\n", totalMemoryKB);
+
+
+
+	CreateLevelLayout();
+
 	//make an actor
 	player = std::make_shared<Actor>(nullptr);
 	player->NPCid = 0;
@@ -128,16 +149,6 @@ bool CapstoneSceneDream::OnCreate() {
 	player->GetComponent<TriggerComponent>()->SetCallback(TriggerCallbackCreator::CreateTriggerCallback(this, &CapstoneSceneDream::PrintStatement));
 	AddTransparentActor(player);
 
-
-	//now technically it would mean that out player now has a collider
-	GLint maxTextureSize;
-	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
-	printf("Max Texture Size: %d\n", maxTextureSize);
-
-	GLint totalMemoryKB;
-	glGetIntegerv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX, &totalMemoryKB);
-	printf("Available GPU Memory: %d KB\n", totalMemoryKB);
-
 	camera = std::make_shared<CameraActor>(player.get());
 	camera->isInMainMenu = false;
 	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -2.0f), Quaternion());
@@ -145,27 +156,6 @@ bool CapstoneSceneDream::OnCreate() {
 	camera->GetProjectionMatrix().print("ProjectionMatrix");
 	camera->GetViewMatrix().print("ViewMatrix");
 
-	//cube = std::make_shared<Actor>(nullptr);
-	//cube->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -2.0f, 0.0f),/// pos
-	//	QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
-	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	//);
-	//cube->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
-	//cube->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("House"));
-	//AABB cubeCollider;
-	//cubeCollider.center = cube->GetComponent<PhysicsComponent>()->GetPosition();
-	////Problem, this looks a bit weird cause Y goes very deep in the bottom comparing to the top side, leadingfor stuff to look sketchy 
-	//cubeCollider.rx = 3.18f;
-	//cubeCollider.ry = 0.51f;
-	//cubeCollider.rz = 0.904f;
-
-	//cube->AddComponent<CollisionComponent>(nullptr, cubeCollider);
-	//cube->GetComponent<PhysicsComponent>()->isStatic = true;
-
-	//cube->AddComponent<ShaderComponent>(CubeShader);
-	//cube->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("house"));
-	//cube->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	//AddOpaqueActor(cube);
 
 	skybox = std::make_shared<SkyBox>(nullptr, "textures/Skyboxes/Overworld/px.png", "textures/Skyboxes/Overworld/nx.png",
 		"textures/Skyboxes/Overworld/py.png", "textures/Skyboxes/Overworld/ny.png", "textures/Skyboxes/Overworld/pz.png",
@@ -175,11 +165,6 @@ bool CapstoneSceneDream::OnCreate() {
 
 	light = std::make_shared<LightActor>(camera.get(), LightStyle::DirectionLight, Vec3(0.0f, 5.0f, 1.0f), Vec4(0.85f, 0.6, 0.6f, 0.0f));
 	light->OnCreate();
-
-	CreateLevelLayout();
-
-
-
 	/// Register the two balls with the physics and collision systems
 	physicsSystem.AddActor(player);
 
@@ -312,6 +297,40 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 
 bool CapstoneSceneDream::CreateLevelLayout() {
 	Ref<ShaderComponent> CubeShader = assetManager->GetComponent<ShaderComponent>("RegularTextureShader");
+	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("TextureShader");
+
+
+	//Randomizer of positions and rotations of greenery
+	std::random_device randomGenerator;
+	std::mt19937 gen(randomGenerator());
+	std::uniform_real_distribution<float> xDist(4.0f, 13.0f);
+	std::uniform_real_distribution<float> yDist(-2.0f, -1.0f);
+	std::uniform_real_distribution<float> zDist(-1.0f, 1.0f);
+
+	std::uniform_real_distribution<float> angleDist(0.0f, 90.0f);
+
+	for (int i = 0; i < 10; i++) {
+		Ref<Actor> bush = std::make_shared<Actor>(nullptr);
+
+		Vec3 generatedPos = Vec3(xDist(randomGenerator), yDist(randomGenerator), zDist(randomGenerator));
+		float angle = angleDist(randomGenerator);
+		Quaternion rotation = QMath::angleAxisRotation(angle, Vec3(0.0, 0.0f, 0.0f));
+
+
+		bush->AddComponent<PhysicsComponent>(nullptr, generatedPos,/// pos
+			rotation,
+			Vec3(0.0f, 0.0f, 0.0f) ///velocity
+		);
+		bush->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
+		bush->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Bush_obj"));
+		bush->GetComponent<PhysicsComponent>()->isStatic = true;
+
+		bush->AddComponent<ShaderComponent>(shader);
+		bush->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Bush_mat"));
+		bush->AddComponent<TriggerComponent>(nullptr, 1.0f);
+		AddTransparentActor(bush);
+	}
+
 
 	Island1 = std::make_shared<Actor>(nullptr);
 	Island1->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -2.0f, 0.0f),/// pos
@@ -423,6 +442,10 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	Flower_1->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Flower_v1_mat"));
 	Flower_1->AddComponent<TriggerComponent>(nullptr, 1.0f);
 	AddOpaqueActor(Flower_1);
+
+	
+
+	
 
 
 
@@ -665,11 +688,9 @@ void CapstoneSceneDream::Render() const {
 		std::dynamic_pointer_cast<SkyBox>(skybox)->Render();
 		glUseProgram(0);
 
-		// Then render player with proper depth testing
+		glDisable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS);  // Only render if closer than existing geometry
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDepthFunc(GL_LESS);
 
 		for (auto opaqueActor : opaqueActors) {
 			glUseProgram(opaqueActor->GetComponent<ShaderComponent>()->GetProgram());
@@ -679,9 +700,33 @@ void CapstoneSceneDream::Render() const {
 			opaqueActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
 		}
 
-		RenderAdrielMagik();
+		//RenderAdrielMagik();
+		std::vector<Ref<Actor>> sortedTransparentActors = transparentActors;
+		std::sort(sortedTransparentActors.begin(), sortedTransparentActors.end(),
+			[this](const Ref<Actor>& a, const Ref<Actor>& b) {
+				// Extract camera position from the orientation matrix
+				Vec3 camPos = camera->GetComponent<TransformComponent>()->GetPosition();
 
-		for (auto transparentActor : transparentActors) {
+				// Get positions of actors
+				Vec3 posA = a->GetComponent<PhysicsComponent>()->GetPosition();
+				Vec3 posB = b->GetComponent<PhysicsComponent>()->GetPosition();
+
+				// Calculate squared distances (faster than computing actual distances)
+				float distSquaredA = VMath::dot(posA - camPos, posA- camPos);
+				float distSquaredB = VMath::dot(posB - camPos, posB - camPos);
+
+				if (a->NPCid == 0) return false;
+				if (b->NPCid == 0) return true;
+				// Sort from far to near
+				return distSquaredA > distSquaredB;
+			});
+		glDisable(GL_CULL_FACE);
+		glEnable(GL_DEPTH_TEST);
+		glDepthMask(GL_FALSE);  // Don't write to depth buffer
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		for (auto transparentActor : sortedTransparentActors) {
 			glUseProgram(transparentActor->GetComponent<ShaderComponent>()->GetProgram());
 			glUniform1i(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("NPC_id"), transparentActor->NPCid);
 			glUniform1i(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("talking"), true);
@@ -694,7 +739,7 @@ void CapstoneSceneDream::Render() const {
 				transparentActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
 			}
 		}
-	
+		glDepthMask(GL_TRUE);
 	ImGui::Render();
 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

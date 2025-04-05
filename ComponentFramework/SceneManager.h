@@ -45,6 +45,8 @@ private:
 public:
 	int getWindowHeight() { return window->getHeight(); };
 	int getWindowWidth() { return window->getWidth(); };
+	void AddItemToInventory(std::shared_ptr<Actor> other, int index);
+	void DropItemFromInventory(int index);
 };
 
 

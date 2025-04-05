@@ -2,6 +2,8 @@
 #define SCENE_H
 #include "Actor.h"
 #include "SceneManager.h"
+#include "TriggerSystem.h"
+
 union SDL_Event; /// Forward declaration for HandleEvents
 
 struct ViewPort {
@@ -24,11 +26,13 @@ struct ViewPort {
 class Scene{
 protected:
 	std::vector<Ref<Actor>> actors;
-	std::vector<Ref<Actor>> opaqueActors;
-	std::vector<Ref<Actor>> transparentActors;
+
 	ViewPort viewport;
 	SceneManager* sceneMan = nullptr;
 public:	
+	TriggerSystem triggerSystem;
+	std::vector<Ref<Actor>> opaqueActors;
+	std::vector<Ref<Actor>> transparentActors;
 	virtual ~Scene() {}
 	virtual bool OnCreate() = 0;
 	virtual void OnDestroy() = 0;

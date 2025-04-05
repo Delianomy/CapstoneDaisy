@@ -225,8 +225,7 @@ bool SceneManager::BuildCapstoneScenes() {
 	if (!status) { return false; }
 
 	if (dreamScene == nullptr) {
-		dreamScene = new CapstoneScene();
-		dreamScene->SetSceneManager(this);
+		dreamScene = new CapstoneSceneDream(this);
 		status = dreamScene->OnCreate();
 	}
 

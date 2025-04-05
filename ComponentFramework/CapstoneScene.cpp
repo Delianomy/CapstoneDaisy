@@ -33,12 +33,14 @@ bool CapstoneScene::OnCreate() {
 	defaultCursorTexture = IMG_Load("textures/UI_elements/cursor/cursor_normal.png");
 	hoveredCursorTexture = IMG_Load("textures/UI_elements/cursor//cursor_hovered.png");
 	
+	
 
 	SDL_Surface* highlightTexure = IMG_Load("textures/UI_elements/cursor/hovered.png");
 
 	audioManager = std::make_shared<AudioManager>();
 	dialogueSystem = std::make_shared<DialogueSystem>();
 	dialogueSystem->SetAudioManager(audioManager);
+	
 
 	if (defaultCursorTexture && hoveredCursorTexture) {
 		SDL_SetColorKey(defaultCursorTexture, SDL_TRUE, SDL_MapRGB(defaultCursorTexture->format, 255, 0, 255));
@@ -76,7 +78,7 @@ bool CapstoneScene::OnCreate() {
 	//bear->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Bear"));
 	//AddTransparentActor(bear);
 
-
+	
 	test = std::make_shared<PickableItem>(
 		assetManager,                                          // Ref<AssetManager> assMan
 		"Item1",                                               // std::string name_
@@ -85,7 +87,9 @@ bool CapstoneScene::OnCreate() {
 		Vec3(0.1f, 0.1f, 0.1f),                               // Vec3 scale
 		assetManager->GetComponent<MaterialComponent>("Bear") // std::shared_ptr<MaterialComponent> material   // std::shared_ptr<MeshComponent> mesh
 	);
+	triggerSystem.AddActor(test);
 	AddTransparentActor(test);
+	dialogueSystem->SetOnItemTaken([this]() {sceneMan->AddItemToInventory(test, 0); });
 
 	/*books = std::make_shared<Actor>(nullptr);
 	books->AddComponent<TransformComponent>(nullptr, Vec3(1.8f, 0.32f, -3.99f), QMath::angleAxisRotation(0.0f, Vec3(0.0f, 9.0f, 0.0f)));
@@ -605,7 +609,19 @@ void CapstoneScene::DrawUI_imgui()
 		ImGui::PopStyleVar();
 		ImGui::PopStyleColor();
 
-		ImGui::SetNextWindowPos(ImVec2(330, 660)); // Set the window position here (x, y)
+		/// Drawing the object texture on top
+		if (sceneMan->inventory.items[0] != nullptr) {
+			ImGui::SetNextWindowPos(ImVec2(285, 625)); // Window position + 35
+			ImGui::SetNextWindowSize(ImVec2(150, 150)); // Set the window size
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+			ImGui::Begin("Item slot 1", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoDecoration);
+			ImGui::Image((intptr_t)sceneMan->inventory.items[0]->GetComponent<MaterialComponent>()->getTextureID(), ImVec2(80, 80));
+			ImGui::End();
+			ImGui::PopStyleVar();
+			ImGui::PopStyleColor();
+		}
+		ImGui::SetNextWindowPos(ImVec2(285 + 35, 625 + 35)); // Set the window position here (x, y)
 		ImGui::SetNextWindowSize(ImVec2(80, 80)); // Set the window size
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -630,6 +646,18 @@ void CapstoneScene::DrawUI_imgui()
 		ImGui::PopStyleVar();
 		ImGui::PopStyleColor();
 
+		if (sceneMan->inventory.items[1] != nullptr) {
+			ImGui::SetNextWindowPos(ImVec2(395 + 35, 665 + 35));
+			ImGui::SetNextWindowSize(ImVec2(150, 150));
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+			ImGui::Begin("Item slot 2", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoDecoration);
+			ImGui::Image((intptr_t)sceneMan->inventory.items[1]->GetComponent<MaterialComponent>()->getTextureID(), ImVec2(80, 80));
+			ImGui::End();
+			ImGui::PopStyleVar();
+			ImGui::PopStyleColor();
+		}
+
 		ImGui::SetNextWindowPos(ImVec2(475, 735)); // Set the window position here (x, y)
 		ImGui::SetNextWindowSize(ImVec2(80, 80)); // Set the window size
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
@@ -639,6 +667,7 @@ void CapstoneScene::DrawUI_imgui()
 		ImGui::End();
 		ImGui::PopStyleVar();
 		ImGui::PopStyleColor();
+
 
 
 		/// ---------------------------INVENTORY SLOT 3 ----------------------------------------------------------------------
@@ -652,6 +681,17 @@ void CapstoneScene::DrawUI_imgui()
 		ImGui::PopStyleVar();
 		ImGui::PopStyleColor();
 
+		if (sceneMan->inventory.items[2] != nullptr) {
+			ImGui::SetNextWindowPos(ImVec2(465 + 35, 815 + 35)); // Set the window position here (x, y)
+			ImGui::SetNextWindowSize(ImVec2(150, 150)); // Set the window size
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+			ImGui::Begin("Item slot 3", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoDecoration);
+			ImGui::Image((intptr_t)sceneMan->inventory.items[2]->GetComponent<MaterialComponent>()->getTextureID(), ImVec2(80, 80));
+			ImGui::End();
+			ImGui::PopStyleVar();
+			ImGui::PopStyleColor();
+		}
 
 		ImGui::SetNextWindowPos(ImVec2(545, 885)); // Set the window position here (x, y)
 		ImGui::SetNextWindowSize(ImVec2(80, 80)); // Set the window size
@@ -659,23 +699,10 @@ void CapstoneScene::DrawUI_imgui()
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		ImGui::Begin("3 button", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoDecoration);
 		ImGui::Image((intptr_t)assetManager->GetComponent<MaterialComponent>("number 3")->getTextureID(), ImVec2(80, 80));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		ImGui::End();
 		ImGui::PopStyleVar();
 		ImGui::PopStyleColor();
+
 
 	}
 

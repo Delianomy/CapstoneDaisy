@@ -41,9 +41,7 @@ class CapstoneScene : public Scene
 	int mouseX, mouseY;
 	GLuint hoveredActorHiglightTexture;
 
-
-
-	
+		
 
 	Ref<AssetManager> assetManager;
 	Ref<CameraActor> camera;

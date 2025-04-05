@@ -7,6 +7,7 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "AssetManager.h"
 #include "AudioSystem.h"
+#include "SceneManager.h"
 class Dialogue {
 public:
 	const char* NPCname;
@@ -19,6 +20,7 @@ public:
 
 class DialogueSystem
 {
+    SceneManager* sceneManager;
     ImGuiIO& io = ImGui::GetIO();
     ImFont* customFont;
     Ref<AssetManager> assetMan;
@@ -29,15 +31,25 @@ class DialogueSystem
 	int currentDialogueIndex = 0;
 	bool isDialogueOpen = false;
     bool wasDialogueOpen = false;
-    //std::function<void()> onItemTaken;
+    
+    std::function<void()> onItemTaken;
 public:
-
+  
     DialogueSystem() {
        /// customFont = io.Fonts->AddFontFromFileTTF("fonts/lunchds.ttf", 20.0f);
       
     }
+
+    void SetOnItemTaken(std::function<void()> onItemTaken_) {
+        onItemTaken = onItemTaken_;
+    }
+
     void SetAudioManager(Ref<AudioManager> audio) {
         audioManager = audio;
+    }
+
+    void SetSceneManager(SceneManager* sceneManager_) {
+        sceneManager = sceneManager_;
     }
 
     void ClearDialogues() {
@@ -139,16 +151,10 @@ public:
         ImGui::SetCursorPosY(160);// Position button to the right
 
         if (ImGui::Button("Take item")) {
-            if (audioManager) {
-                audioManager->Play(3, 1.0f);
-            }
-            if (currentDialogueIndex < dialogues.size() - 1) {
-                currentDialogueIndex++;
-            }
-            else {
-                isDialogueOpen = false;
-                ClearDialogues();
-            }
+            onItemTaken();
+            
+            
+          
         }
 
         ImGui::End();

@@ -173,4 +173,45 @@ void SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 	}	
 }
 
+void SceneManager::AddItemToInventory(std::shared_ptr<Actor> other, int index)
+{
+	//Check if it's a pickable item
+	if (std::dynamic_pointer_cast<PickableItem>(other) != nullptr) {
+		//Drops the item
+		if (inventory.items[index] != nullptr) {
+			DropItemFromInventory(index);
+		}
+
+		//Add the item to the inventory
+		inventory.AddItem(std::dynamic_pointer_cast<PickableItem>(other), index);
+
+		//Remove the item from the triggerSystem
+		int index = 0;
+		for (int i = 0; i < currentScene->triggerSystem.triggeringActors.size(); i++) {
+			if (currentScene->triggerSystem.triggeringActors[i] == other) {
+				index = i;
+				break;
+			}
+		}
+		currentScene->triggerSystem.triggeringActors.erase(currentScene->triggerSystem.triggeringActors.begin() + index);
+
+		//Remove the item from the opaque actors
+		index = 0;
+		for (int i = 0; i < currentScene->transparentActors.size(); i++) {
+			if (currentScene->transparentActors[i] == other) {
+				index = i;
+				break;
+			}
+		}
+		currentScene->transparentActors.erase(currentScene->transparentActors.begin() + index);
+	}
+}
+
+void SceneManager::DropItemFromInventory(int index) {
+	//Add the object back into the actor vectors
+	currentScene->transparentActors.push_back(inventory.items[index]);
+	currentScene->triggerSystem.AddActor(inventory.items[index]);
+	//Remove the item from the inventory
+	inventory.RemoveItem(index);
+}
 

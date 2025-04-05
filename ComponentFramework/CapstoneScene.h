@@ -31,6 +31,7 @@ class DialogueSystem;
 #include "Scene.h"
 class CapstoneScene : public Scene 
 {
+	
 	SDL_Surface* defaultCursorTexture;
 	SDL_Surface* hoveredCursorTexture;
 	SDL_Cursor* defaultCursor;
@@ -92,6 +93,8 @@ public:
 	bool isCursoreOnObject(int x, int y);
 	void InitializeDialogue();
 	void DrawUI_imgui();
+
+	
 };
 
 #endif // CAPSTONESCENE_H

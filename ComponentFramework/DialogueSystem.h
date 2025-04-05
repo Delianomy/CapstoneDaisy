@@ -1,6 +1,7 @@
 #ifndef DIALOGUE_SYSTEM_H
 #define DIALOGUE_SYSTEM_H
 #include <vector>
+#include <functional> 
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_opengl3.h"
@@ -28,6 +29,7 @@ class DialogueSystem
 	int currentDialogueIndex = 0;
 	bool isDialogueOpen = false;
     bool wasDialogueOpen = false;
+    //std::function<void()> onItemTaken;
 public:
 
     DialogueSystem() {
@@ -133,6 +135,22 @@ public:
                  ClearDialogues();
             }
         }
+        ImGui::SetCursorPosX(dialogueWidth - 200);
+        ImGui::SetCursorPosY(160);// Position button to the right
+
+        if (ImGui::Button("Take item")) {
+            if (audioManager) {
+                audioManager->Play(3, 1.0f);
+            }
+            if (currentDialogueIndex < dialogues.size() - 1) {
+                currentDialogueIndex++;
+            }
+            else {
+                isDialogueOpen = false;
+                ClearDialogues();
+            }
+        }
+
         ImGui::End();
         ImGui::PopStyleVar();
         ImGui::PopStyleColor();

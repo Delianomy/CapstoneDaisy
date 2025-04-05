@@ -145,10 +145,12 @@ void SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 	
 	case SCENE_NUMBER::SCENE_CAPSTONE:
 		currentScene = new CapstoneScene();
+		currentScene->SetSceneManager(this);
 		status = currentScene->OnCreate();
 		break;
 	case SCENE_NUMBER::SCENE_CAPSTONE_DREAM:
 		currentScene = new CapstoneSceneDream(this);
+		currentScene->SetSceneManager(this);
 		status = currentScene->OnCreate();
 		break;
 	case SCENE_NUMBER::SCENE_SHADER_TEST:

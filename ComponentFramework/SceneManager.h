@@ -3,9 +3,11 @@
 
 #include <string>
 #include "Window.h"
+#include "Inventory.h"
+
 class SceneManager  {
 public:
-	
+	Inventory inventory;
 	SceneManager();
 	~SceneManager();
 	void Run();

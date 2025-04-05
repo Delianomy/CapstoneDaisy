@@ -30,24 +30,24 @@ bool CapstoneScene::OnCreate() {
 	Debug::Info("Loading assets Scene Dream: ", __FILE__, __LINE__);
 	assetManager = std::make_shared<AssetManager>();
 
-	//defaultCursorTexture = IMG_Load("textures/UI_elements/cursor/cursor_normal.png");
-	//hoveredCursorTexture = IMG_Load("textures/UI_elements/cursor//cursor_hovered.png");
-	//
+	defaultCursorTexture = IMG_Load("textures/UI_elements/cursor/cursor_normal.png");
+	hoveredCursorTexture = IMG_Load("textures/UI_elements/cursor//cursor_hovered.png");
+	
 
-	//SDL_Surface* highlightTexure = IMG_Load("textures/UI_elements/cursor/hovered.png");
+	SDL_Surface* highlightTexure = IMG_Load("textures/UI_elements/cursor/hovered.png");
 
 	audioManager = std::make_shared<AudioManager>();
 	dialogueSystem = std::make_shared<DialogueSystem>();
 	dialogueSystem->SetAudioManager(audioManager);
 
-	//if (defaultCursorTexture && hoveredCursorTexture) {
-	//	SDL_SetColorKey(defaultCursorTexture, SDL_TRUE, SDL_MapRGB(defaultCursorTexture->format, 255, 0, 255));
-	//	SDL_SetColorKey(hoveredCursorTexture, SDL_TRUE, SDL_MapRGB(hoveredCursorTexture->format, 255, 0, 255));
-	//}
-	/*defaultCursor = SDL_CreateColorCursor(defaultCursorTexture, 0, 0);
-	hoveredCursor = SDL_CreateColorCursor(hoveredCursorTexture, 0, 0);*/
+	if (defaultCursorTexture && hoveredCursorTexture) {
+		SDL_SetColorKey(defaultCursorTexture, SDL_TRUE, SDL_MapRGB(defaultCursorTexture->format, 255, 0, 255));
+		SDL_SetColorKey(hoveredCursorTexture, SDL_TRUE, SDL_MapRGB(hoveredCursorTexture->format, 255, 0, 255));
+	}
+	defaultCursor = SDL_CreateColorCursor(defaultCursorTexture, 0, 0);
+	hoveredCursor = SDL_CreateColorCursor(hoveredCursorTexture, 0, 0);
 
-	//SDL_SetCursor(defaultCursor);
+	SDL_SetCursor(defaultCursor);
 
 
 
@@ -124,22 +124,22 @@ CapstoneScene::~CapstoneScene() {
 
 void CapstoneScene::OnDestroy() {
 	Debug::Info("Deleting assets Scene Bedroom: ", __FILE__, __LINE__);
-	//if (defaultCursor) {
-	//	SDL_FreeCursor(defaultCursor);
-	//	defaultCursor = nullptr;
-	//}
-	//if (hoveredCursor) {
-	//	SDL_FreeCursor(hoveredCursor);
-	//	hoveredCursor = nullptr;
-	//}
-	//if (defaultCursorTexture) {
-	//	SDL_FreeSurface(defaultCursorTexture);
-	//	defaultCursorTexture = nullptr;
-	//}
-	//if (hoveredCursorTexture) {
-	//	SDL_FreeSurface(hoveredCursorTexture);
-	//	hoveredCursorTexture = nullptr;
-	//}
+	if (defaultCursor) {
+		SDL_FreeCursor(defaultCursor);
+		defaultCursor = nullptr;
+	}
+	if (hoveredCursor) {
+		SDL_FreeCursor(hoveredCursor);
+		hoveredCursor = nullptr;
+	}
+	if (defaultCursorTexture) {
+		SDL_FreeSurface(defaultCursorTexture);
+		defaultCursorTexture = nullptr;
+	}
+	if (hoveredCursorTexture) {
+		SDL_FreeSurface(hoveredCursorTexture);
+		hoveredCursorTexture = nullptr;
+	}
 
 	auto test = &CapstoneScene::Update;
 }	
@@ -157,10 +157,10 @@ void CapstoneScene::HandleEvents(const SDL_Event& sdlEvent) {
 	case SDL_MOUSEMOTION:
 		mouseX = sdlEvent.motion.x;
 		mouseY = sdlEvent.motion.y;
-		//hovering = isCursoreOnObject(mouseX, mouseY);
+		hovering = isCursoreOnObject(mouseX, mouseY);
 		if (hovering != isHovering) {
 			isHovering = hovering;
-			/*SDL_SetCursor(isHovering ? hoveredCursor : defaultCursor);*/
+			SDL_SetCursor(isHovering ? hoveredCursor : defaultCursor);
 		}
 		break;
 	case SDL_KEYDOWN:

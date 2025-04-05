@@ -1,7 +1,7 @@
 #ifndef SCENE_H
 #define SCENE_H
 #include "Actor.h"
-
+#include "SceneManager.h"
 union SDL_Event; /// Forward declaration for HandleEvents
 
 struct ViewPort {
@@ -27,6 +27,7 @@ protected:
 	std::vector<Ref<Actor>> opaqueActors;
 	std::vector<Ref<Actor>> transparentActors;
 	ViewPort viewport;
+	SceneManager* sceneMan = nullptr;
 public:	
 	virtual ~Scene() {}
 	virtual bool OnCreate() = 0;
@@ -54,6 +55,10 @@ public:
 	template<typename ActorTemplate, typename ... Args>
 	void AddActor(Args&& ... args_) {
 		actors.push_back(std::make_shared<ActorTemplate>(std::forward<Args>(args_)...));
+	}
+
+	void SetSceneManager(SceneManager* manager) {
+		sceneMan = manager;
 	}
 
 };

@@ -1,15 +1,15 @@
-Wed Apr  2 04:14:33 2025
+Sat Apr  5 08:01:59 2025
 [INFO]: Starting the SceneManager
 [INFO]: OpenGL version: 4.6.0 NVIDIA 546.80
 [INFO]: Graphics card vendor NVIDIA Corporation
 [INFO]: Graphics card name NVIDIA GeForce RTX 3050 Laptop GPU/PCIe/SSE2
 [INFO]: GLSL Version 4.60 NVIDIA
-[INFO]: Created Scene Dream: 
+[INFO]: Created Scene Bedroom: 
 [INFO]: Loading assets Scene Dream: 
 [INFO]: Uniforms:
-"depthProjectionMatrix" loc:0
-"depthViewMatrix" loc:1
-"modelMatrix" loc:2
+"modelMatrix" loc:0
+"projectionMatrix" loc:1
+"viewMatrix" loc:2
 
 [INFO]: Uniforms:
 "color" loc:2
@@ -24,22 +24,12 @@ Wed Apr  2 04:14:33 2025
 "view" loc:-1
 
 [INFO]: Uniforms:
-"colorID" loc:4
-"modelMatrix" loc:1
-"projectionMatrix" loc:3
-"viewMatrix" loc:2
-
-[INFO]: Uniforms:
-"iResolution" loc:0
-"iTime" loc:1
+"colour" loc:-1
 "modelMatrix" loc:2
+"myTexture" loc:0
+"position" loc:-1
 "projection" loc:-1
 "view" loc:-1
-
-[INFO]: Uniforms:
-"modelMatrix" loc:0
-"projectionMatrix" loc:1
-"viewMatrix" loc:2
 
 [INFO]: Uniforms:
 "colorID" loc:4
@@ -59,6 +49,11 @@ Wed Apr  2 04:14:33 2025
 "view" loc:-1
 
 [INFO]: Uniforms:
+"depthProjectionMatrix" loc:0
+"depthViewMatrix" loc:1
+"modelMatrix" loc:2
+
+[INFO]: Uniforms:
 "modelMatrix" loc:1
 "projection" loc:-1
 "view" loc:-1
@@ -72,14 +67,18 @@ Wed Apr  2 04:14:33 2025
 "view" loc:-1
 
 [INFO]: Uniforms:
-"colour" loc:-1
+"iResolution" loc:0
+"iTime" loc:1
 "modelMatrix" loc:2
-"myTexture" loc:0
-"position" loc:-1
 "projection" loc:-1
 "view" loc:-1
 
-[ERROR]: Can't fint requested component in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 31
+[INFO]: Uniforms:
+"colorID" loc:4
+"modelMatrix" loc:1
+"projectionMatrix" loc:3
+"viewMatrix" loc:2
+
 [INFO]: Creating values for CameraActor: 
 [INFO]: Uniforms:
 "modelMatrix" loc:0
@@ -87,22 +86,8 @@ Wed Apr  2 04:14:33 2025
 "skybox" loc:2
 "viewMatrix" loc:3
 
-[INFO]: Deleted Scene Dream: 
-[INFO]: Deleting Scene Dream: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
+[INFO]: Deleted Scene Bedroom: 
+[INFO]: Deleting assets Scene Bedroom: 
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 

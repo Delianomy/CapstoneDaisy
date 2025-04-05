@@ -11,8 +11,8 @@ using namespace MATHEX;
 
 class CollisionSystem {
 private:
-	std::vector<Ref<Actor>> collidingActors;
 public:
+	std::vector<Ref<Actor>> collidingActors;
 	/// This function will check the the actor being added is new and has the all proper components 
 	void AddActor(Ref<Actor> actor_) {
 		if (actor_->GetComponent<CollisionComponent>().get() == nullptr) {

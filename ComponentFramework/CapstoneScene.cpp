@@ -30,9 +30,9 @@ bool CapstoneScene::OnCreate() {
 	Debug::Info("Loading assets Scene Dream: ", __FILE__, __LINE__);
 	assetManager = std::make_shared<AssetManager>();
 
-	SDL_Surface* defaultCursorTexture = IMG_Load("textures/UI_elements/cursor/cursor_normal.png");
-	SDL_Surface* hoveredCursorTexture = IMG_Load("textures/UI_elements/cursor//cursor_hovered.png");
-	defaultCursor = SDL_CreateColorCursor(defaultCursorTexture, 0, 0);
+	defaultCursorTexture = IMG_Load("textures/UI_elements/cursor/cursor_normal.png");
+	hoveredCursorTexture = IMG_Load("textures/UI_elements/cursor//cursor_hovered.png");
+	
 
 	SDL_Surface* highlightTexure = IMG_Load("textures/UI_elements/cursor/hovered.png");
 
@@ -44,14 +44,11 @@ bool CapstoneScene::OnCreate() {
 		SDL_SetColorKey(defaultCursorTexture, SDL_TRUE, SDL_MapRGB(defaultCursorTexture->format, 255, 0, 255));
 		SDL_SetColorKey(hoveredCursorTexture, SDL_TRUE, SDL_MapRGB(hoveredCursorTexture->format, 255, 0, 255));
 	}
-
 	defaultCursor = SDL_CreateColorCursor(defaultCursorTexture, 0, 0);
 	hoveredCursor = SDL_CreateColorCursor(hoveredCursorTexture, 0, 0);
 
 	SDL_SetCursor(defaultCursor);
 
-	SDL_FreeSurface(defaultCursorTexture);
-	SDL_FreeSurface(hoveredCursorTexture);
 
 
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("TextureShader");
@@ -71,19 +68,26 @@ bool CapstoneScene::OnCreate() {
 	camera->GetViewMatrix().print("ViewMatrix");
 
 
-	bear = std::make_shared<Actor>(nullptr);
-	bear->AddComponent<TransformComponent>(nullptr, Vec3(-0.80f, -1.5f, 3.99f), QMath::angleAxisRotation(180.0f, Vec3(0.0f, 1.0f, 0.0f)));
-	bear->GetComponent<TransformComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
-	bear->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
-	bear->AddComponent<ShaderComponent>(simpleTextureShader);
-	bear->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Bear"));
-	AddTransparentActor(bear);
+	//bear = std::make_shared<Actor>(nullptr);
+	//bear->AddComponent<TransformComponent>(nullptr, Vec3(-0.80f, -1.5f, 3.99f), QMath::angleAxisRotation(180.0f, Vec3(0.0f, 1.0f, 0.0f)));
+	//bear->GetComponent<TransformComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
+	//bear->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
+	//bear->AddComponent<ShaderComponent>(simpleTextureShader);
+	//bear->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Bear"));
+	//AddTransparentActor(bear);
 
 
+	test = std::make_shared<PickableItem>(
+		assetManager,                                          // Ref<AssetManager> assMan
+		"Item1",                                               // std::string name_
+		Vec3(-0.80f, -1.5f, 3.99f),                           // Vec3 pos // Quaternion orient
+		1.0f,                                                  // float triggerRadius
+		Vec3(0.1f, 0.1f, 0.1f),                               // Vec3 scale
+		assetManager->GetComponent<MaterialComponent>("Bear") // std::shared_ptr<MaterialComponent> material   // std::shared_ptr<MeshComponent> mesh
+	);
+	AddTransparentActor(test);
 
-	
-
-	books = std::make_shared<Actor>(nullptr);
+	/*books = std::make_shared<Actor>(nullptr);
 	books->AddComponent<TransformComponent>(nullptr, Vec3(1.8f, 0.32f, -3.99f), QMath::angleAxisRotation(0.0f, Vec3(0.0f, 9.0f, 0.0f)));
 	books->GetComponent<TransformComponent>()->SetScale(Vec3(1.3f, 1.3f, 1.0f));
 	books->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
@@ -99,7 +103,7 @@ bool CapstoneScene::OnCreate() {
 	moonTrinket->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
 	moonTrinket->AddComponent<ShaderComponent>(simpleTextureShader);
 	moonTrinket->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("MoonTrinket"));
-	AddTransparentActor(moonTrinket);
+	AddTransparentActor(moonTrinket);*/
 
 	InitializeDialogue();
 
@@ -127,8 +131,23 @@ CapstoneScene::~CapstoneScene() {
 
 void CapstoneScene::OnDestroy() {
 	Debug::Info("Deleting assets Scene Bedroom: ", __FILE__, __LINE__);
-	if (defaultCursor) SDL_FreeCursor(defaultCursor);
-	if (hoveredCursor) SDL_FreeCursor(hoveredCursor);
+	if (defaultCursor) {
+		SDL_FreeCursor(defaultCursor);
+		defaultCursor = nullptr;
+	}
+	if (hoveredCursor) {
+		SDL_FreeCursor(hoveredCursor);
+		hoveredCursor = nullptr;
+	}
+	if (defaultCursorTexture) {
+		SDL_FreeSurface(defaultCursorTexture);
+		defaultCursorTexture = nullptr;
+	}
+	if (hoveredCursorTexture) {
+		SDL_FreeSurface(hoveredCursorTexture);
+		hoveredCursorTexture = nullptr;
+	}
+
 	auto test = &CapstoneScene::Update;
 }	
 
@@ -516,10 +535,10 @@ void CapstoneScene::InitializeDialogue() {
 
 
 
-	//Books
-	textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
-	Dialogue books = Dialogue("Daisy", "Object 2", textureID);
-	dialogueSequences[1].push_back(books);
+	////Books
+	//textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
+	//Dialogue books = Dialogue("Daisy", "Object 2", textureID);
+	//dialogueSequences[1].push_back(books);
 
 
 

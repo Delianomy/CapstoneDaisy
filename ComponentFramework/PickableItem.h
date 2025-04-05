@@ -5,6 +5,7 @@
 #include "InteractableActor.h"
 
 class MaterialComponent;
+class MeshComponent;
 class AssetManager;
 class TriggerCallback;
 

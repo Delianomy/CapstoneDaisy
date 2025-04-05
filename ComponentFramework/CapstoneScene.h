@@ -13,6 +13,9 @@
 #include "backends/imgui_impl_opengl3.h"
 #include <SDL_image.h>
 #include "AudioSystem.h" 
+#include "Inventory.h"
+#include "PickableItem.h"
+
 
 using namespace MATH;
 
@@ -28,6 +31,8 @@ class DialogueSystem;
 #include "Scene.h"
 class CapstoneScene : public Scene 
 {
+	SDL_Surface* defaultCursorTexture;
+	SDL_Surface* hoveredCursorTexture;
 	SDL_Cursor* defaultCursor;
 	SDL_Cursor* hoveredCursor;
 	bool isHovering = false;
@@ -49,6 +54,7 @@ class CapstoneScene : public Scene
 	Ref<AudioManager> audioManager;
 	Ref<DialogueSystem> dialogueSystem;
 
+	Ref<PickableItem> test;
 	Ref<Actor> room;
 	//Ref<Actor> doll;
 	float playerAngle;

@@ -38,9 +38,17 @@ AssetManager::AssetManager() {
 	AddComponent<MeshComponent>("Beanstalk_obj", nullptr, "meshes/Beanstalk.obj");
 	AddComponent<MaterialComponent>("Beanstalk_mat", nullptr, "textures/Environment/beanstalk.png");
 
-
 	AddComponent<MeshComponent>("Leaf_obj", nullptr, "meshes/Leaf.obj");
 	AddComponent<MaterialComponent>("Leaf_mat", nullptr, "textures/Environment/leaf.png");
+
+	AddComponent<MeshComponent>("Tower_obj", nullptr, "meshes/Tower.obj");
+	AddComponent<MaterialComponent>("Tower_mat", nullptr, "textures/Environment/tower_test.png");
+
+	AddComponent<MeshComponent>("Bridge_obj", nullptr, "meshes/Bridge.obj");
+	AddComponent<MaterialComponent>("Bridge_mat", nullptr, "textures/Environment/bridge_test.png");
+
+	AddComponent<MeshComponent>("Bush_obj", nullptr, "meshes/bush.obj");
+	AddComponent<MaterialComponent>("Bush_mat", nullptr, "textures/Environment/bush.png");
 
 	
 

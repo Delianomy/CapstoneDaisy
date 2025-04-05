@@ -61,15 +61,13 @@ bool SceneManager::Initialize(std::string name_, int width_, int height_) {
 	ImGui_ImplSDL2_InitForOpenGL(window->getWindow(), window->getContext());
 	ImGui_ImplOpenGL3_Init();
 
+
+	/// Creates the capstone scenes
+	if (!BuildCapstoneScenes()) { return false; }
+	currentScene = bedroomScene;
+
 	/********************************   Default first scene   ***********************/
-	BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE);
-	//bedroomScene = new CapstoneScene();
-	//bedroomScene->OnCreate();
-
-	//dreamScene = new CapstoneSceneDream();
-	//dreamScene->OnCreate();
-
-	//currentScene = bedroomScene;
+	//BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE);
 	
 	return true;
 }
@@ -104,13 +102,13 @@ void SceneManager::HandleEvents() {
 
 			case SDL_SCANCODE_F1:
 
-				//currentScene = bedroomScene;
-				BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE);
+				currentScene = bedroomScene;
+				//BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE);
 				break;
 
 			case SDL_SCANCODE_F2:
-				//currentScene = dreamScene;
-				BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE_DREAM);
+				currentScene = dreamScene;
+				//BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE_DREAM);
 				break;
 			case SDL_SCANCODE_F3:
 				BuildNewScene(SCENE_NUMBER::SCENE_SHADER_TEST);
@@ -215,3 +213,24 @@ void SceneManager::DropItemFromInventory(int index) {
 	inventory.RemoveItem(index);
 }
 
+bool SceneManager::BuildCapstoneScenes() {
+	bool status = false;
+
+	if (bedroomScene == nullptr) {
+		bedroomScene = new CapstoneScene();
+		bedroomScene->SetSceneManager(this);
+		status = bedroomScene->OnCreate();
+	}
+
+	if (!status) { return false; }
+
+	if (dreamScene == nullptr) {
+		dreamScene = new CapstoneScene();
+		dreamScene->SetSceneManager(this);
+		status = dreamScene->OnCreate();
+	}
+
+	if (!status) { return false; }
+
+	return true;
+}

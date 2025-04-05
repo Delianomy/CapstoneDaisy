@@ -42,11 +42,18 @@ private:
 	bool isRunning;
 	bool fullScreen;
 	void BuildNewScene(SCENE_NUMBER scene_);
+
+	/// <summary>
+	/// Loads the CapstoneScene and CapstoneDreamScene into memory
+	/// </summary>
+	/// <returns></returns>
+	bool BuildCapstoneScenes();
 public:
 	int getWindowHeight() { return window->getHeight(); };
 	int getWindowWidth() { return window->getWidth(); };
 	void AddItemToInventory(std::shared_ptr<Actor> other, int index);
 	void DropItemFromInventory(int index);
+
 };
 
 

@@ -146,7 +146,7 @@ bool CapstoneSceneDream::OnCreate() {
 	player->AddComponent<ShaderComponent>(shader);
 	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Daisy_spriteSheet"));
 	player->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	player->GetComponent<TriggerComponent>()->SetCallback(TriggerCallbackCreator::CreateTriggerCallback(this, &CapstoneSceneDream::PrintStatement));
+	//player->GetComponent<TriggerComponent>()->SetCallback(TriggerCallbackCreator::CreateTriggerCallback(this, &CapstoneSceneDream::PrintStatement));
 	AddTransparentActor(player);
 
 	camera = std::make_shared<CameraActor>(player.get());
@@ -253,6 +253,12 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 
 	case SDL_KEYUP:
 		switch (sdlEvent.key.keysym.scancode) {
+
+		case SDL_SCANCODE_SPACE:
+			if (playerIsGrounded) {
+				movementInput.y = 1.0f;
+			}
+		break;
 		case SDL_SCANCODE_A:
 			movementInput.x = 0.0f;
 			break;
@@ -283,6 +289,7 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 
 	case SDL_MOUSEBUTTONUP:
 	{
+
 		if (sdlEvent.button.button == (SDL_BUTTON_RIGHT)) {
 			rotatePlayerRight = false;
 			break;
@@ -631,6 +638,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 		animIndex = 0;
 	}
 	
+	/// Adriel's movement input
 	Vec3 moveDir = Vec3();
 	if (VMath::mag(movementInput) > 0.0f) {
 		//Capping the x & z directional movement
@@ -641,6 +649,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	}
 
 	playerPhysics->ApplyForce(moveDir * walkSpeed * 0.1);
+	movementInput.y = 0; //Reseting the jumping input
 
 	NPCcurrentTime += deltaTime*0.4f;
 	NPCanimIndex = static_cast<int>(NPCcurrentTime / frameSpeed) % 17;
@@ -685,7 +694,7 @@ void CapstoneSceneDream::Render() const {
 			opaqueActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
 		}
 
-		//RenderAdrielMagik();
+		RenderColliders();
 		std::vector<Ref<Actor>> sortedTransparentActors = transparentActors;
 		std::sort(sortedTransparentActors.begin(), sortedTransparentActors.end(),
 			[this](const Ref<Actor>& a, const Ref<Actor>& b) {
@@ -985,4 +994,53 @@ void CapstoneSceneDream::DrawRay(Ray ray) const {
 	DebugCube->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
+void CapstoneSceneDream::PlayerGroundCheck() {
+	playerIsGrounded = false;
+	float length = 0.3f;
+
+	Vec3 playerPos = player->GetComponent<TransformComponent>()->GetPosition();
+	Vec3 origin = playerPos + Vec3(0, -0.5f, 0);
+	Ray ray = Ray(origin, origin + Vec3(0, -1, 0 * length));
+
+	std::vector<Ref<Actor>> collidedActors = collisionSystem.Raycast(ray);
+
+	for (auto actor : collidedActors) {
+		if (actor->tag == TAGS::GROUND) {
+			playerIsGrounded = true;
+			//std::cout << "Player is grounded \n";
+			return;
+		}
+	}
+	//std::cout << "Player is NOT grounded \n";
+}
+
+void CapstoneSceneDream::RenderColliders() const {
+	//Drawing the triggers
+	for (auto trigger : triggerSystem.triggeringActors) {
+		DrawSphere(trigger->GetComponent<TransformComponent>()->GetPosition(), trigger->GetComponent<TriggerComponent>()->radius);
+	}
+
+	//Drawing the colliders
+	for (auto actor : collisionSystem.collidingActors) {
+		Ref<CollisionComponent> collider = actor->GetComponent<CollisionComponent>();
+		switch (collider->GetColliderType()) {
+			case ColliderType::Sphere:
+				DrawSphere(actor->GetComponent<TransformComponent>()->GetPosition(), collider->GetRadisu());
+				break;
+			case ColliderType::AABB:
+				DrawCube(collider->GetAABB());
+				break;
+		default:
+			break;
+		}
+	}
+
+	//Drawing the player's ray
+	float length = 0.3f;
+	Vec3 playerPos = player->GetComponent<TransformComponent>()->GetPosition();
+	Vec3 origin = playerPos + Vec3(0, -0.5f, 0);
+	Ray ray = Ray(origin, origin + Vec3(0, -1, 0) * length);
+	DrawRay(ray);
 }

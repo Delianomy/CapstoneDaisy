@@ -129,17 +129,14 @@ public:
 	void DrawMeshOverlay(const Vec4 color) const;
 	void DrawUI_imgui();
 	
-
-	void PrintStatement(std::shared_ptr<Actor> a) {
-		std::cout << "I collided with ";
-		std::cout << a.get() << "\n";
-	}
-
+	///Adriel's land
 	void DrawSphere(Vec3 pos, float radius) const;
 	void DrawSphere(Sphere s) const;
 	void DrawCube(Vec3 pos, Vec3 dimensions) const;
 	void DrawCube(AABB a) const;
 	void DrawRay(Ray ray) const;
+	void PlayerGroundCheck();
+	void RenderColliders() const;
 };
 
 #endif // CAPSTONESCENE_DREAM_H

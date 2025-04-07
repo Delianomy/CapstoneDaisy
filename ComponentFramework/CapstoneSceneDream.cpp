@@ -185,56 +185,56 @@ bool CapstoneSceneDream::OnCreate() {
 	triggerSystem.AddActor(player);
 
 
-	//FrameBuffer
-	glGenFramebuffers(1, &frameBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	////FrameBuffer
+	//glGenFramebuffers(1, &frameBuffer);
+	//glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 
 
-	glGenTextures(1, &textureColorbuffer);
-	glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
-	//RESET THE SCREEN WIDTH AND HEIGHT LATER!!!
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1366, 768, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//glGenTextures(1, &textureColorbuffer);
+	//glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
+	////RESET THE SCREEN WIDTH AND HEIGHT LATER!!!
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1366, 768, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
-
-
-	glGenRenderbuffers(1, &rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 1366, 768);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-
-	
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
 
 
-	float triangleVertices[] = {
-		-1.0f, -1.0f,     0.0f, 0.0f,  // Bottom-left
-		 3.0f, -1.0f,     1.0f, 0.0f,  // Bottom-right (going beyond the NDC range for full screen)
-		-1.0f,  3.0f,     0.0f, 1.0f   // Top-left (going beyond the NDC range for full screen)
-	};
+	//glGenRenderbuffers(1, &rbo);
+	//glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 1366, 768);
+	//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
+	//
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	// Bind the VAO
-	glBindVertexArray(VAO);
 
-	// Bind and populate the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertices), triangleVertices, GL_STATIC_DRAW);
+	//float triangleVertices[] = {
+	//	-1.0f, -1.0f,     0.0f, 0.0f,  // Bottom-left
+	//	 3.0f, -1.0f,     1.0f, 0.0f,  // Bottom-right (going beyond the NDC range for full screen)
+	//	-1.0f,  3.0f,     0.0f, 1.0f   // Top-left (going beyond the NDC range for full screen)
+	//};
 
-	// Define the position attribute (first 2 components of each vertex)
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
+	//glGenVertexArrays(1, &VAO);
+	//glGenBuffers(1, &VBO);
 
-	// Define the texture coordinate attribute (last 2 components of each vertex)
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 *sizeof(float), (void*)(2 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	//// Bind the VAO
+	//glBindVertexArray(VAO);
 
-	// Unbind VAO
-	glBindVertexArray(0);
+	//// Bind and populate the VBO
+	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertices), triangleVertices, GL_STATIC_DRAW);
+
+	//// Define the position attribute (first 2 components of each vertex)
+	//glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	//glEnableVertexAttribArray(0);
+
+	//// Define the texture coordinate attribute (last 2 components of each vertex)
+	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 *sizeof(float), (void*)(2 * sizeof(float)));
+	//glEnableVertexAttribArray(1);
+
+	//// Unbind VAO
+	//glBindVertexArray(0);
 
 	return true;
 }
@@ -827,20 +827,20 @@ void CapstoneSceneDream::Render() const {
 			});
 
 
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glDepthMask(GL_FALSE);
+		//glEnable(GL_BLEND);
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		//glDepthMask(GL_FALSE);
 
-		glUseProgram(Ocean->GetComponent<ShaderComponent>()->GetProgram());
-		glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, Ocean->GetModelMatrix());
-		glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, MMath::inverse(camera->orient));
-		glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
-		glUniform1f(Ocean->GetComponent<ShaderComponent>()->GetUniformID("time"), currentTime);
+		//glUseProgram(Ocean->GetComponent<ShaderComponent>()->GetProgram());
+		//glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, Ocean->GetModelMatrix());
+		//glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, MMath::inverse(camera->orient));
+		//glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
+		//glUniform1f(Ocean->GetComponent<ShaderComponent>()->GetUniformID("time"), currentTime);
 
-		if (Ocean->GetComponent<MaterialComponent>()) {
-			glBindTexture(GL_TEXTURE_2D, Ocean->GetComponent<MaterialComponent>()->getTextureID());
-			Ocean->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
-		}
+		//if (Ocean->GetComponent<MaterialComponent>()) {
+		//	glBindTexture(GL_TEXTURE_2D, Ocean->GetComponent<MaterialComponent>()->getTextureID());
+		//	Ocean->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+		//}
 
 
 		glDepthMask(GL_TRUE);
@@ -866,16 +866,16 @@ void CapstoneSceneDream::Render() const {
 		
 
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glUseProgram(assetManager->GetComponent<ShaderComponent>("Frame buffer")->GetProgram());
-	glUniform1f(assetManager->GetComponent<ShaderComponent>("Frame buffer")->GetUniformID("time"), currentTime);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
-	//rendering the screen (triangle)
-	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
-	glBindVertexArray(0);
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glUseProgram(assetManager->GetComponent<ShaderComponent>("Frame buffer")->GetProgram());
+	//glUniform1f(assetManager->GetComponent<ShaderComponent>("Frame buffer")->GetUniformID("time"), currentTime);
+	//glActiveTexture(GL_TEXTURE0);
+	//glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
+	////rendering the screen (triangle)
+	//glBindVertexArray(VAO);
+	//glDrawArrays(GL_TRIANGLES, 0, 3);
+	//glBindVertexArray(0);
 
 
 	ImGui::Render();

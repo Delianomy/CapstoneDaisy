@@ -71,7 +71,7 @@ class CapstoneSceneDream : public Scene
 	Ref<Actor> Bridge;
 	Ref<Actor> BottomOfTheOcean;
 	Ref<Actor> Bush;
-	
+	Ref<Actor> Ocean;
 
 
 	//Test collisions
@@ -138,6 +138,14 @@ class CapstoneSceneDream : public Scene
 	{PlayerAnimType::SwimmingIdle, {2, 6}},
 	{PlayerAnimType::Swimming,     {1, 10}}
 	};
+
+	//FRAMEBUFFER
+	GLuint frameBuffer;
+	GLuint textureColorbuffer;
+	GLuint rbo;
+	GLuint VAO;
+	GLuint VBO;
+
 public:
 	Matrix4 orient;
 	explicit CapstoneSceneDream(SceneManager* scenemanager);
@@ -165,6 +173,8 @@ public:
 	void DrawRay(Ray ray) const;
 	void PlayerGroundCheck();
 	void RenderColliders() const;
+
+
 
 	Vec2 GetAnimIndex(float deltaTime, float& currentTime, PlayerAnimType animType, float frameSpeed) {
 

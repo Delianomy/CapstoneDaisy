@@ -262,6 +262,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="coolWaterVert.glsl" />
+    <None Include="shaders\bufferFrag.glsl" />
+    <None Include="shaders\bufferVert.glsl" />
     <None Include="shaders\colorPickingFrag.glsl" />
     <None Include="shaders\colorPickingVert.glsl" />
     <None Include="shaders\defaultFrag.glsl" />
@@ -279,6 +281,8 @@
     <None Include="shaders\textureFragRegular.glsl" />
     <None Include="shaders\textureVert.glsl" />
     <None Include="shaders\textureVertRegular.glsl" />
+    <None Include="shaders\waterShaderFrag.glsl" />
+    <None Include="shaders\waterShaderVert.glsl" />
     <None Include="shaders\waveFrag.glsl" />
     <None Include="shaders\waveVert.glsl" />
     <None Include="shaders\wireFrameFrag.glsl" />

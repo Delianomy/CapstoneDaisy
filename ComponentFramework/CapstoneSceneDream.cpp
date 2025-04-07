@@ -40,9 +40,23 @@ bool CapstoneSceneDream::OnCreate() {
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("TextureShader");
 	Ref<ShaderComponent> WaveShader = assetManager->GetComponent<ShaderComponent>("WaveShader");
 	Ref<ShaderComponent> CubeShader = assetManager->GetComponent<ShaderComponent>("RegularTextureShader");
-
+	Ref<ShaderComponent> WaterShader = assetManager->GetComponent<ShaderComponent>("Water Shader");
 
 	AdrielMagik();
+
+
+	Ocean = std::make_shared<Actor>(nullptr);
+	Ocean->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -3.0f, 0.0f),/// pos
+		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	Ocean->GetComponent<PhysicsComponent>()->SetScale(Vec3(20.0f, 0.0f, 20.0f));
+	Ocean->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
+	Ocean->AddComponent<ShaderComponent>(WaterShader);
+	Ocean->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Water_normal"));
+
+
+
 
 	mermaid = std::make_shared<Actor>(nullptr);
 	mermaid->NPCid = 1;
@@ -127,7 +141,7 @@ bool CapstoneSceneDream::OnCreate() {
 
 
 
-	CreateLevelLayout();
+	//CreateLevelLayout();
 
 	//make an actor
 	player = std::make_shared<Actor>(nullptr);
@@ -140,7 +154,7 @@ bool CapstoneSceneDream::OnCreate() {
 	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
 	player->AddComponent<CollisionComponent>(nullptr, 0.8f);
 	player->GetComponent<PhysicsComponent>()->isStatic = false;
-	player->GetComponent<PhysicsComponent>()->useGravity = true;
+	player->GetComponent<PhysicsComponent>()->useGravity = false;
 	player->GetComponent<PhysicsComponent>()->mass = 1.0f;
 	player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
 	player->AddComponent<ShaderComponent>(shader);
@@ -167,15 +181,60 @@ bool CapstoneSceneDream::OnCreate() {
 	light->OnCreate();
 	/// Register the two balls with the physics and collision systems
 	physicsSystem.AddActor(player);
-
-	
-
 	collisionSystem.AddActor(player);
-
-
-
 	triggerSystem.AddActor(player);
 
+
+	//FrameBuffer
+	glGenFramebuffers(1, &frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+
+
+	glGenTextures(1, &textureColorbuffer);
+	glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
+	//RESET THE SCREEN WIDTH AND HEIGHT LATER!!!
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1366, 768, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
+
+
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 1366, 768);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+	
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+	float triangleVertices[] = {
+		-1.0f, -1.0f,     0.0f, 0.0f,  // Bottom-left
+		 3.0f, -1.0f,     1.0f, 0.0f,  // Bottom-right (going beyond the NDC range for full screen)
+		-1.0f,  3.0f,     0.0f, 1.0f   // Top-left (going beyond the NDC range for full screen)
+	};
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+
+	// Bind the VAO
+	glBindVertexArray(VAO);
+
+	// Bind and populate the VBO
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertices), triangleVertices, GL_STATIC_DRAW);
+
+	// Define the position attribute (first 2 components of each vertex)
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	// Define the texture coordinate attribute (last 2 components of each vertex)
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 *sizeof(float), (void*)(2 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	// Unbind VAO
+	glBindVertexArray(0);
 
 	return true;
 }
@@ -188,8 +247,11 @@ CapstoneSceneDream::~CapstoneSceneDream() {
 
 void CapstoneSceneDream::OnDestroy() {
 	Debug::Info("Deleting Scene Dream: ", __FILE__, __LINE__);
-
-	//SDL_SetCursor(SDL_GetDefaultCursor());
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteFramebuffers(1, &rbo);
+	glDeleteFramebuffers(1, &frameBuffer);
+	glDeleteTextures(1, &textureColorbuffer);
 }
 
 void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
@@ -362,7 +424,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	Island2->GetComponent<PhysicsComponent>()->isStatic = true;
 	Island2->AddComponent<ShaderComponent>(CubeShader);
 	Island2->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
-	Island2->AddComponent<CollisionComponent>(nullptr, 6.0f);
+	Island2->AddComponent<CollisionComponent>(nullptr, 1.0f);
 	AddOpaqueActor(Island2);
 	physicsSystem.AddActor(Island2);
 	collisionSystem.AddActor(Island2);
@@ -602,27 +664,10 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	}
 	
 	if (VMath::mag(movementInput) > 0.0f || !playerIsGrounded || playerIsSwimming) {
-		currentTime += deltaTime;
-	}
-	else {
-		currentTime = 0.0f; // Optional: reset or freeze
+		
 	}
 
-	//if (playerIsSwimming) {
-	//	//currentAnim = isIdle ? PlayerAnimType::SwimmingIdle : PlayerAnimType::Swimming;
-	//}
-	//else if (!playerIsGrounded) {
-	//	
-	//}
-	//else if (VMath::mag(movementInput) > 0.0f) {
-	//	
-	//}
-	//else {
-	//	
-	//}
-	//currentAnim = PlayerAnimType::Swimming;
-	//
-	
+	currentTime += deltaTime;
 	if (!playerIsGrounded) {
 		currentAnim = PlayerAnimType::Jumping;
 	}
@@ -661,6 +706,8 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 }
 
 void CapstoneSceneDream::Render() const {
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+
 		glEnable(GL_DEPTH_TEST);
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -713,11 +760,9 @@ void CapstoneSceneDream::Render() const {
 				// Sort from far to near
 				return distSquaredA > distSquaredB;
 			});
-		glDisable(GL_CULL_FACE);
-		glEnable(GL_DEPTH_TEST);
-		glDepthMask(GL_FALSE);  // Don't write to depth buffer
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDisable(GL_BLEND);
+		glEnable(GL_ALPHA_TEST);  // Note: In modern OpenGL, use fragment shader discard
+		glAlphaFunc(GL_GREATER, 0.5f);  // Adjust threshold as needed
 
 		for (auto transparentActor : sortedTransparentActors) {
 			glUseProgram(transparentActor->GetComponent<ShaderComponent>()->GetProgram());
@@ -732,9 +777,37 @@ void CapstoneSceneDream::Render() const {
 				transparentActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
 			}
 		}
-		glDepthMask(GL_TRUE);
-	ImGui::Render();
 
+		glUseProgram(Ocean->GetComponent<ShaderComponent>()->GetProgram());
+		glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, Ocean->GetModelMatrix());
+		glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, MMath::inverse(camera->orient));
+		glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
+		
+		glUniform1f(Ocean->GetComponent<ShaderComponent>()->GetUniformID("time"), currentTime);
+		if (Ocean->GetComponent<MaterialComponent>()) {
+			glBindTexture(GL_TEXTURE_2D, Ocean->GetComponent<MaterialComponent>()->getTextureID());
+			Ocean->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+		}
+
+		glDepthMask(GL_TRUE);
+
+		
+		
+
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glUseProgram(assetManager->GetComponent<ShaderComponent>("Frame buffer")->GetProgram());
+	glUniform1f(assetManager->GetComponent<ShaderComponent>("Frame buffer")->GetUniformID("time"), currentTime);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
+	//rendering the screen (triangle)
+	glBindVertexArray(VAO);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glBindVertexArray(0);
+
+
+	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 }

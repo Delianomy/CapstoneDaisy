@@ -65,6 +65,8 @@ AssetManager::AssetManager() {
 
 	AddComponent<ShaderComponent>("SimpleTextureShader", nullptr, "shaders/simpleTextureVert.glsl", "shaders/simpleTextureFrag.glsl");
 	AddComponent<ShaderComponent>("ColorPicker", nullptr, "shaders/colorPickingVert.glsl", "shaders/colorPickingFrag.glsl");
+	AddComponent<ShaderComponent>("Frame buffer", nullptr, "shaders/bufferVert.glsl", "shaders/bufferFrag.glsl");
+	AddComponent<ShaderComponent>("Water Shader", nullptr, "shaders/waterShaderVert.glsl", "shaders/waterShaderFrag.glsl");
 
 
 	//SPRITE SHEETS
@@ -74,7 +76,7 @@ AssetManager::AssetManager() {
 	AddComponent<MaterialComponent>("Fairy", nullptr, "textures/SpriteSheets/fairy_spritesheet.png");
 	AddComponent<MaterialComponent>("Daisy_spriteSheet", nullptr, "textures/SpriteSheets/Player_spritesheet.png");
 	
-
+	AddComponent<MaterialComponent>("Water_normal", nullptr, "textures/water_normal.jpg");
 
 
 	AddComponent<MaterialComponent>("ChessBoard",nullptr, "textures/8x8_checkered_board.png");

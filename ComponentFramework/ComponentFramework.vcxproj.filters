@@ -456,9 +456,6 @@
     <None Include="simpleTextureVert.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="simpleTextureFrag.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="shaders\bufferFrag.glsl">
       <Filter>Resource Files</Filter>
     </None>

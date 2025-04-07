@@ -50,7 +50,10 @@ AssetManager::AssetManager() {
 	AddComponent<MeshComponent>("Bush_obj", nullptr, "meshes/bush.obj");
 	AddComponent<MaterialComponent>("Bush_mat", nullptr, "textures/Environment/bush.png");
 
-	
+	AddComponent<MeshComponent>("Grass1_obj", nullptr, "meshes/grass_1.obj");
+	AddComponent<MaterialComponent>("Grass1_mat", nullptr, "textures/Environment/grass_1.png");
+
+
 
 	AddComponent<ShaderComponent>("DefaultShader",nullptr,"shaders/defaultVert.glsl", "shaders/defaultFrag.glsl");
 	AddComponent<ShaderComponent>("ColorPickingShader",nullptr,"shaders/colorPickingVert.glsl", "shaders/colorPickingFrag.glsl");

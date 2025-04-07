@@ -1,7 +1,7 @@
 # Blender 4.4.0 MTL File: 'None'
 # www.blender.org
 
-newmtl bush
+newmtl bush.003
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -11,7 +11,7 @@ illum 2
 map_Kd C:/Users/user/Desktop/Debuggin/ComponentByScott/CapstoneDaisy/ComponentFramework/textures/Environment/bush.png
 map_d C:/Users/user/Desktop/Debuggin/ComponentByScott/CapstoneDaisy/ComponentFramework/textures/Environment/bush.png
 
-newmtl bush.001
+newmtl bush.004
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -21,7 +21,7 @@ illum 2
 map_Kd C:/Users/user/Desktop/Debuggin/ComponentByScott/CapstoneDaisy/ComponentFramework/textures/Environment/bush.png
 map_d C:/Users/user/Desktop/Debuggin/ComponentByScott/CapstoneDaisy/ComponentFramework/textures/Environment/bush.png
 
-newmtl bush.002
+newmtl bush.005
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000

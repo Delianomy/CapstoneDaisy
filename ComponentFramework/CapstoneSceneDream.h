@@ -53,24 +53,7 @@ class CapstoneSceneDream : public Scene
 	Ref<Actor> mrsMouse;
 	Ref<Actor> fairy;
 
-	//Middle part
-	Ref<Actor> Island1;
-	Ref<Actor> Island2;
-	Ref<Actor> Island3;
-	Ref<Actor> House;
-	Ref<Actor> Flower_1;
-	Ref<Actor> Flower_2;
-	Ref<Actor> Flower_3;
-	Ref<Actor> Flower_4;
-	Ref<Actor> Beanstalk1;
-	Ref<Actor> Leaf1;
-	Ref<Actor> Leaf2;
-	Ref<Actor> Flower_5; 
-	Ref<Actor> Flower_6;
-	Ref<Actor> Tower1;
-	Ref<Actor> Bridge;
-	Ref<Actor> BottomOfTheOcean;
-	Ref<Actor> Bush;
+
 	Ref<Actor> Ocean;
 
 

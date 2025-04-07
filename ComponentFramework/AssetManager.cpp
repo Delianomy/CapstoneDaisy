@@ -19,7 +19,7 @@ AssetManager::AssetManager() {
 	AddComponent<MeshComponent>("Plane", nullptr,"meshes/Plane8x8.obj");
 	AddComponent<MeshComponent>("Island", nullptr, "meshes/Island.obj");
 	AddComponent<MeshComponent>("QuirkyCube", nullptr, "meshes/CubeCore.obj");
-	
+	AddComponent<MeshComponent>("BigPlane", nullptr, "meshes/Plane.obj");
 
 
 	//Actual level MODELS

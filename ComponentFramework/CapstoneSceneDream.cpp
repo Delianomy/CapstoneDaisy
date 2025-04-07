@@ -47,11 +47,11 @@ bool CapstoneSceneDream::OnCreate() {
 
 	Ocean = std::make_shared<Actor>(nullptr);
 	Ocean->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -3.0f, 0.0f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
+		QMath::angleAxisRotation(90.0f, Vec3(0.0f, 1.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
 	Ocean->GetComponent<PhysicsComponent>()->SetScale(Vec3(20.0f, 0.0f, 20.0f));
-	Ocean->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
+	Ocean->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
 	Ocean->AddComponent<ShaderComponent>(WaterShader);
 	Ocean->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Water_normal"));
 
@@ -141,7 +141,7 @@ bool CapstoneSceneDream::OnCreate() {
 
 
 
-	//CreateLevelLayout();
+	CreateLevelLayout();
 
 	//make an actor
 	player = std::make_shared<Actor>(nullptr);
@@ -387,7 +387,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 
 
-	Island1 = std::make_shared<Actor>(nullptr);
+	Ref<Actor>Island1 = std::make_shared<Actor>(nullptr);
 	Island1->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -2.0f, 0.0f),/// pos
 		QMath::angleAxisRotation(90.0f, Vec3(0.0f, 1.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
@@ -399,12 +399,9 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	//Problem, this looks a bit weird cause Y goes very deep in the bottom comparing to the top side, leadingfor stuff to look sketchy 
 	cubeCollider.rx = 3.18f;
 	cubeCollider.ry = 0.51f;
-	cubeCollider.rz = 0.904f;
-
-
+	cubeCollider.rz = 2.8f;
 	Island1->AddComponent<CollisionComponent>(nullptr, cubeCollider);
 	Island1->GetComponent<PhysicsComponent>()->isStatic = true;
-
 	Island1->AddComponent<ShaderComponent>(CubeShader);
 	Island1->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island1_mat"));
 	Island1->AddComponent<TriggerComponent>(nullptr, 1.0f);
@@ -414,12 +411,12 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 
 
-	Island2 = std::make_shared<Actor>(nullptr);
-	Island2->AddComponent<PhysicsComponent>(nullptr, Vec3(11.0f, -2.0f, 0.0f),/// pos
+	Ref<Actor>Island2 = std::make_shared<Actor>(nullptr);
+	Island2->AddComponent<PhysicsComponent>(nullptr, Vec3(11.0f, -1.8f, 0.0f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
-	Island2->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 0.7f, 1.0f));
+	Island2->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 0.76f, 1.0f));
 	Island2->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
 	Island2->GetComponent<PhysicsComponent>()->isStatic = true;
 	Island2->AddComponent<ShaderComponent>(CubeShader);
@@ -432,7 +429,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 
 
-	BottomOfTheOcean = std::make_shared<Actor>(nullptr);
+	Ref<Actor>BottomOfTheOcean = std::make_shared<Actor>(nullptr);
 	BottomOfTheOcean->AddComponent<PhysicsComponent>(nullptr, Vec3(18.0f, -10.0f, 0.0f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
@@ -457,8 +454,8 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 
 
-	House = std::make_shared<Actor>(nullptr);
-	House->AddComponent<PhysicsComponent>(nullptr, Vec3(8.8f, 0.4f, -0.5f),/// pos
+	Ref<Actor>House = std::make_shared<Actor>(nullptr);
+	House->AddComponent<PhysicsComponent>(nullptr, Vec3(8.8f, -0.3f, -0.5f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
@@ -467,14 +464,11 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	 cubeCollider;
 	cubeCollider.center = House->GetComponent<PhysicsComponent>()->GetPosition();
 	//Problem, this looks a bit weird cause Y goes very deep in the bottom comparing to the top side, leadingfor stuff to look sketchy 
-	cubeCollider.rx = 1.0f;
-	cubeCollider.ry = 1.0f;
-	cubeCollider.rz = 1.0f;
-
-
-	House->AddComponent<CollisionComponent>(nullptr, 1.0);
+	cubeCollider.rx = 0.7f;
+	cubeCollider.ry = 1.5f;
+	cubeCollider.rz = 0.7f;
+	House->AddComponent<CollisionComponent>(nullptr, cubeCollider);
 	House->GetComponent<PhysicsComponent>()->isStatic = true;
-
 	House->AddComponent<ShaderComponent>(CubeShader);
 	House->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("House_mat"));
 	House->AddComponent<TriggerComponent>(nullptr, 1.0f);
@@ -485,7 +479,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 
 
-	Flower_1 = std::make_shared<Actor>(nullptr);
+	Ref<Actor>Flower_1 = std::make_shared<Actor>(nullptr);
 	Flower_1->AddComponent<PhysicsComponent>(nullptr, Vec3(8.8f, -1.25f, 2.0f),/// pos
 		QMath::angleAxisRotation(20.0f, Vec3(-15.0f, 1.0f, -1.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
@@ -505,7 +499,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 
 
-	Flower_2 = std::make_shared<Actor>(nullptr);
+	Ref<Actor>Flower_2 = std::make_shared<Actor>(nullptr);
 	Flower_2->AddComponent<PhysicsComponent>(nullptr, Vec3(11.3f, -1.25f, 2.8f),/// pos
 		QMath::angleAxisRotation(20.0f, Vec3(1.0f, 1.0f, 1.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
@@ -519,7 +513,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	AddOpaqueActor(Flower_2);
 
 
-	Flower_3 = std::make_shared<Actor>(nullptr);
+	Ref<Actor>Flower_3 = std::make_shared<Actor>(nullptr);
 	Flower_3->AddComponent<PhysicsComponent>(nullptr, Vec3(12.3f, -0.92f, 1.3f),/// pos
 		QMath::angleAxisRotation(50.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
@@ -533,7 +527,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	AddOpaqueActor(Flower_3);
 
 
-	Flower_4 = std::make_shared<Actor>(nullptr);
+	Ref<Actor>Flower_4 = std::make_shared<Actor>(nullptr);
 	Flower_4->AddComponent<PhysicsComponent>(nullptr, Vec3(12.3f, -0.25f, -0.9f),/// pos
 		QMath::angleAxisRotation(20.0f, Vec3(-1.0f, 1.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
@@ -551,7 +545,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	/* --------------------ISLAND WITH THE LAKE-------------------- */
 
 
-	Beanstalk1 = std::make_shared<Actor>(nullptr);
+	Ref<Actor>Beanstalk1 = std::make_shared<Actor>(nullptr);
 	Beanstalk1->AddComponent<PhysicsComponent>(nullptr, Vec3(1.3f, 0.8f, -0.9f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(-1.0f, 1.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
@@ -566,7 +560,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 
 
-	Leaf1 = std::make_shared<Actor>(nullptr);
+	Ref<Actor>Leaf1 = std::make_shared<Actor>(nullptr);
 	Leaf1->AddComponent<PhysicsComponent>(nullptr, Vec3(2.3f, 1.5f, -1.55f),/// pos
 		QMath::angleAxisRotation(35.0f, Vec3(1.0f, 1.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
@@ -580,7 +574,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	AddOpaqueActor(Leaf1);
 
 
-	Leaf2 = std::make_shared<Actor>(nullptr);
+	Ref<Actor>Leaf2 = std::make_shared<Actor>(nullptr);
 	Leaf2->AddComponent<PhysicsComponent>(nullptr, Vec3(3.5f, 3.5f, -2.7f),/// pos
 		QMath::angleAxisRotation(35.0f, Vec3(1.0f, -1.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
@@ -594,7 +588,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	AddOpaqueActor(Leaf2);
 
 
-	Flower_5 = std::make_shared<Actor>(nullptr);
+	Ref<Actor>Flower_5 = std::make_shared<Actor>(nullptr);
 	Flower_5->AddComponent<PhysicsComponent>(nullptr, Vec3(1.3f, -1.5f, 0.3f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(-1.0f, 1.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
@@ -608,7 +602,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	AddOpaqueActor(Flower_5);
 
 
-	Tower1 = std::make_shared<Actor>(nullptr);
+	Ref<Actor>Tower1 = std::make_shared<Actor>(nullptr);
 	Tower1->AddComponent<PhysicsComponent>(nullptr, Vec3(-5.3f, -5.0f, 0.3f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(-1.0f, 1.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
@@ -622,7 +616,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	AddOpaqueActor(Tower1);
 
 
-	Bridge = std::make_shared<Actor>(nullptr);
+	Ref<Actor>Bridge = std::make_shared<Actor>(nullptr);
 	Bridge->AddComponent<PhysicsComponent>(nullptr, Vec3(-6.3f, -5.5f, 0.3f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(-1.0f, 1.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
@@ -760,6 +754,26 @@ void CapstoneSceneDream::Render() const {
 				// Sort from far to near
 				return distSquaredA > distSquaredB;
 			});
+
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDepthMask(GL_FALSE);
+
+		glUseProgram(Ocean->GetComponent<ShaderComponent>()->GetProgram());
+		glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, Ocean->GetModelMatrix());
+		glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, MMath::inverse(camera->orient));
+		glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
+		glUniform1f(Ocean->GetComponent<ShaderComponent>()->GetUniformID("time"), currentTime);
+
+		if (Ocean->GetComponent<MaterialComponent>()) {
+			glBindTexture(GL_TEXTURE_2D, Ocean->GetComponent<MaterialComponent>()->getTextureID());
+			Ocean->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+		}
+
+
+		glDepthMask(GL_TRUE);
+
 		glDisable(GL_BLEND);
 		glEnable(GL_ALPHA_TEST);  // Note: In modern OpenGL, use fragment shader discard
 		glAlphaFunc(GL_GREATER, 0.5f);  // Adjust threshold as needed
@@ -778,18 +792,6 @@ void CapstoneSceneDream::Render() const {
 			}
 		}
 
-		glUseProgram(Ocean->GetComponent<ShaderComponent>()->GetProgram());
-		glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, Ocean->GetModelMatrix());
-		glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, MMath::inverse(camera->orient));
-		glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
-		
-		glUniform1f(Ocean->GetComponent<ShaderComponent>()->GetUniformID("time"), currentTime);
-		if (Ocean->GetComponent<MaterialComponent>()) {
-			glBindTexture(GL_TEXTURE_2D, Ocean->GetComponent<MaterialComponent>()->getTextureID());
-			Ocean->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
-		}
-
-		glDepthMask(GL_TRUE);
 
 		
 		

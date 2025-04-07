@@ -257,6 +257,9 @@ std::vector<Ref<Actor>> CollisionSystem::Raycast(Ray ray) {
     CollisionComponent* collider;
     TransformComponent* transform;
 
+    //Incase the collider is a box
+    AABB boxCollider;
+
     for (auto actor : collidingActors) {
         bool actorInList = false;
         collider = actor->GetComponent<CollisionComponent>().get();
@@ -283,7 +286,8 @@ std::vector<Ref<Actor>> CollisionSystem::Raycast(Ray ray) {
 
         case ColliderType::AABB:
             transform = actor->GetComponent<TransformComponent>().get();
-            if (MEW::RayAABBIntersection(ray, AABB(transform->GetPosition(), Vec3(collider->GetAABB().rx, collider->GetAABB().ry, collider->GetAABB().rz)))) {
+            boxCollider = AABB(transform->GetPosition(), Vec3(collider->GetAABB().rx, collider->GetAABB().ry, collider->GetAABB().rz));
+            if (MEW::RayAABBIntersection(ray, boxCollider)) {
                 collidedActors.push_back(actor);
                 continue;
             }

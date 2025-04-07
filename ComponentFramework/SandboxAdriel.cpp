@@ -857,8 +857,6 @@ void SandboxAdriel::PlayerGroundCheck() {
 
 	std::vector<Ref<Actor>> collidedActors = collisionSystem.Raycast(ray);
 
-	
-
 	for (auto actor : collidedActors) {
 		if (actor->tag == TAGS::GROUND) {
 			playerIsGrounded = true;

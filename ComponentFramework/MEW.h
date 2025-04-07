@@ -120,46 +120,62 @@ public:
         //TX
         float tx1 = (boxMin.x - ray.start.x) / rayDir.x;
         float tx2 = (boxMax.x - ray.start.x) / rayDir.x;
+        if (rayDir.x == 0.0f) {
+            // Check if ray.start.x is within the bounds of the box on the X axis
+            if (ray.start.x < boxMin.x || ray.start.x > boxMax.x) {
+                return false; // No intersection if the ray is parallel and not in range
+            }
+            // If the ray is parallel to the X axis, treat as infinite range on that axis
+            tx1 = -std::numeric_limits<float>::infinity();
+            tx2 = std::numeric_limits<float>::infinity();
+        }
+        else if (tx1 > tx2) {
+            std::swap(tx1, tx2);
+        }
         float tNearX = std::min(tx1, tx2);
         float tFarX = std::max(tx1, tx2);
-        if (rayDir.x == 0.0f) {
-            tNearX = 0.0f;
-            tFarX = 0.0f;
-        }
 
         //TY
         float ty1 = (boxMin.y - ray.start.y) / rayDir.y;
         float ty2 = (boxMax.y - ray.start.y) / rayDir.y;
+        if (rayDir.y == 0.0f) {
+            // Check if ray.start.y is within the bounds of the box on the Y axis
+            if (ray.start.y < boxMin.y || ray.start.y > boxMax.y) {
+                return false; // No intersection if the ray is parallel and not in range
+            }
+            ty1 = -std::numeric_limits<float>::infinity();
+            ty2 = std::numeric_limits<float>::infinity();
+        }
+        else if (ty1 > ty2) {
+            std::swap(ty1, ty2);
+        }
         float tNearY = std::min(ty1, ty2);
         float tFarY = std::max(ty1, ty2);
-        if (rayDir.y == 0.0f) {
-            tNearY = 0.0f;
-            tFarY = 0.0f;
-        }
+
 
         //TZ
         float tz1 = (boxMin.z - ray.start.z) / rayDir.z;
         float tz2 = (boxMax.z - ray.start.z) / rayDir.z;
+        if (rayDir.z == 0.0f) {
+            // Check if ray.start.z is within the bounds of the box on the Z axis
+            if (ray.start.z < boxMin.z || ray.start.z > boxMax.z) {
+                return false; // No intersection if the ray is parallel and not in range
+            }
+            tz1 = -std::numeric_limits<float>::infinity();
+            tz2 = std::numeric_limits<float>::infinity();
+        }
+        else if (tz1 > tz2) {
+            std::swap(tz1, tz2);
+        }
         float tNearZ = std::min(tz1, tz2);
         float tFarZ = std::max(tz1, tz2);
-        if (rayDir.z == 0.0f) {
-            tNearZ = 0.0f;
-            tFarZ = 0.0f;
-        }
+      
 
         //Finding the biggest TNear value
         float tmin = std::max(std::max(tNearX, tNearY), tNearZ);
 
         //Finding the smallest Tmax value
         float tmax = std::min(std::min(tFarX, tFarY), tFarZ);
-
-        if (tmin < 0 || tmin > 1) {
-            return false;
-        }
-
-        if (tmax < 0 || tmax > 1) {
-            return false;
-        }
 
         if (tmin > tmax) { 
             return false; 

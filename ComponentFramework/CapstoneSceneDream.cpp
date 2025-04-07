@@ -1128,7 +1128,7 @@ void CapstoneSceneDream::DrawRay(Ray ray) const {
 
 void CapstoneSceneDream::PlayerGroundCheck() {
 	playerIsGrounded = false;
-	float length = 0.05f;
+	float length = 0.3f;
 
 	Vec3 playerPos = player->GetComponent<TransformComponent>()->GetPosition();
 	Vec3 origin = playerPos;
@@ -1182,7 +1182,7 @@ void CapstoneSceneDream::RenderColliders() const {
 	}
 
 	//Drawing the player's ground ray
-	DrawRay(groundCheckRay);
+	//DrawRay(groundCheckRay);
 }
 
 void CapstoneSceneDream::DebugUI() const {
@@ -1216,7 +1216,7 @@ void CapstoneSceneDream::DebugUI() const {
 	ImGui::SetNextWindowSize(ImVec2(0.3f, 0.3f));
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-	ImGui::Begin(" ", nullptr, flags);
+	ImGui::Begin("s", nullptr, flags);
 	ImGui::End();
 	ImGui::PopStyleColor();
 	ImGui::PopStyleVar();
@@ -1226,7 +1226,7 @@ void CapstoneSceneDream::DebugUI() const {
 	ImGui::SetNextWindowSize(ImVec2(0.3f, 0.3f));
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 1.0f, 0.0f, 1.0f));
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-	ImGui::Begin(" ", nullptr, flags);
+	ImGui::Begin("e", nullptr, flags);
 	ImGui::End();
 	ImGui::PopStyleColor();
 	ImGui::PopStyleVar();

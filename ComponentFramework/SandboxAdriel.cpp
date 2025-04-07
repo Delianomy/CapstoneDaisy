@@ -852,8 +852,8 @@ void SandboxAdriel::PlayerGroundCheck() {
 	float length = 0.3f;
 
 	Vec3 playerPos = player->GetComponent<TransformComponent>()->GetPosition();
-	Vec3 origin = playerPos;
-	Ray ray = Ray(origin, origin + Vec3(0, -1, 0 * length));
+	Vec3 origin = playerPos + Vec3(0, -0.5f, 0);
+	Ray ray = Ray(origin, origin + Vec3(0, -1, 0) * length);
 
 	std::vector<Ref<Actor>> collidedActors = collisionSystem.Raycast(ray);
 

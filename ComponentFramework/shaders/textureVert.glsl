@@ -30,13 +30,22 @@ uniform vec2 NPCanimIndex;
 uniform int NPC_id;
 uniform bool talking;
 
+
+
 void main() {
     texCoord = uvCoord;
    
-    if(NPC_id == 0){ //player
-     texCoord.y *= -1.0;
-     texCoord.x = texCoord.x*0.077 + (playeranimIndex.x*0.077);
-    }
+    if (NPC_id == 0) {
+    texCoord.y *= -1.0;
+
+    // There are 5 total rows = 1/5 = 0.2
+    texCoord.y *= 0.2;
+    texCoord.y += playeranimIndex.y * 0.2;
+
+    // Most frames = 13, so each frame is ~1/13 = 0.077
+    texCoord.x *= 0.077;
+    texCoord.x += playeranimIndex.x * 0.077;
+}
     else if(NPC_id == 1){ //mermaid
           texCoord.y = -texCoord.y;
           //top row

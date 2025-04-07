@@ -24,6 +24,20 @@ class Actor;
 class SkyBox;
 
 #include "Scene.h"
+
+enum class PlayerAnimType {
+	Idle = 0,
+	Walking,
+	Jumping,
+	SwimmingIdle,
+	Swimming
+};
+
+struct AnimationInfo {
+	int row;       // Sprite sheet row (Y index)
+	int frameCount; // Number of frames in that row
+};
+
 class CapstoneSceneDream : public Scene 
 {
 	Ref<AssetManager> assetManager;
@@ -103,13 +117,27 @@ class CapstoneSceneDream : public Scene
 	void AdrielMagik();
 	void RenderAdrielMagik() const;
 
-	int animIndex = 0;
 	int NPCanimIndex = 0;
 	float currentTime = 0.0f;
 	float NPCcurrentTime = 0.0f;
 	float frameSpeed = 0.1f;
 	bool drawNormals;
 	bool drawOverlay;
+
+
+
+
+	bool playerIsSwimming = false;
+	PlayerAnimType currentAnim;
+	Vec2 animIndex;
+
+	std::unordered_map<PlayerAnimType, AnimationInfo> animTable = {
+	{PlayerAnimType::Idle,         {5, 11}},
+	{PlayerAnimType::Walking,      {4, 13}},
+	{PlayerAnimType::Jumping,      {3, 13}},
+	{PlayerAnimType::SwimmingIdle, {2, 6}},
+	{PlayerAnimType::Swimming,     {1, 10}}
+	};
 public:
 	Matrix4 orient;
 	explicit CapstoneSceneDream(SceneManager* scenemanager);
@@ -137,6 +165,14 @@ public:
 	void DrawRay(Ray ray) const;
 	void PlayerGroundCheck();
 	void RenderColliders() const;
+
+	Vec2 GetAnimIndex(float deltaTime, float& currentTime, PlayerAnimType animType, float frameSpeed) {
+
+		auto& anim = animTable[animType];
+		int xIndex = static_cast<int>(currentTime / frameSpeed) % anim.frameCount;
+		int yIndex = anim.row;
+		return Vec2(static_cast<float>(xIndex), static_cast<float>(yIndex));
+	}
 };
 
 #endif // CAPSTONESCENE_DREAM_H

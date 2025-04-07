@@ -72,7 +72,7 @@ AssetManager::AssetManager() {
 	AddComponent<MaterialComponent>("Mouse", nullptr, "textures/SpriteSheets/Mouse_spritesheet.png");
 	AddComponent<MaterialComponent>("Owl", nullptr, "textures/SpriteSheets/Owl_spritesheet.png");
 	AddComponent<MaterialComponent>("Fairy", nullptr, "textures/SpriteSheets/fairy_spritesheet.png");
-	AddComponent<MaterialComponent>("Daisy_spriteSheet", nullptr, "textures/SpriteSheets/walking_spritesheet.png");
+	AddComponent<MaterialComponent>("Daisy_spriteSheet", nullptr, "textures/SpriteSheets/Player_spritesheet.png");
 	
 
 

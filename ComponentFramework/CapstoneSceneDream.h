@@ -83,7 +83,9 @@ class CapstoneSceneDream : public Scene
 
 	//NewInput
 	Vec3 movementInput = Vec3();
+	float jumpSpeed = 100.0f;
 	bool playerIsGrounded = false;
+	Ray groundCheckRay = Ray(Vec3(), Vec3());
 
 	//invetory UI imput
 	bool inventoryButtonPressed = true;
@@ -97,8 +99,9 @@ class CapstoneSceneDream : public Scene
 	//Debug Meshes
 	Ref<Actor> DebugSphere;
 	Ref<Actor> DebugCube;
-	void AdrielMagik();
-	void RenderAdrielMagik() const;
+
+	//Debug messages
+	std::string rayCollidedActors;
 
 	int NPCanimIndex = 0;
 	float currentTime = 0.0f;
@@ -106,9 +109,6 @@ class CapstoneSceneDream : public Scene
 	float frameSpeed = 0.1f;
 	bool drawNormals;
 	bool drawOverlay;
-
-
-
 
 	bool playerIsSwimming = false;
 	PlayerAnimType currentAnim;
@@ -156,7 +156,8 @@ public:
 	void DrawRay(Ray ray) const;
 	void PlayerGroundCheck();
 	void RenderColliders() const;
-
+	void CreateDebugMeshes();
+	void DebugUI() const;
 
 
 	Vec2 GetAnimIndex(float deltaTime, float& currentTime, PlayerAnimType animType, float frameSpeed) {

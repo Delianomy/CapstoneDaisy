@@ -15,6 +15,7 @@
 #include "CollisionComponent.h"
 #include "TriggerComponent.h"
 #include <random>
+#include <sstream>
 
 #include "SkyBox.h"
 #include <string>
@@ -42,7 +43,7 @@ bool CapstoneSceneDream::OnCreate() {
 	Ref<ShaderComponent> CubeShader = assetManager->GetComponent<ShaderComponent>("RegularTextureShader");
 	Ref<ShaderComponent> WaterShader = assetManager->GetComponent<ShaderComponent>("Water Shader");
 
-	AdrielMagik();
+	CreateDebugMeshes();
 
 
 	Ocean = std::make_shared<Actor>(nullptr);
@@ -261,6 +262,8 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 	static float flip = 1.0f;
 	Ref<TransformComponent> cameraTC;
 	Ref<TransformComponent> gameBoardTC;
+	float cameraMoveSpeed = 0.1f;
+	Vec3 cameraNewPos;
 
 	/// Handle Camera movement 
 	switch (sdlEvent.type) {
@@ -319,7 +322,6 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 		case SDL_SCANCODE_SPACE:
 			if (playerIsGrounded) {
 				movementInput.y = 1.0f;
-				
 			}
 		break;
 		case SDL_SCANCODE_A:
@@ -363,6 +365,20 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 		}
 		break;
 	}
+
+	case SDL_MOUSEWHEEL:{
+		cameraTC = camera->GetComponent<TransformComponent>();
+		if (sdlEvent.wheel.y > 0.0f) {
+			cameraNewPos = cameraTC->GetPosition() + Vec3(0.0, 0.0, cameraMoveSpeed);
+			cameraTC->SetPosition(cameraNewPos);
+			break;
+		}
+
+		cameraNewPos = cameraTC->GetPosition() - Vec3(0.0, 0.0, cameraMoveSpeed);
+		cameraTC->SetPosition(cameraNewPos);
+		break;
+	}
+
 	ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
 	}
 }
@@ -425,6 +441,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 	//island with the house
 	Ref<Actor>Island2 = std::make_shared<Actor>(nullptr);
+	Island2->tag = GROUND;
 	Island2->AddComponent<PhysicsComponent>(nullptr, Vec3(11.0f, -1.9f, 0.0f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
@@ -710,6 +727,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	
 	
 	DrawUI_imgui();
+	PlayerGroundCheck();
 	iTime += deltaTime;
 
 	//change in angle 
@@ -743,8 +761,6 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 		currentAnim = PlayerAnimType::Idle;
 	}
 
-	std::cout << playerIsGrounded;
-
 
 	/// Adriel's movement input
 	Vec3 moveDir = Vec3();
@@ -757,7 +773,9 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 
 	animIndex = GetAnimIndex(deltaTime, currentTime, currentAnim, frameSpeed);
 
-	playerPhysics->ApplyForce(moveDir * walkSpeed * 0.1);
+	Vec3 moveResult = moveDir * walkSpeed;
+	moveResult.y = moveDir.y * jumpSpeed;
+	playerPhysics->ApplyForce(moveResult);
 	movementInput.y = 0; //Reseting the jumping input
 
 	NPCcurrentTime += deltaTime*0.4f;
@@ -777,7 +795,7 @@ void CapstoneSceneDream::Render() const {
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	
+		DebugUI();
 
 		glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
 		glBindBuffer(GL_UNIFORM_BUFFER, light->GetLightID());
@@ -1002,20 +1020,8 @@ void CapstoneSceneDream::DrawUI_imgui()
 		ImGui::PopStyleVar();
 		ImGui::PopStyleColor();
 
-	}
-
-
-
-
-	
+	}	
 }
-
-
-
-
-
-
-
 
 void CapstoneSceneDream::DrawNormals(const Vec4 color) const {
 	glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
@@ -1028,8 +1034,6 @@ void CapstoneSceneDream::DrawNormals(const Vec4 color) const {
 	}
 	glUseProgram(0);
 }
-
-
 
 void CapstoneSceneDream::DrawMeshOverlay(const Vec4 color) const {
 	glDisable(GL_DEPTH_TEST);
@@ -1048,9 +1052,7 @@ void CapstoneSceneDream::DrawMeshOverlay(const Vec4 color) const {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-
-
-void CapstoneSceneDream::AdrielMagik() {
+void CapstoneSceneDream::CreateDebugMeshes() {
 	//Creating the debug objects
 	DebugSphere = std::make_shared<Actor>(nullptr);
 	DebugSphere->AddComponent<TransformComponent>(nullptr, Vec3(), Quaternion(), Vec3());
@@ -1061,21 +1063,6 @@ void CapstoneSceneDream::AdrielMagik() {
 	DebugCube->AddComponent<TransformComponent>(nullptr, Vec3(), Quaternion(), Vec3());
 	DebugCube->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
 	DebugCube->AddComponent<ShaderComponent>(assetManager->GetComponent< ShaderComponent>("DefaultShader"));
-}
-
-void CapstoneSceneDream::RenderAdrielMagik() const{
-	for (auto actor : collisionSystem.collidingActors) {
-		//if sphere
-		CollisionComponent* collider = actor->GetComponent<CollisionComponent>().get();
-
-		if (collider->GetColliderType() == ColliderType::AABB) {
-			DrawCube(collider->GetAABB());
-		}
-
-		if (collider->GetColliderType() == ColliderType::Sphere) {
-			DrawSphere(actor->GetComponent<TransformComponent>()->GetPosition(), collider->GetRadisu());
-		}
-	}
 }
 
 void CapstoneSceneDream::DrawSphere(Vec3 pos, float radius) const {
@@ -1141,13 +1128,27 @@ void CapstoneSceneDream::DrawRay(Ray ray) const {
 
 void CapstoneSceneDream::PlayerGroundCheck() {
 	playerIsGrounded = false;
-	float length = 0.3f;
+	float length = 0.05f;
 
 	Vec3 playerPos = player->GetComponent<TransformComponent>()->GetPosition();
-	Vec3 origin = playerPos + Vec3(0, -0.5f, 0);
-	Ray ray = Ray(origin, origin + Vec3(0, -1, 0 * length));
+	Vec3 origin = playerPos;
+	Ray ray = Ray(origin, origin + Vec3(0, -1, 0) * length);
+	groundCheckRay = ray;
 
-	std::vector<Ref<Actor>> collidedActors = collisionSystem.Raycast(ray);
+	std::vector<Ref<Actor>> collidedActors = collisionSystem.Raycast(groundCheckRay);
+	
+	//Sotring all the collided actors in a string to print
+	rayCollidedActors = "";
+	for (auto actor : collidedActors) {
+		if (actor->tag == TAGS::GROUND) {
+			std::stringstream ss;
+			Vec3 pos = actor->GetComponent<TransformComponent>()->GetPosition();
+
+			rayCollidedActors += "Collided with actor at: ";
+			ss << "(" << pos.x << ", " << pos.y << ", " << pos.z << ")" << "\n";
+			rayCollidedActors += ss.str();
+		}
+	}
 
 	for (auto actor : collidedActors) {
 		if (actor->tag == TAGS::GROUND) {
@@ -1180,10 +1181,53 @@ void CapstoneSceneDream::RenderColliders() const {
 		}
 	}
 
-	//Drawing the player's ray
-	float length = 0.3f;
+	//Drawing the player's ground ray
+	DrawRay(groundCheckRay);
+}
+
+void CapstoneSceneDream::DebugUI() const {
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiCond_FirstUseEver | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar;
+	ImGui::SetNextWindowPos(ImVec2());
+	ImGui::SetNextWindowSize(ImVec2(400, 400));
+	ImGui::Begin("DEBUG", nullptr, flags);
+	
+	//Displaying the player's position
 	Vec3 playerPos = player->GetComponent<TransformComponent>()->GetPosition();
-	Vec3 origin = playerPos + Vec3(0, -0.5f, 0);
-	Ray ray = Ray(origin, origin + Vec3(0, -1, 0) * length);
-	DrawRay(ray);
+	ImGui::Text("Player Pos: (%.3f, %.3f, %.3f)", playerPos.x, playerPos.y, playerPos.z);
+	ImGui::Text("Player Grounded: %s", (playerIsGrounded) ? "True" : "False");
+
+	//Printing the ray's positions
+	Vec3 rayOrigin = groundCheckRay.start;
+	Vec3 rayEnd = groundCheckRay.direction;
+
+	ImGui::Text("Ray Origin: (%.3f, %.3f, %.3f)", rayOrigin.x, rayOrigin.y, rayOrigin.z);
+	ImGui::Text("Ray End   : (%.3f, %.3f, %.3f)", rayEnd.x, rayEnd.y, rayEnd.z);
+
+	ImGui::SeparatorText("CollidedActors");
+	ImGui::Text("%s", rayCollidedActors.c_str());
+
+	ImGui::End();
+
+	Vec2 rayOriginScreen = sceneManagerRef->WorldToScreenCoordinates(rayOrigin, camera.get());
+	Vec2 rayEndScreen = sceneManagerRef->WorldToScreenCoordinates(rayEnd, camera.get());
+
+	// S = start
+	ImGui::SetNextWindowPos(ImVec2(rayOriginScreen.x, rayOriginScreen.y));
+	ImGui::SetNextWindowSize(ImVec2(0.3f, 0.3f));
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	ImGui::Begin(" ", nullptr, flags);
+	ImGui::End();
+	ImGui::PopStyleColor();
+	ImGui::PopStyleVar();
+
+	// E = end
+	ImGui::SetNextWindowPos(ImVec2(rayEndScreen.x, rayEndScreen.y));
+	ImGui::SetNextWindowSize(ImVec2(0.3f, 0.3f));
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 1.0f, 0.0f, 1.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	ImGui::Begin(" ", nullptr, flags);
+	ImGui::End();
+	ImGui::PopStyleColor();
+	ImGui::PopStyleVar();
 }

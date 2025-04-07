@@ -4,9 +4,11 @@
 #include "Window.h"
 #include "CapstoneScene.h"
 #include "CapstoneSceneDream.h"
+#include "CameraActor.h"
 #include "SandboxAdriel.h"
 #include "ShaderTestScene.h"
 #include "MainMenu.h"
+
 
 SceneManager::SceneManager(): 
 	currentScene(nullptr), window(nullptr), timer(nullptr),
@@ -117,7 +119,7 @@ void SceneManager::HandleEvents() {
 				BuildNewScene(SCENE_NUMBER::SCENE_MAIN_MENU);
 				break;
 			case SDL_SCANCODE_F11:
-				BuildNewScene(SCENE_NUMBER::SCENE0);
+				BuildNewScene(SCENE_NUMBER::SCENE_SANDBOX_ADRIEL);
 				break;
 			}
 		}
@@ -232,4 +234,11 @@ bool SceneManager::BuildCapstoneScenes() {
 	if (!status) { return false; }
 
 	return true;
+}
+
+Vec2 SceneManager::WorldToScreenCoordinates(Vec3 coords, CameraActor* camera){
+	Vec4 screenPos = camera->GetProjectionMatrix() * camera->GetViewMatrix() * Vec4(coords, 1.0f);
+	Vec4 NDC = screenPos * (1 / screenPos.w);
+	Vec2 screenSpaceCoords = Vec2((NDC.x + 1) / 2 * getWindowWidth(), (1 - NDC.y) / 2 * getWindowHeight());
+	return screenSpaceCoords;
 }

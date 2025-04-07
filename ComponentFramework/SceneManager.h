@@ -5,6 +5,7 @@
 #include "Window.h"
 #include "Inventory.h"
 
+class CameraActor;
 class SceneManager  {
 public:
 	Inventory inventory;
@@ -32,6 +33,7 @@ private:
 
 	};
 
+	//Forward declarations
 	class Scene* currentScene;
 	class Scene* bedroomScene;
 	class Scene* dreamScene;
@@ -53,7 +55,7 @@ public:
 	int getWindowWidth() { return window->getWidth(); };
 	void AddItemToInventory(std::shared_ptr<Actor> other, int index);
 	void DropItemFromInventory(int index);
-
+	Vec2 WorldToScreenCoordinates(Vec3 coords, CameraActor* camera);
 };
 
 

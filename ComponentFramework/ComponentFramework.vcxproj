@@ -181,7 +181,7 @@
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="SandboxAdriel.cpp" />
     <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="s.cpp" />
     <ClCompile Include="MMath.cpp" />
     <ClCompile Include="ShaderComponent.cpp" />
     <ClCompile Include="ShaderTestScene.cpp" />

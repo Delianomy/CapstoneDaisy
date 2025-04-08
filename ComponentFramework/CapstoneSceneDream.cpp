@@ -150,7 +150,7 @@ bool CapstoneSceneDream::OnCreate() {
 	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
 	player->AddComponent<CollisionComponent>(nullptr, 0.8f);
 	player->GetComponent<PhysicsComponent>()->isStatic = false;
-	player->GetComponent<PhysicsComponent>()->useGravity = false;
+	player->GetComponent<PhysicsComponent>()->useGravity = true;
 	player->GetComponent<PhysicsComponent>()->mass = 1.0f;
 	player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
 	player->AddComponent<ShaderComponent>(shader);
@@ -267,6 +267,9 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 		switch (sdlEvent.key.keysym.scancode) {
 
 		case SDL_SCANCODE_SPACE:
+			if (playerIsGrounded) {
+				movementInput.y = 1.0f;
+			}
 			break;
 
 
@@ -315,9 +318,7 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 		switch (sdlEvent.key.keysym.scancode) {
 
 		case SDL_SCANCODE_SPACE:
-			if (playerIsGrounded) {
-				movementInput.y = 1.0f;
-			}
+			movementInput.y = 0.0f;
 		break;
 		case SDL_SCANCODE_A:
 			movementInput.x = 0.0f;
@@ -715,12 +716,12 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 
 
-	return true;
+return true;
 }
 
 void CapstoneSceneDream::Update(const float deltaTime) {
-	
-	
+
+
 	DrawUI_imgui();
 	PlayerGroundCheck();
 	iTime += deltaTime;
@@ -736,13 +737,13 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	Ref<PhysicsComponent> playerPhysics = player->GetComponent<PhysicsComponent>();
 
 	//Update players rotation 
-	if(rotatePlayerLeft || rotatePlayerRight){
+	if (rotatePlayerLeft || rotatePlayerRight) {
 		Quaternion newQuat = QMath::angleAxisRotation(playerAngle, Vec3(0.0f, 1.0f, 0.0f));
 		playerPhysics->SetQuaternion(newQuat);
 	}
-	
+
 	if (VMath::mag(movementInput) > 0.0f || !playerIsGrounded || playerIsSwimming) {
-		
+
 	}
 
 	currentTime += deltaTime;
@@ -768,19 +769,30 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 
 	animIndex = GetAnimIndex(deltaTime, currentTime, currentAnim, frameSpeed);
 
+	//Change accel depending if the player is grounded or not
+	if (playerIsGrounded) {
+		walkSpeed = groudAccel;
+	}
+	else {
+		walkSpeed = airAccel;
+	}
 	Vec3 moveResult = moveDir * walkSpeed;
-	moveResult.y = moveDir.y * jumpSpeed;
+	moveResult.y = movementInput.y * jumpSpeed;
 	playerPhysics->ApplyForce(moveResult);
 	movementInput.y = 0; //Reseting the jumping input
 
-	NPCcurrentTime += deltaTime*0.4f;
+	if (playerPhysics->GetVel().y > jumpSpeed * deltaTime) {
+		Vec3 currentVel = playerPhysics->GetVel();
+		playerPhysics->SetVel(Vec3(currentVel.x, jumpSpeed * deltaTime ,currentVel.z));
+	}
+
+	NPCcurrentTime += deltaTime * 0.4f;
 	NPCanimIndex = static_cast<int>(NPCcurrentTime / frameSpeed) % 17;
 
 	camera->UpdateViewMatrix();
 	collisionSystem.Update(deltaTime);
 	physicsSystem.Update(deltaTime);
 	triggerSystem.Update(deltaTime);
-
 }
 
 void CapstoneSceneDream::Render() const {
@@ -1161,7 +1173,7 @@ void CapstoneSceneDream::DrawRay(Ray ray) const {
 
 void CapstoneSceneDream::PlayerGroundCheck() {
 	playerIsGrounded = false;
-	float length = 1.0f;
+	float length = 0.5f;
 
 	Vec3 playerPos = player->GetComponent<TransformComponent>()->GetPosition();
 	Vec3 origin = playerPos + Vec3(0, -0.3, 0);
@@ -1228,6 +1240,15 @@ void CapstoneSceneDream::DebugUI() const {
 	Vec3 playerPos = player->GetComponent<TransformComponent>()->GetPosition();
 	ImGui::Text("Player Pos: (%.3f, %.3f, %.3f)", playerPos.x, playerPos.y, playerPos.z);
 	ImGui::Text("Player Grounded: %s", (playerIsGrounded) ? "True" : "False");
+
+	Vec3 playerForce = player->GetComponent<PhysicsComponent>()->GetForce();
+	ImGui::Text("Player Force: (%.3f, %.3f, %.3f)", playerForce.x, playerForce.y, playerForce.z);
+
+	Vec3 playerAccel = player->GetComponent<PhysicsComponent>()->GetAcc();
+	ImGui::Text("Player Accel: (%.3f, %.3f, %.3f)", playerAccel.x, playerAccel.y, playerAccel.z);
+
+	Vec3 playerVel = player->GetComponent<PhysicsComponent>()->GetVel();
+	ImGui::Text("Player Vel: (%.3f, %.3f, %.3f)", playerVel.x, playerVel.y, playerVel.z);
 
 	//Printing the ray's positions
 	Vec3 rayOrigin = groundCheckRay.start;

@@ -83,11 +83,13 @@ class CapstoneSceneDream : public Scene
 	bool rotatePlayerLeft = false;
 	Vec3 forwardVector = Vec3(0.0f, 0.0f, 0.1f);
 	Vec3 lefr_right_Vector = Vec3(0.1f, 0.0f, 0.0f);
-	float walkSpeed = 40.0f;
 
 	//NewInput
 	Vec3 movementInput = Vec3();
-	float jumpSpeed = 100.0f;
+	float walkSpeed = 10.0f;
+	float jumpSpeed = 200.0f;
+	float groudAccel = 20.0f;
+	float airAccel = 3.0f;
 	bool playerIsGrounded = false;
 	Ray groundCheckRay = Ray(Vec3(), Vec3());
 

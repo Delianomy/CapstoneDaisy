@@ -695,6 +695,57 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	collisionSystem.AddActor(Beanstalk1);
 
 
+	Ref<Actor>Beanstalk2 = std::make_shared<Actor>(nullptr);
+	Beanstalk2->AddComponent<PhysicsComponent>(nullptr, Vec3(-2.5f, -0.2f, 0.9f),/// pos
+		QMath::angleAxisRotation(30.0f, Vec3(0.0f, 1.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	cubeCollider.center = Beanstalk2->GetComponent<PhysicsComponent>()->GetPosition();
+	cubeCollider.rx = 0.2f;
+	cubeCollider.ry = 0.7f;
+	cubeCollider.rz = 0.2f;
+	Beanstalk2->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.3f, 0.2f, 0.3f));
+	Beanstalk2->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Beanstalk_obj"));
+	Beanstalk2->GetComponent<PhysicsComponent>()->isStatic = true;
+	Beanstalk2->AddComponent<CollisionComponent>(nullptr, cubeCollider);
+	Beanstalk2->AddComponent<ShaderComponent>(CubeShader);
+	Beanstalk2->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Beanstalk_mat"));
+	Beanstalk2->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	AddOpaqueActor(Beanstalk2);
+	physicsSystem.AddActor(Beanstalk2);
+	collisionSystem.AddActor(Beanstalk2);
+
+
+
+	Ref<Actor>Leaf3 = std::make_shared<Actor>(nullptr);
+	Leaf3->AddComponent<PhysicsComponent>(nullptr, Vec3(-2.5f, 0.2f, 0.9f),/// pos
+		QMath::angleAxisRotation(35.0f, Vec3(1.0f, 1.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	Leaf3->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.3f, 0.5f, 0.3f));
+	Leaf3->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Leaf_obj"));
+	Leaf3->GetComponent<PhysicsComponent>()->isStatic = true;
+	Leaf3->AddComponent<ShaderComponent>(CubeShader);
+	Leaf3->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Leaf_mat"));
+	Leaf3->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	AddOpaqueActor(Leaf3);
+
+
+	Ref<Actor>Leaf4 = std::make_shared<Actor>(nullptr);
+	Leaf4->AddComponent<PhysicsComponent>(nullptr, Vec3(-2.5f, 0.5f, 0.0f),/// pos
+		QMath::angleAxisRotation(90.0f, Vec3(1.0f, 1.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	Leaf4->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.7f, 0.7f, 0.7f));
+	Leaf4->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Leaf_obj"));
+	Leaf4->GetComponent<PhysicsComponent>()->isStatic = true;
+	Leaf4->AddComponent<ShaderComponent>(CubeShader);
+	Leaf4->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Leaf_mat"));
+	Leaf4->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	AddOpaqueActor(Leaf4);
+
+
+
 	Ref<Actor>Leaf1 = std::make_shared<Actor>(nullptr);
 	Leaf1->AddComponent<PhysicsComponent>(nullptr, Vec3(2.3f, 1.5f, -1.55f),/// pos
 		QMath::angleAxisRotation(35.0f, Vec3(1.0f, 1.0f, 0.0f)),

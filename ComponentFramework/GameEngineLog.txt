@@ -1,4 +1,4 @@
-Tue Apr  8 16:39:43 2025
+Tue Apr  8 16:59:55 2025
 [INFO]: Starting the SceneManager
 [INFO]: OpenGL version: 4.6.0 NVIDIA 546.80
 [INFO]: Graphics card vendor NVIDIA Corporation
@@ -100,6 +100,9 @@ Tue Apr  8 16:39:43 2025
 
 [INFO]: Deleted Scene Dream: 
 [INFO]: Deleting Scene Dream: 
+[INFO]: Deleting assets for Actor: 
+[INFO]: Deleting assets for Actor: 
+[INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 

@@ -388,32 +388,32 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("TextureShader");
 
 
-	Ref<Actor> bush1 = std::make_shared<Actor>(nullptr);
-	bush1->AddComponent<PhysicsComponent>(nullptr, Vec3(10.0f, 0.0f, 1.0f),/// pos
-		QMath::angleAxisRotation(0, Vec3(0.0, 1.0f, 0.0f)),
-			Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	bush1->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
-	bush1->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Bush_obj"));
-	bush1->GetComponent<PhysicsComponent>()->isStatic = true;
+	//Ref<Actor> bush1 = std::make_shared<Actor>(nullptr);
+	//bush1->AddComponent<PhysicsComponent>(nullptr, Vec3(10.0f, 0.0f, 1.0f),/// pos
+	//	QMath::angleAxisRotation(0, Vec3(0.0, 1.0f, 0.0f)),
+	//		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	//);
+	//bush1->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
+	//bush1->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Bush_obj"));
+	//bush1->GetComponent<PhysicsComponent>()->isStatic = true;
 
-	bush1->AddComponent<ShaderComponent>(shader);
-	bush1->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Bush_mat"));
-	bush1->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	AddTransparentActor(bush1);
+	//bush1->AddComponent<ShaderComponent>(shader);
+	//bush1->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Bush_mat"));
+	//bush1->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	//AddTransparentActor(bush1);
 
 
-	Ref<Actor> grass = std::make_shared<Actor>(nullptr);
-	grass->AddComponent<PhysicsComponent>(nullptr, Vec3(10.0f, -1.0f, 1.0f),/// pos
-		QMath::angleAxisRotation(0, Vec3(1.0, 0.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	grass->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
-	grass->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Grass1_obj"));
-	grass->AddComponent<ShaderComponent>(shader);
-	grass->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Grass1_mat"));
-	grass->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	AddTransparentActor(grass);
+	//Ref<Actor> grass = std::make_shared<Actor>(nullptr);
+	//grass->AddComponent<PhysicsComponent>(nullptr, Vec3(10.0f, -1.0f, 1.0f),/// pos
+	//	QMath::angleAxisRotation(0, Vec3(1.0, 0.0f, 0.0f)),
+	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	//);
+	//grass->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
+	//grass->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Grass1_obj"));
+	//grass->AddComponent<ShaderComponent>(shader);
+	//grass->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Grass1_mat"));
+	//grass->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	//AddTransparentActor(grass);
 
 
 	//island in the centre
@@ -458,264 +458,264 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 
 
-	//Small island
-	Ref<Actor>Island3 = std::make_shared<Actor>(nullptr);
-	Island3->AddComponent<PhysicsComponent>(nullptr, Vec3(2.5f, -2.3f, 3.2f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	Island3->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.1f, 0.1f, 0.1f));
-	Island3->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
-	Island3->GetComponent<PhysicsComponent>()->isStatic = true;
-	Island3->AddComponent<ShaderComponent>(CubeShader);
-	Island3->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
-	Island3->AddComponent<CollisionComponent>(nullptr, 0.34f);
-	AddOpaqueActor(Island3);
-	physicsSystem.AddActor(Island3);
-	collisionSystem.AddActor(Island3);
+	////Small island
+	//Ref<Actor>Island3 = std::make_shared<Actor>(nullptr);
+	//Island3->AddComponent<PhysicsComponent>(nullptr, Vec3(2.5f, -2.3f, 3.2f),/// pos
+	//	QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
+	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	//);
+	//Island3->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.1f, 0.1f, 0.1f));
+	//Island3->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
+	//Island3->GetComponent<PhysicsComponent>()->isStatic = true;
+	//Island3->AddComponent<ShaderComponent>(CubeShader);
+	//Island3->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
+	//Island3->AddComponent<CollisionComponent>(nullptr, 0.34f);
+	//AddOpaqueActor(Island3);
+	//physicsSystem.AddActor(Island3);
+	//collisionSystem.AddActor(Island3);
 
 
 
-	//Small island 2
-	Ref<Actor>Island4 = std::make_shared<Actor>(nullptr);
-	Island4->AddComponent<PhysicsComponent>(nullptr, Vec3(5.3f, -2.4f, 2.0f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	Island4->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.2f, 0.2f, 0.2f));
-	Island4->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
-	Island4->GetComponent<PhysicsComponent>()->isStatic = true;
-	Island4->AddComponent<ShaderComponent>(CubeShader);
-	Island4->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
-	Island4->AddComponent<CollisionComponent>(nullptr, 0.57f);
-	AddOpaqueActor(Island4);
-	physicsSystem.AddActor(Island4);
-	collisionSystem.AddActor(Island4);
+	////Small island 2
+	//Ref<Actor>Island4 = std::make_shared<Actor>(nullptr);
+	//Island4->AddComponent<PhysicsComponent>(nullptr, Vec3(5.3f, -2.4f, 2.0f),/// pos
+	//	QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
+	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	//);
+	//Island4->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.2f, 0.2f, 0.2f));
+	//Island4->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
+	//Island4->GetComponent<PhysicsComponent>()->isStatic = true;
+	//Island4->AddComponent<ShaderComponent>(CubeShader);
+	//Island4->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
+	//Island4->AddComponent<CollisionComponent>(nullptr, 0.57f);
+	//AddOpaqueActor(Island4);
+	//physicsSystem.AddActor(Island4);
+	//collisionSystem.AddActor(Island4);
 
 
 
-	//Small island 3
-	Ref<Actor>Island5 = std::make_shared<Actor>(nullptr);
-	Island5->AddComponent<PhysicsComponent>(nullptr, Vec3(6.8f, -2.0f, 0.0f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	Island5->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.2f, 0.2f, 0.2f));
-	Island5->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
-	Island5->GetComponent<PhysicsComponent>()->isStatic = true;
-	Island5->AddComponent<ShaderComponent>(CubeShader);
-	Island5->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
-	Island5->AddComponent<CollisionComponent>(nullptr, 0.5f);
-	AddOpaqueActor(Island5);
-	physicsSystem.AddActor(Island5);
-	collisionSystem.AddActor(Island5);
+	////Small island 3
+	//Ref<Actor>Island5 = std::make_shared<Actor>(nullptr);
+	//Island5->AddComponent<PhysicsComponent>(nullptr, Vec3(6.8f, -2.0f, 0.0f),/// pos
+	//	QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
+	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	//);
+	//Island5->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.2f, 0.2f, 0.2f));
+	//Island5->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
+	//Island5->GetComponent<PhysicsComponent>()->isStatic = true;
+	//Island5->AddComponent<ShaderComponent>(CubeShader);
+	//Island5->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
+	//Island5->AddComponent<CollisionComponent>(nullptr, 0.5f);
+	//AddOpaqueActor(Island5);
+	//physicsSystem.AddActor(Island5);
+	//collisionSystem.AddActor(Island5);
 
 
 
-	Ref<Actor>BottomOfTheOcean = std::make_shared<Actor>(nullptr);
-	BottomOfTheOcean->AddComponent<PhysicsComponent>(nullptr, Vec3(18.0f, -30.0f, 0.0f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	BottomOfTheOcean->GetComponent<PhysicsComponent>()->SetScale(Vec3(10.0f, 0.1f, 10.0f));
-	BottomOfTheOcean->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
-	cubeCollider;
-	cubeCollider.center = BottomOfTheOcean->GetComponent<PhysicsComponent>()->GetPosition();
-	//Problem, this looks a bit weird cause Y goes very deep in the bottom comparing to the top side, leadingfor stuff to look sketchy 
-	cubeCollider.rx = 3.18f;
-	cubeCollider.ry = 0.51f;
-	cubeCollider.rz = 0.904f;
-	//cube->AddComponent<CollisionComponent>(nullptr, cubeCollider);
-	BottomOfTheOcean->GetComponent<PhysicsComponent>()->isStatic = true;
-	BottomOfTheOcean->AddComponent<ShaderComponent>(CubeShader);
-	BottomOfTheOcean->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
-	//BottomOfTheOcean->AddComponent<CollisionComponent>(nullptr, 1.0f);
-	AddOpaqueActor(BottomOfTheOcean);
-	physicsSystem.AddActor(BottomOfTheOcean);
-	collisionSystem.AddActor(BottomOfTheOcean);
-
-
-
-
-	Ref<Actor>House = std::make_shared<Actor>(nullptr);
-	House->AddComponent<PhysicsComponent>(nullptr, Vec3(8.8f, -0.3f, -0.5f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	House->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
-	House->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("House_obj"));
-	cubeCollider.center = House->GetComponent<PhysicsComponent>()->GetPosition();
-	//Problem, this looks a bit weird cause Y goes very deep in the bottom comparing to the top side, leadingfor stuff to look sketchy 
-	cubeCollider.rx = 0.7f;
-	cubeCollider.ry = 1.5f;
-	cubeCollider.rz = 0.7f;
-	House->AddComponent<CollisionComponent>(nullptr, cubeCollider);
-	House->GetComponent<PhysicsComponent>()->isStatic = true;
-	House->AddComponent<ShaderComponent>(CubeShader);
-	House->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("House_mat"));
-	House->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	AddOpaqueActor(House);
-	physicsSystem.AddActor(House);
-	collisionSystem.AddActor(House);
+	//Ref<Actor>BottomOfTheOcean = std::make_shared<Actor>(nullptr);
+	//BottomOfTheOcean->AddComponent<PhysicsComponent>(nullptr, Vec3(18.0f, -30.0f, 0.0f),/// pos
+	//	QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
+	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	//);
+	//BottomOfTheOcean->GetComponent<PhysicsComponent>()->SetScale(Vec3(10.0f, 0.1f, 10.0f));
+	//BottomOfTheOcean->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
+	//cubeCollider;
+	//cubeCollider.center = BottomOfTheOcean->GetComponent<PhysicsComponent>()->GetPosition();
+	////Problem, this looks a bit weird cause Y goes very deep in the bottom comparing to the top side, leadingfor stuff to look sketchy 
+	//cubeCollider.rx = 3.18f;
+	//cubeCollider.ry = 0.51f;
+	//cubeCollider.rz = 0.904f;
+	////cube->AddComponent<CollisionComponent>(nullptr, cubeCollider);
+	//BottomOfTheOcean->GetComponent<PhysicsComponent>()->isStatic = true;
+	//BottomOfTheOcean->AddComponent<ShaderComponent>(CubeShader);
+	//BottomOfTheOcean->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
+	////BottomOfTheOcean->AddComponent<CollisionComponent>(nullptr, 1.0f);
+	//AddOpaqueActor(BottomOfTheOcean);
+	//physicsSystem.AddActor(BottomOfTheOcean);
+	//collisionSystem.AddActor(BottomOfTheOcean);
 
 
 
 
-	Ref<Actor>Flower_1 = std::make_shared<Actor>(nullptr);
-	Flower_1->AddComponent<PhysicsComponent>(nullptr, Vec3(8.8f, -1.30f, 2.0f),/// pos
-		QMath::angleAxisRotation(20.0f, Vec3(-15.0f, 1.0f, -1.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	Flower_1->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.2f, 0.2f, 0.2f));
-	Flower_1->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Flower_obj"));
-	Flower_1->GetComponent<PhysicsComponent>()->isStatic = true;
-
-	Flower_1->AddComponent<ShaderComponent>(CubeShader);
-	Flower_1->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Flower_v1_mat"));
-	Flower_1->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	AddOpaqueActor(Flower_1);
-
-	
-
-	
-
-
-
-	Ref<Actor>Flower_2 = std::make_shared<Actor>(nullptr);
-	Flower_2->AddComponent<PhysicsComponent>(nullptr, Vec3(11.3f, -1.20f, 2.8f),/// pos
-		QMath::angleAxisRotation(20.0f, Vec3(1.0f, 1.0f, 1.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	Flower_2->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.3f, 0.3f, 0.3f));
-	Flower_2->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Flower_obj"));
-	Flower_2->GetComponent<PhysicsComponent>()->isStatic = true;
-	Flower_2->AddComponent<ShaderComponent>(CubeShader);
-	Flower_2->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Flower_v1_mat"));
-	Flower_2->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	AddOpaqueActor(Flower_2);
-
-
-	Ref<Actor>Flower_3 = std::make_shared<Actor>(nullptr);
-	Flower_3->AddComponent<PhysicsComponent>(nullptr, Vec3(12.3f, 0.0f, 1.3f),/// pos
-		QMath::angleAxisRotation(50.0f, Vec3(1.0f, 0.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	Flower_3->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.25f, 0.25f, 0.25f));
-	Flower_3->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Flower_obj"));
-	Flower_3->GetComponent<PhysicsComponent>()->isStatic = true;
-	Flower_3->AddComponent<ShaderComponent>(CubeShader);
-	Flower_3->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Flower_v1_mat"));
-	Flower_3->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	AddOpaqueActor(Flower_3);
-
-
-	Ref<Actor>Flower_4 = std::make_shared<Actor>(nullptr);
-	Flower_4->AddComponent<PhysicsComponent>(nullptr, Vec3(12.3f, -0.25f, -0.9f),/// pos
-		QMath::angleAxisRotation(20.0f, Vec3(-1.0f, 1.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	Flower_4->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.25f, 0.25f, 0.25f));
-	Flower_4->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Flower_obj"));
-	Flower_4->GetComponent<PhysicsComponent>()->isStatic = true;
-	Flower_4->AddComponent<ShaderComponent>(CubeShader);
-	Flower_4->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Flower_v1_mat"));
-	Flower_4->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	AddOpaqueActor(Flower_4);
+	//Ref<Actor>House = std::make_shared<Actor>(nullptr);
+	//House->AddComponent<PhysicsComponent>(nullptr, Vec3(8.8f, -0.3f, -0.5f),/// pos
+	//	QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
+	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	//);
+	//House->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
+	//House->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("House_obj"));
+	//cubeCollider.center = House->GetComponent<PhysicsComponent>()->GetPosition();
+	////Problem, this looks a bit weird cause Y goes very deep in the bottom comparing to the top side, leadingfor stuff to look sketchy 
+	//cubeCollider.rx = 0.7f;
+	//cubeCollider.ry = 1.5f;
+	//cubeCollider.rz = 0.7f;
+	//House->AddComponent<CollisionComponent>(nullptr, cubeCollider);
+	//House->GetComponent<PhysicsComponent>()->isStatic = true;
+	//House->AddComponent<ShaderComponent>(CubeShader);
+	//House->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("House_mat"));
+	//House->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	//AddOpaqueActor(House);
+	//physicsSystem.AddActor(House);
+	//collisionSystem.AddActor(House);
 
 
 
-	/* --------------------ISLAND WITH THE LAKE-------------------- */
+
+	//Ref<Actor>Flower_1 = std::make_shared<Actor>(nullptr);
+	//Flower_1->AddComponent<PhysicsComponent>(nullptr, Vec3(8.8f, -1.30f, 2.0f),/// pos
+	//	QMath::angleAxisRotation(20.0f, Vec3(-15.0f, 1.0f, -1.0f)),
+	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	//);
+	//Flower_1->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.2f, 0.2f, 0.2f));
+	//Flower_1->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Flower_obj"));
+	//Flower_1->GetComponent<PhysicsComponent>()->isStatic = true;
+
+	//Flower_1->AddComponent<ShaderComponent>(CubeShader);
+	//Flower_1->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Flower_v1_mat"));
+	//Flower_1->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	//AddOpaqueActor(Flower_1);
+
+	//
+
+	//
 
 
-	Ref<Actor>Beanstalk1 = std::make_shared<Actor>(nullptr);
-	Beanstalk1->AddComponent<PhysicsComponent>(nullptr, Vec3(2.5f, -0.5f, -0.9f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(-1.0f, 1.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	cubeCollider.center = Beanstalk1->GetComponent<PhysicsComponent>()->GetPosition();
-	cubeCollider.rx = 0.2f;
-	cubeCollider.ry = 3.0f;
-	cubeCollider.rz = 0.2f;
-	Beanstalk1->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.3f, 0.72f, 0.3f));
-	Beanstalk1->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Beanstalk_obj"));
-	Beanstalk1->GetComponent<PhysicsComponent>()->isStatic = true;
-	Beanstalk1->AddComponent<CollisionComponent>(nullptr, cubeCollider);
-	Beanstalk1->AddComponent<ShaderComponent>(CubeShader);
-	Beanstalk1->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Beanstalk_mat"));
-	Beanstalk1->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	AddOpaqueActor(Beanstalk1);
-	physicsSystem.AddActor(Beanstalk1);
-	collisionSystem.AddActor(Beanstalk1);
+
+	//Ref<Actor>Flower_2 = std::make_shared<Actor>(nullptr);
+	//Flower_2->AddComponent<PhysicsComponent>(nullptr, Vec3(11.3f, -1.20f, 2.8f),/// pos
+	//	QMath::angleAxisRotation(20.0f, Vec3(1.0f, 1.0f, 1.0f)),
+	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	//);
+	//Flower_2->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.3f, 0.3f, 0.3f));
+	//Flower_2->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Flower_obj"));
+	//Flower_2->GetComponent<PhysicsComponent>()->isStatic = true;
+	//Flower_2->AddComponent<ShaderComponent>(CubeShader);
+	//Flower_2->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Flower_v1_mat"));
+	//Flower_2->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	//AddOpaqueActor(Flower_2);
 
 
-	Ref<Actor>Leaf1 = std::make_shared<Actor>(nullptr);
-	Leaf1->AddComponent<PhysicsComponent>(nullptr, Vec3(2.3f, 1.5f, -1.55f),/// pos
-		QMath::angleAxisRotation(35.0f, Vec3(1.0f, 1.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	Leaf1->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.3f, 0.5f, 0.3f));
-	Leaf1->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Leaf_obj"));
-	Leaf1->GetComponent<PhysicsComponent>()->isStatic = true;
-	Leaf1->AddComponent<ShaderComponent>(CubeShader);
-	Leaf1->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Leaf_mat"));
-	Leaf1->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	AddOpaqueActor(Leaf1);
+	//Ref<Actor>Flower_3 = std::make_shared<Actor>(nullptr);
+	//Flower_3->AddComponent<PhysicsComponent>(nullptr, Vec3(12.3f, 0.0f, 1.3f),/// pos
+	//	QMath::angleAxisRotation(50.0f, Vec3(1.0f, 0.0f, 0.0f)),
+	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	//);
+	//Flower_3->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.25f, 0.25f, 0.25f));
+	//Flower_3->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Flower_obj"));
+	//Flower_3->GetComponent<PhysicsComponent>()->isStatic = true;
+	//Flower_3->AddComponent<ShaderComponent>(CubeShader);
+	//Flower_3->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Flower_v1_mat"));
+	//Flower_3->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	//AddOpaqueActor(Flower_3);
 
 
-	Ref<Actor>Leaf2 = std::make_shared<Actor>(nullptr);
-	Leaf2->AddComponent<PhysicsComponent>(nullptr, Vec3(3.5f, 3.5f, -2.7f),/// pos
-		QMath::angleAxisRotation(35.0f, Vec3(1.0f, -1.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	Leaf2->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.7f, 0.7f, 0.7f));
-	Leaf2->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Leaf_obj"));
-	Leaf2->GetComponent<PhysicsComponent>()->isStatic = true;
-	Leaf2->AddComponent<ShaderComponent>(CubeShader);
-	Leaf2->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Leaf_mat"));
-	Leaf2->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	AddOpaqueActor(Leaf2);
+	//Ref<Actor>Flower_4 = std::make_shared<Actor>(nullptr);
+	//Flower_4->AddComponent<PhysicsComponent>(nullptr, Vec3(12.3f, -0.25f, -0.9f),/// pos
+	//	QMath::angleAxisRotation(20.0f, Vec3(-1.0f, 1.0f, 0.0f)),
+	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	//);
+	//Flower_4->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.25f, 0.25f, 0.25f));
+	//Flower_4->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Flower_obj"));
+	//Flower_4->GetComponent<PhysicsComponent>()->isStatic = true;
+	//Flower_4->AddComponent<ShaderComponent>(CubeShader);
+	//Flower_4->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Flower_v1_mat"));
+	//Flower_4->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	//AddOpaqueActor(Flower_4);
 
 
-	Ref<Actor>Flower_5 = std::make_shared<Actor>(nullptr);
-	Flower_5->AddComponent<PhysicsComponent>(nullptr, Vec3(1.3f, -1.5f, 0.3f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(-1.0f, 1.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	Flower_5->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.15f, 0.15f, 0.15f));
-	Flower_5->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Flower_obj"));
-	Flower_5->GetComponent<PhysicsComponent>()->isStatic = true;
-	Flower_5->AddComponent<ShaderComponent>(CubeShader);
-	Flower_5->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Flower_v1_mat"));
-	Flower_5->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	AddOpaqueActor(Flower_5);
+
+	///* --------------------ISLAND WITH THE LAKE-------------------- */
 
 
-	Ref<Actor>Tower1 = std::make_shared<Actor>(nullptr);
-	Tower1->AddComponent<PhysicsComponent>(nullptr, Vec3(-5.3f, -5.0f, 0.3f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(-1.0f, 1.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	Tower1->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.5f, 0.5f, 0.5f));
-	Tower1->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Tower_obj"));
-	Tower1->GetComponent<PhysicsComponent>()->isStatic = true;
-	Tower1->AddComponent<ShaderComponent>(CubeShader);
-	Tower1->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Tower_mat"));
-	Tower1->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	AddOpaqueActor(Tower1);
+	//Ref<Actor>Beanstalk1 = std::make_shared<Actor>(nullptr);
+	//Beanstalk1->AddComponent<PhysicsComponent>(nullptr, Vec3(2.5f, -0.5f, -0.9f),/// pos
+	//	QMath::angleAxisRotation(0.0f, Vec3(-1.0f, 1.0f, 0.0f)),
+	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	//);
+	//cubeCollider.center = Beanstalk1->GetComponent<PhysicsComponent>()->GetPosition();
+	//cubeCollider.rx = 0.2f;
+	//cubeCollider.ry = 3.0f;
+	//cubeCollider.rz = 0.2f;
+	//Beanstalk1->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.3f, 0.72f, 0.3f));
+	//Beanstalk1->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Beanstalk_obj"));
+	//Beanstalk1->GetComponent<PhysicsComponent>()->isStatic = true;
+	//Beanstalk1->AddComponent<CollisionComponent>(nullptr, cubeCollider);
+	//Beanstalk1->AddComponent<ShaderComponent>(CubeShader);
+	//Beanstalk1->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Beanstalk_mat"));
+	//Beanstalk1->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	//AddOpaqueActor(Beanstalk1);
+	//physicsSystem.AddActor(Beanstalk1);
+	//collisionSystem.AddActor(Beanstalk1);
 
 
-	Ref<Actor>Bridge = std::make_shared<Actor>(nullptr);
-	Bridge->AddComponent<PhysicsComponent>(nullptr, Vec3(-6.3f, -5.5f, 0.3f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(-1.0f, 1.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	Bridge->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.3f, 0.3f, 0.3f));
-	Bridge->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Bridge_obj"));
-	Bridge->GetComponent<PhysicsComponent>()->isStatic = true;
-	Bridge->AddComponent<ShaderComponent>(CubeShader);
-	Bridge->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Bridge_mat"));
-	Bridge->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	AddOpaqueActor(Bridge);
+	//Ref<Actor>Leaf1 = std::make_shared<Actor>(nullptr);
+	//Leaf1->AddComponent<PhysicsComponent>(nullptr, Vec3(2.3f, 1.5f, -1.55f),/// pos
+	//	QMath::angleAxisRotation(35.0f, Vec3(1.0f, 1.0f, 0.0f)),
+	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	//);
+	//Leaf1->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.3f, 0.5f, 0.3f));
+	//Leaf1->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Leaf_obj"));
+	//Leaf1->GetComponent<PhysicsComponent>()->isStatic = true;
+	//Leaf1->AddComponent<ShaderComponent>(CubeShader);
+	//Leaf1->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Leaf_mat"));
+	//Leaf1->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	//AddOpaqueActor(Leaf1);
+
+
+	//Ref<Actor>Leaf2 = std::make_shared<Actor>(nullptr);
+	//Leaf2->AddComponent<PhysicsComponent>(nullptr, Vec3(3.5f, 3.5f, -2.7f),/// pos
+	//	QMath::angleAxisRotation(35.0f, Vec3(1.0f, -1.0f, 0.0f)),
+	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	//);
+	//Leaf2->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.7f, 0.7f, 0.7f));
+	//Leaf2->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Leaf_obj"));
+	//Leaf2->GetComponent<PhysicsComponent>()->isStatic = true;
+	//Leaf2->AddComponent<ShaderComponent>(CubeShader);
+	//Leaf2->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Leaf_mat"));
+	//Leaf2->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	//AddOpaqueActor(Leaf2);
+
+
+	//Ref<Actor>Flower_5 = std::make_shared<Actor>(nullptr);
+	//Flower_5->AddComponent<PhysicsComponent>(nullptr, Vec3(1.3f, -1.5f, 0.3f),/// pos
+	//	QMath::angleAxisRotation(0.0f, Vec3(-1.0f, 1.0f, 0.0f)),
+	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	//);
+	//Flower_5->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.15f, 0.15f, 0.15f));
+	//Flower_5->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Flower_obj"));
+	//Flower_5->GetComponent<PhysicsComponent>()->isStatic = true;
+	//Flower_5->AddComponent<ShaderComponent>(CubeShader);
+	//Flower_5->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Flower_v1_mat"));
+	//Flower_5->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	//AddOpaqueActor(Flower_5);
+
+
+	//Ref<Actor>Tower1 = std::make_shared<Actor>(nullptr);
+	//Tower1->AddComponent<PhysicsComponent>(nullptr, Vec3(-5.3f, -5.0f, 0.3f),/// pos
+	//	QMath::angleAxisRotation(0.0f, Vec3(-1.0f, 1.0f, 0.0f)),
+	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	//);
+	//Tower1->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.5f, 0.5f, 0.5f));
+	//Tower1->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Tower_obj"));
+	//Tower1->GetComponent<PhysicsComponent>()->isStatic = true;
+	//Tower1->AddComponent<ShaderComponent>(CubeShader);
+	//Tower1->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Tower_mat"));
+	//Tower1->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	//AddOpaqueActor(Tower1);
+
+
+	//Ref<Actor>Bridge = std::make_shared<Actor>(nullptr);
+	//Bridge->AddComponent<PhysicsComponent>(nullptr, Vec3(-6.3f, -5.5f, 0.3f),/// pos
+	//	QMath::angleAxisRotation(0.0f, Vec3(-1.0f, 1.0f, 0.0f)),
+	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	//);
+	//Bridge->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.3f, 0.3f, 0.3f));
+	//Bridge->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Bridge_obj"));
+	//Bridge->GetComponent<PhysicsComponent>()->isStatic = true;
+	//Bridge->AddComponent<ShaderComponent>(CubeShader);
+	//Bridge->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Bridge_mat"));
+	//Bridge->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	//AddOpaqueActor(Bridge);
 
 
 
@@ -1128,10 +1128,10 @@ void CapstoneSceneDream::DrawRay(Ray ray) const {
 
 void CapstoneSceneDream::PlayerGroundCheck() {
 	playerIsGrounded = false;
-	float length = 0.3f;
+	float length = 1.0f;
 
 	Vec3 playerPos = player->GetComponent<TransformComponent>()->GetPosition();
-	Vec3 origin = playerPos;
+	Vec3 origin = playerPos + Vec3(0, -0.3, 0);
 	Ray ray = Ray(origin, origin + Vec3(0, -1, 0) * length);
 	groundCheckRay = ray;
 

@@ -98,15 +98,28 @@ public:
     }
 
     static bool RaySphereIntersection(Ray ray, Sphere sphere) {
-        Vec3 V = ray.direction; //The ray's directions
-        Vec3 S = ray.start; //The ray's starting position
+        //Please work
+        //https://kylehalladay.com/blog/tutorial/math/2013/12/24/Ray-Sphere-Intersection.html
+        //Thanks btw
 
-        float a = VMath::mag(V) * VMath::mag(V);
-        float b = 2 * VMath::dot(S, V);
-        float c = (VMath::mag(S) * VMath::mag(S)) - (sphere.r * sphere.r);
-        float D = (b * b) - (4 * a * c);
+        Vec3 rayOrigin = ray.start;
+        Vec3 rayDirection = ray.direction - ray.start;
 
-        if (D < 0) { return false; } //If D < 0 collision is not possible
+        Vec3 L = sphere.center - rayOrigin;
+
+        float tc = VMath::dot(L, rayDirection);
+        if (tc < 0.0) return false;
+
+        float d = sqrt(VMath::dot(L,L) - (tc * tc));
+        if (d > sphere.r * sphere.r) { return false; }
+
+        //solve for t1c
+        float t1c = sqrt((sphere.r * sphere.r) - (d * d));
+
+        //solve for intersection points
+        float t1 = tc - t1c;
+        float t2 = tc + t1c;
+
         return true;
     }
 
@@ -181,6 +194,10 @@ public:
             return false; 
         }
 
+        //Checking if the tmin are within the bounds
+        if (tmin > 1) {
+            return false;
+        }
         return true;
     }
 

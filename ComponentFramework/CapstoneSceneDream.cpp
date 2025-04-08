@@ -31,6 +31,7 @@ CapstoneSceneDream::CapstoneSceneDream(SceneManager* scenemanager) :drawNormals(
 bool CapstoneSceneDream::OnCreate() {
 	Debug::Info("Loading assets Scene Dream: ", __FILE__, __LINE__);
 	assetManager = std::make_shared<AssetManager>();
+	interactionManager = std::make_shared<InteractionManager>();
 
 
 	//SDL_SetCursor(SDL_GetDefaultCursor());
@@ -60,34 +61,58 @@ bool CapstoneSceneDream::OnCreate() {
 
 	//Ref<AssetManager> assMan, Vec3 pos, float triggerRadius = 0.5f, Vec3 scale = Vec3(0.1f, 0.1f, 0.1f), std::shared_ptr<MaterialComponent> material = nullptr
 
-	mermaid = std::make_shared<InteractableActor>(assetManager, Vec3(0.0f, -1.0f, 0.0f), 0.5f, Vec3(0.1f, 0.1f, 0.1f), assetManager->GetComponent<MaterialComponent>("Mermaid"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
+	mermaid = std::make_shared<InteractableActor>(assetManager, Vec3(0.0f, 0.0f, 0.0f), 1.5f, Vec3(0.5f, 0.5f, 0.5f), assetManager->GetComponent<MaterialComponent>("Mermaid"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
 	mermaid->NPCid = 1;
-	mermaid->AddComponent<CollisionComponent>(nullptr, 0.8f);
+	mermaid->Bind([this]() {
+		inventoryButtonPressed = !inventoryButtonPressed;
+
+		std::cout << "Interacted with mermaid";
+		});
+	mermaid->AddComponent<CollisionComponent>(nullptr, 0.5f);
 	triggerSystem.AddActor(mermaid);
 	AddTransparentActor(mermaid);
 
 
-
-
-
-
-
-	mrOwl = std::make_shared<Actor>(nullptr);
+	mrOwl = std::make_shared<InteractableActor>(assetManager, Vec3(2.0f, 0.0f, 0.0f), 1.5f, Vec3(0.5f, 0.5f, 0.5f), assetManager->GetComponent<MaterialComponent>("Owl"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
 	mrOwl->NPCid = 2;
-	mrOwl->AddComponent<PhysicsComponent>(nullptr, Vec3(3.0f, 0.0f, 0.0f),/// pos
+	mrOwl->Bind([this]() {
+		inventoryButtonPressed = !inventoryButtonPressed;
+
+		std::cout << "Interacted with owl";
+		});
+	mrOwl->AddComponent<CollisionComponent>(nullptr, 0.5f);
+	triggerSystem.AddActor(mrOwl);
+	AddTransparentActor(mrOwl);
+
+
+
+
+
+	//make an actor
+	player = std::make_shared<Actor>(nullptr);
+	player->NPCid = 0;
+	player->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, 0.0f, 0.0f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
-	mrOwl->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.3f, 1.3f, 1.0f));
+	player->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
 	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
-	mrOwl->AddComponent<CollisionComponent>(nullptr, 0.8f);
-	mrOwl->GetComponent<PhysicsComponent>()->isStatic = true;
-	mrOwl->GetComponent<PhysicsComponent>()->mass = 1.0f;
-	mrOwl->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
-	mrOwl->AddComponent<ShaderComponent>(shader);
-	mrOwl->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Owl"));
-	mrOwl->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	AddTransparentActor(mrOwl);
+	player->AddComponent<CollisionComponent>(nullptr, 0.8f);
+	player->GetComponent<PhysicsComponent>()->isStatic = false;
+	player->GetComponent<PhysicsComponent>()->useGravity = false;
+	player->GetComponent<PhysicsComponent>()->mass = 1.0f;
+	player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
+	player->AddComponent<ShaderComponent>(shader);
+	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Daisy_spriteSheet"));
+	player->AddComponent<TriggerComponent>(nullptr, 1.0f);
+
+	player->GetComponent<TriggerComponent>()->SetCallback(this, &CapstoneSceneDream::PlayerTriggerCallback);
+	AddTransparentActor(player);
+
+
+
+
+	
 
 
 	mrsMouse = std::make_shared<Actor>(nullptr);
@@ -139,25 +164,7 @@ bool CapstoneSceneDream::OnCreate() {
 
 	CreateLevelLayout();
 
-	//make an actor
-	player = std::make_shared<Actor>(nullptr);
-	player->NPCid = 0;
-	player->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, 0.0f, 0.0f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	player->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
-	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
-	player->AddComponent<CollisionComponent>(nullptr, 0.8f);
-	player->GetComponent<PhysicsComponent>()->isStatic = false;
-	player->GetComponent<PhysicsComponent>()->useGravity = true;
-	player->GetComponent<PhysicsComponent>()->mass = 1.0f;
-	player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
-	player->AddComponent<ShaderComponent>(shader);
-	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Daisy_spriteSheet"));
-	player->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	//player->GetComponent<TriggerComponent>()->SetCallback(TriggerCallbackCreator::CreateTriggerCallback(this, &CapstoneSceneDream::PrintStatement));
-	AddTransparentActor(player);
+	
 
 	camera = std::make_shared<CameraActor>(player.get());
 	camera->isInMainMenu = false;
@@ -259,7 +266,7 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 	Ref<TransformComponent> gameBoardTC;
 	float cameraMoveSpeed = 0.1f;
 	Vec3 cameraNewPos;
-
+	Ref<InteractableActor> currentInteraction;
 	/// Handle Camera movement 
 	switch (sdlEvent.type) {
 	case SDL_KEYDOWN:
@@ -279,6 +286,21 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 			break;
 		case SDL_SCANCODE_E:
 			inventoryButtonPressed = !inventoryButtonPressed;
+
+			//Pend the item to the inventory
+			//The function already checks if it's nullptr so don't worry about it
+			PendItemToInventory(interactionManager->GetCurrentInteraction());
+			break;
+		case SDL_SCANCODE_1:
+			if (inventoryButtonPressed) {
+				std::shared_ptr<ItemInteractable> itemInteraction = std::dynamic_pointer_cast<ItemInteractable>(interactionManager->GetCurrentInteraction());
+				if (itemInteraction != nullptr) {
+					itemInteraction->TryItem(inventory->items[0]);
+					break;
+				}
+
+				AddItemToInventory(inventory->pendingItem, 0);
+			}
 			break;
 
 		case SDL_SCANCODE_A:
@@ -297,7 +319,18 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 			movementInput += Vec3(0.0, 0.0, 1.0);
 			break;
 
+		case SDL_SCANCODE_F:
+			currentInteraction = interactionManager->GetCurrentInteraction();
+			if (currentInteraction == nullptr) { break; }
 
+			//Check if it's a pickable item
+			//Skip if that's the case
+			if (std::dynamic_pointer_cast<PickableItem>(currentInteraction) != nullptr) { break; }
+
+			//Calls the callback function
+			currentInteraction->Invoke();
+			break;
+			break;
 		case SDL_SCANCODE_N:
 			if (drawNormals == false) drawNormals = true;
 
@@ -725,7 +758,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	DrawUI_imgui();
 	PlayerGroundCheck();
 	iTime += deltaTime;
-
+	interactionManager->Reset();
 	//change in angle 
 	if (rotatePlayerLeft) {
 		playerAngle -= 0.4f;
@@ -1284,4 +1317,80 @@ void CapstoneSceneDream::DebugUI() const {
 	ImGui::End();
 	ImGui::PopStyleColor();
 	ImGui::PopStyleVar();
+}
+
+void CapstoneSceneDream::PendItemToInventory(std::shared_ptr<Actor> other)
+{
+	Ref<PickableItem> item;
+	item = std::dynamic_pointer_cast<PickableItem>(other);
+	if (item != nullptr) {
+
+		//Originally I wanted to add a check to see if the item is in the inventory before it's allowed to be Pend
+		//But removing it from the triggerSystem array should do the trick (hopefully)
+		//for(int i = 0; i < inventory->inventorySize; i++){}
+
+		inventory->pendingItem = nullptr;
+		inventory->pendingItem = item;
+	}
+}
+
+
+void CapstoneSceneDream::AddItemToInventory(std::shared_ptr<Actor> other, int index) {
+	//Check if it's a pickable item
+	if (std::dynamic_pointer_cast<PickableItem>(other) != nullptr) {
+		//Drops the item
+		if (inventory->items[index] != nullptr) {
+			DropItemFromInventory(index);
+		}
+
+		//Add the item to the inventory
+		inventory->AddItem(std::dynamic_pointer_cast<PickableItem>(other), index);
+
+		//Remove the item from the triggerSystem
+		int index = 0;
+		for (int i = 0; i < triggerSystem.triggeringActors.size(); i++) {
+			if (triggerSystem.triggeringActors[i] == other) {
+				index = i;
+				break;
+			}
+		}
+		triggerSystem.triggeringActors.erase(triggerSystem.triggeringActors.begin() + index);
+
+		//Remove the item from the opaque actors
+		index = 0;
+		for (int i = 0; i < opaqueActors.size(); i++) {
+			if (opaqueActors[i] == other) {
+				index = i;
+				break;
+			}
+		}
+		opaqueActors.erase(opaqueActors.begin() + index);
+	}
+}
+
+
+void CapstoneSceneDream::DropItemFromInventory(int index) {
+	//Add the object back into the actor vectors
+	transparentActors.push_back(inventory->items[index]);
+	triggerSystem.AddActor(inventory->items[index]);
+
+	//Remove the item from the inventory
+	inventory->RemoveItem(index);
+}
+
+
+void CapstoneSceneDream::PlayerTriggerCallback(Ref<Actor> other) {
+	//Check if it's an item
+	Ref<PickableItem> item = std::dynamic_pointer_cast<PickableItem>(other);
+	if (item != nullptr) {
+		PendItemToInventory(other);
+		return;
+	}
+
+	//Check if it's an interactable actor
+	Ref<InteractableActor> actor = std::dynamic_pointer_cast<InteractableActor>(other);
+	if (actor != nullptr) {
+		interactionManager->SetCurrentInteraction(actor);
+		return;
+	}
 }

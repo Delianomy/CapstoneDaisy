@@ -13,6 +13,8 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "SceneManager.h"
 #include "Inventory.h"
+#include "ItemInteractable.h"
+#include "InteractionManager.h"
 #include <algorithm>
 using namespace MATH;
 
@@ -41,19 +43,19 @@ struct AnimationInfo {
 class CapstoneSceneDream : public Scene 
 {
 	Ref<AssetManager> assetManager;
-	Ref<CameraActor> camera;
+	Ref<InteractionManager> interactionManager;
+ 	Ref<CameraActor> camera;
 	Ref<LightActor> light;
 
 
 	Ref<Actor> player;
 	Ref<Actor> cube;
 	Ref<Actor> skybox;
-	Ref<Actor> mrOwl;
 	Ref<Actor> mrsMouse;
 	Ref<Actor> fairy;
 
 
-
+	Ref<InteractableActor> mrOwl;
 	Ref<InteractableActor> mermaid;
 
 
@@ -150,7 +152,6 @@ public:
 	
 	/// The w component holds the scale of the normal
 	void DrawNormals(const Vec4 color) const;
-
 	void DrawMeshOverlay(const Vec4 color) const;
 	void DrawUI_imgui();
 	
@@ -164,6 +165,13 @@ public:
 	void RenderColliders() const;
 	void CreateDebugMeshes();
 	void DebugUI() const;
+
+
+
+	void PendItemToInventory(std::shared_ptr<Actor> other);
+	void AddItemToInventory(std::shared_ptr<Actor> other, int index);
+	void DropItemFromInventory(int index);
+	void PlayerTriggerCallback(Ref<Actor> other);
 
 
 	Vec2 GetAnimIndex(float deltaTime, float& currentTime, PlayerAnimType animType, float frameSpeed) {

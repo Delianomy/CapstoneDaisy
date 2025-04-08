@@ -9,7 +9,7 @@
 #include "ShaderTestScene.h"
 #include "MainMenu.h"
 
-SceneManager::SceneManager() :
+SceneManager::SceneManager():
 	currentScene(nullptr), window(nullptr), timer(nullptr),
 	fps(60), isRunning(false), fullScreen(false) {
 	Debug::Info("Starting the SceneManager", __FILE__, __LINE__);
@@ -63,17 +63,12 @@ bool SceneManager::Initialize(std::string name_, int width_, int height_) {
 	ImGui_ImplOpenGL3_Init();
 
 	/********************************   Default first scene   ***********************/
-	BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE_DREAM);
-	//bedroomScene = new CapstoneScene();
-	//bedroomScene->OnCreate();
+	BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE);
 
-	//dreamScene = new CapstoneSceneDream();
-	//dreamScene->OnCreate();
-
-	//currentScene = bedroomScene;
 
 	return true;
 }
+
 
 /// This is the whole game
 void SceneManager::Run() {
@@ -132,6 +127,8 @@ void SceneManager::HandleEvents() {
 		currentScene->HandleEvents(sdlEvent);
 	}
 }
+
+
 
 void SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 	bool status;
@@ -216,26 +213,6 @@ void SceneManager::DropItemFromInventory(int index) {
 	inventory.RemoveItem(index);
 }
 
-bool SceneManager::BuildCapstoneScenes() {
-	bool status = false;
-
-	if (bedroomScene == nullptr) {
-		bedroomScene = new CapstoneScene();
-		bedroomScene->SetSceneManager(this);
-		status = bedroomScene->OnCreate();
-	}
-
-	if (!status) { return false; }
-
-	if (dreamScene == nullptr) {
-		dreamScene = new CapstoneSceneDream(this);
-		status = dreamScene->OnCreate();
-	}
-
-	if (!status) { return false; }
-
-	return true;
-}
 
 Vec2 SceneManager::WorldToScreenCoordinates(Vec3 coords, CameraActor* camera){
 	Vec4 screenPos = camera->GetProjectionMatrix() * camera->GetViewMatrix() * Vec4(coords, 1.0f);
@@ -243,6 +220,18 @@ Vec2 SceneManager::WorldToScreenCoordinates(Vec3 coords, CameraActor* camera){
 	Vec2 screenSpaceCoords = Vec2((NDC.x + 1) / 2 * getWindowWidth(), (1 - NDC.y) / 2 * getWindowHeight());
 	return screenSpaceCoords;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

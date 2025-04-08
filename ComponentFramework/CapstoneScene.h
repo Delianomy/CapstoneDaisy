@@ -97,7 +97,7 @@ public:
 	bool isCursoreOnObject(int x, int y);
 	void InitializeDialogue();
 	void DrawUI_imgui();
-
+	void AdrielMagik();
 	
 };
 

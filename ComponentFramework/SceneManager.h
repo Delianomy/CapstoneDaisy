@@ -6,6 +6,7 @@
 #include "Inventory.h"
 
 class CameraActor;
+
 class SceneManager  {
 public:
 	Inventory inventory;
@@ -35,8 +36,6 @@ private:
 
 	//Forward declarations
 	class Scene* currentScene;
-	class Scene* bedroomScene;
-	class Scene* dreamScene;
 	class Timer* timer;
 	class Window* window;
 
@@ -44,12 +43,6 @@ private:
 	bool isRunning;
 	bool fullScreen;
 	void BuildNewScene(SCENE_NUMBER scene_);
-
-	/// <summary>
-	/// Loads the CapstoneScene and CapstoneDreamScene into memory
-	/// </summary>
-	/// <returns></returns>
-	bool BuildCapstoneScenes();
 public:
 	int getWindowHeight() { return window->getHeight(); };
 	int getWindowWidth() { return window->getWidth(); };
@@ -59,4 +52,4 @@ public:
 };
 
 
-#endif // SCENEMANAGER_H
+#endif SCENEMANAGER_H

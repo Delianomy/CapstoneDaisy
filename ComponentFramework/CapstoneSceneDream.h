@@ -92,8 +92,10 @@ class CapstoneSceneDream : public Scene
 	float jumpSpeed = 200.0f;
 	float groudAccel = 20.0f;
 	float airAccel = 3.0f;
+	float swimSpeed = 5.0f;
 	bool playerIsGrounded = false;
 	Ray groundCheckRay = Ray(Vec3(), Vec3());
+	bool underwater = false;
 
 	//invetory UI imput
 	bool inventoryButtonPressed = true;
@@ -165,7 +167,7 @@ public:
 	void RenderColliders() const;
 	void CreateDebugMeshes();
 	void DebugUI() const;
-
+	void OnEnterOcean(Ref<Actor> other) { underwater = true; }
 
 
 	void PendItemToInventory(std::shared_ptr<Actor> other);

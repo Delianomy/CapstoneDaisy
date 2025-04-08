@@ -5,10 +5,12 @@
 using namespace MATHEX;
 #include "Component.h"
 #include "TransformComponent.h"
-
+//This is only here to get the AABB thanks scott >:(
+#include "CollisionComponent.h"
 
 enum class TriggerType {
-	Sphere
+	Sphere,
+	Box
 };
 
 class Actor;
@@ -66,14 +68,12 @@ class TriggerComponent : public Component
 	TriggerComponent& operator = (TriggerComponent&&) = delete;
 	TriggerCallback* callback = nullptr;
 
-protected:
-	TriggerType colliderType;
-
-
 public:
-	
+	TriggerType colliderType;
 	float radius; /// sphere collision
+	AABB box;
 	TriggerComponent(Component* parent_, float radius_); /// Sphere 
+	TriggerComponent(Component* parent_, AABB box_); /// Box
 	bool OnCreate() { return true; }
 	void OnDestroy() {}
 	void Update(const float deltaTime_) {}

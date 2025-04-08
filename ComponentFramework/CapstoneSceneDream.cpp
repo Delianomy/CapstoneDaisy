@@ -48,7 +48,7 @@ bool CapstoneSceneDream::OnCreate() {
 
 
 	Ocean = std::make_shared<Actor>(nullptr);
-	Ocean->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -3.0f, 0.0f),/// pos
+	Ocean->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -8.0f, 0.0f),/// pos
 		QMath::angleAxisRotation(90.0f, Vec3(0.0f, 1.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
@@ -56,6 +56,10 @@ bool CapstoneSceneDream::OnCreate() {
 	Ocean->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
 	Ocean->AddComponent<ShaderComponent>(WaterShader);
 	Ocean->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Water_normal"));
+	AABB oceanCollider = AABB(Vec3(0.0f, -3.0f, 0.0f), Vec3(20.0f, 5.0f, 20.0f));
+	Ocean->AddComponent<TriggerComponent>(nullptr, oceanCollider);
+	Ocean->GetComponent<TriggerComponent>()->SetCallback(TriggerCallbackCreator::CreateTriggerCallback(this, &CapstoneSceneDream::OnEnterOcean));
+	triggerSystem.AddActor(Ocean);
 
 
 
@@ -261,11 +265,15 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 		switch (sdlEvent.key.keysym.scancode) {
 
 		case SDL_SCANCODE_SPACE:
-			if (playerIsGrounded) {
+			if (playerIsGrounded || underwater) {
 				movementInput.y = 1.0f;
 			}
 			break;
-
+		case SDL_SCANCODE_LCTRL:
+			if (underwater) {
+				movementInput.y = -1.0f;
+			}
+			break;
 
 		case SDL_SCANCODE_Q:
 			cameraTC->SetTransform(cameraTC->GetPosition(), cameraTC->GetQuaternion() *
@@ -364,7 +372,12 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 
 		case SDL_SCANCODE_SPACE:
 			movementInput.y = 0.0f;
-		break;
+			break;
+
+		case SDL_SCANCODE_LCTRL:
+			movementInput.y = 0.0f;
+			break;
+
 		case SDL_SCANCODE_A:
 			movementInput.x = 0.0f;
 			break;
@@ -822,8 +835,6 @@ return true;
 }
 
 void CapstoneSceneDream::Update(const float deltaTime) {
-
-
 	DrawUI_imgui();
 	PlayerGroundCheck();
 	iTime += deltaTime;
@@ -870,30 +881,40 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	}
 
 	animIndex = GetAnimIndex(deltaTime, currentTime, currentAnim, frameSpeed);
-
-	//Change accel depending if the player is grounded or not
-	if (playerIsGrounded) {
-		walkSpeed = groudAccel;
+	Vec3 moveResult;
+	if (underwater) {
+		playerPhysics->useGravity = false;
+		playerPhysics->SetVel(playerPhysics->GetVel() * 0.98f);
+		moveResult = moveDir * swimSpeed;
+		playerPhysics->ApplyForce(moveResult);
 	}
 	else {
-		walkSpeed = airAccel;
-	}
-	Vec3 moveResult = moveDir * walkSpeed;
-	moveResult.y = movementInput.y * jumpSpeed;
-	playerPhysics->ApplyForce(moveResult);
-	movementInput.y = 0; //Reseting the jumping input
+		playerPhysics->useGravity = true;
+		//Change accel depending if the player is grounded or not
+		if (playerIsGrounded) {
+			walkSpeed = groudAccel;
+		}
+		else {
+			walkSpeed = airAccel;
+		}
+		moveResult = moveDir * walkSpeed;
+		moveResult.y = movementInput.y * jumpSpeed;
+		playerPhysics->ApplyForce(moveResult);
+		movementInput.y = 0; //Reseting the jumping input
 
-	if (playerPhysics->GetVel().y > jumpSpeed * deltaTime) {
-		Vec3 currentVel = playerPhysics->GetVel();
-		playerPhysics->SetVel(Vec3(currentVel.x, jumpSpeed * deltaTime ,currentVel.z));
+		if (playerPhysics->GetVel().y > jumpSpeed * deltaTime) {
+			Vec3 currentVel = playerPhysics->GetVel();
+			playerPhysics->SetVel(Vec3(currentVel.x, jumpSpeed * deltaTime, currentVel.z));
+		}
 	}
-
 	NPCcurrentTime += deltaTime * 0.4f;
 	NPCanimIndex = static_cast<int>(NPCcurrentTime / frameSpeed) % 17;
 
 	camera->UpdateViewMatrix();
 	collisionSystem.Update(deltaTime);
 	physicsSystem.Update(deltaTime);
+
+	underwater = false;
 	triggerSystem.Update(deltaTime);
 }
 
@@ -1169,7 +1190,6 @@ void CapstoneSceneDream::DrawUI_imgui()
 	}
 }
 
-
 void CapstoneSceneDream::DrawNormals(const Vec4 color) const {
 	glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("DrawNormalsShader");
@@ -1310,7 +1330,16 @@ void CapstoneSceneDream::PlayerGroundCheck() {
 void CapstoneSceneDream::RenderColliders() const {
 	//Drawing the triggers
 	for (auto trigger : triggerSystem.triggeringActors) {
-		DrawSphere(trigger->GetComponent<TransformComponent>()->GetPosition(), trigger->GetComponent<TriggerComponent>()->radius);
+		Ref<TriggerComponent> tc = trigger->GetComponent<TriggerComponent>();
+		switch (tc->colliderType) {
+			case TriggerType::Sphere:
+				DrawSphere(trigger->GetComponent<TransformComponent>()->GetPosition(), trigger->GetComponent<TriggerComponent>()->radius);
+				break;
+
+			case TriggerType::Box:
+				DrawCube(trigger->GetComponent<TransformComponent>()->GetPosition(), Vec3(tc->box.rx, tc->box.ry, tc->box.rz));
+				break;
+		}
 	}
 
 	//Drawing the colliders
@@ -1342,6 +1371,7 @@ void CapstoneSceneDream::DebugUI() const {
 	Vec3 playerPos = player->GetComponent<TransformComponent>()->GetPosition();
 	ImGui::Text("Player Pos: (%.3f, %.3f, %.3f)", playerPos.x, playerPos.y, playerPos.z);
 	ImGui::Text("Player Grounded: %s", (playerIsGrounded) ? "True" : "False");
+	ImGui::Text("Player Underwater: %s", (underwater) ? "True" : "False");
 
 	Vec3 playerForce = player->GetComponent<PhysicsComponent>()->GetForce();
 	ImGui::Text("Player Force: (%.3f, %.3f, %.3f)", playerForce.x, playerForce.y, playerForce.z);

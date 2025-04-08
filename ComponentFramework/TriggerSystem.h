@@ -32,6 +32,7 @@ public:
 	}
 
 	bool SphereSphereCollisionDetection(const Sphere& s1, const Sphere& s2) const;
+	bool SphereAABBCollisionDetection(const Sphere& s, const AABB& aabb) const;
 	
 	void Update(const float deltaTime);
 

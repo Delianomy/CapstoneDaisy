@@ -72,48 +72,52 @@ bool CapstoneScene::OnCreate() {
 
 
 
-
+	bearInInventory = sceneMan->inventory.GetItemByName("Item1");
+	if(bearInInventory == nullptr){
+		bear = std::make_shared<PickableItem>(
+			assetManager,                                          // Ref<AssetManager> assMan
+			"Item1",                                               // std::string name_
+			Vec3(-0.80f, -1.5f, 3.99f),                           // Vec3 pos // Quaternion orient
+			1.0f,                                                  // float triggerRadius
+			Vec3(0.1f, 0.1f, 0.1f),                               // Vec3 scale
+			assetManager->GetComponent<MaterialComponent>("Bear") // std::shared_ptr<MaterialComponent> material   // std::shared_ptr<MeshComponent> mesh
+		);
+		triggerSystem.AddActor(bear);
+		AddTransparentActor(bear);
+		AddActor(bear);
+	}
+	else {
+		bear = bearInInventory;
+	}
 	
-	bear = std::make_shared<PickableItem>(
-		assetManager,                                          // Ref<AssetManager> assMan
-		"Item1",                                               // std::string name_
-		Vec3(-0.80f, -1.5f, 3.99f),                           // Vec3 pos // Quaternion orient
-		1.0f,                                                  // float triggerRadius
-		Vec3(0.1f, 0.1f, 0.1f),                               // Vec3 scale
-		assetManager->GetComponent<MaterialComponent>("Bear") // std::shared_ptr<MaterialComponent> material   // std::shared_ptr<MeshComponent> mesh
-	);
-	triggerSystem.AddActor(bear);
-	AddTransparentActor(bear);
-	AddActor(bear);
+
+
+	//moonTrinket = std::make_shared<PickableItem>(
+	//	assetManager,                                          // Ref<AssetManager> assMan
+	//	"Item2",                                               // std::string name_
+	//	Vec3(-0.02f, 0.8f, 3.99f),                           // Vec3 pos // Quaternion orient
+	//	1.0f,                                                  // float triggerRadius
+	//	Vec3(0.25f, 0.25f, 0.25f),                               // Vec3 scale
+	//	assetManager->GetComponent<MaterialComponent>("MoonTrinket") // std::shared_ptr<MaterialComponent> material   // std::shared_ptr<MeshComponent> mesh
+	//);
+	//triggerSystem.AddActor(moonTrinket);
+	//AddTransparentActor(moonTrinket);
+	//AddActor(moonTrinket);
 
 
 
-	moonTrinket = std::make_shared<PickableItem>(
-		assetManager,                                          // Ref<AssetManager> assMan
-		"Item2",                                               // std::string name_
-		Vec3(-0.02f, 0.8f, 3.99f),                           // Vec3 pos // Quaternion orient
-		1.0f,                                                  // float triggerRadius
-		Vec3(0.25f, 0.25f, 0.25f),                               // Vec3 scale
-		assetManager->GetComponent<MaterialComponent>("MoonTrinket") // std::shared_ptr<MaterialComponent> material   // std::shared_ptr<MeshComponent> mesh
-	);
-	triggerSystem.AddActor(moonTrinket);
-	AddTransparentActor(moonTrinket);
-	AddActor(moonTrinket);
-
-
-
-	books = std::make_shared<PickableItem>(
-		assetManager,                                          // Ref<AssetManager> assMan
-		"Item3",                                               // std::string name_
-		Vec3(1.8f, 0.32f, -3.99f),                           // Vec3 pos // Quaternion orient
-		1.0f,                                                  // float triggerRadius
-		Vec3(0.15f, 0.15f, 0.15f),                               // Vec3 scale
-		assetManager->GetComponent<MaterialComponent>("Books") // std::shared_ptr<MaterialComponent> material   // std::shared_ptr<MeshComponent> mesh
-	);
-	triggerSystem.AddActor(books);
-	AddTransparentActor(books);
-	AddActor(books);
-	
+	//books = std::make_shared<PickableItem>(
+	//	assetManager,                                          // Ref<AssetManager> assMan
+	//	"Item3",                                               // std::string name_
+	//	Vec3(1.8f, 0.32f, -3.99f),                           // Vec3 pos // Quaternion orient
+	//	1.0f,                                                  // float triggerRadius
+	//	Vec3(0.15f, 0.15f, 0.15f),                               // Vec3 scale
+	//	assetManager->GetComponent<MaterialComponent>("Books") // std::shared_ptr<MaterialComponent> material   // std::shared_ptr<MeshComponent> mesh
+	//);
+	//triggerSystem.AddActor(books);
+	//AddTransparentActor(books);
+	//AddActor(books);
+	//
 
 
 
@@ -531,10 +535,13 @@ void CapstoneScene::InitializeDialogue() {
 
 
 	//Teddy Bear
-	unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
-	Dialogue teddy_bear = Dialogue("Daisy", "Oh! Thats my Teddy bear!", textureID);
-	teddy_bear.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(bear, 0); });
-	dialogueSequences[0].push_back(teddy_bear);
+	if (!bearInInventory) {
+		unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
+		Dialogue teddy_bear = Dialogue("Daisy", "Oh! Thats my Teddy bear!", textureID);
+		teddy_bear.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(bear, 0); });
+		dialogueSequences[0].push_back(teddy_bear);
+	}
+
 
 	/*textureID = assetManager->GetComponent<MaterialComponent>("Player_laugh")->getTextureID();
 	teddy_bear = Dialogue("Daisy", "My mom gave him to me on Christmas.", textureID);
@@ -544,20 +551,20 @@ void CapstoneScene::InitializeDialogue() {
 	teddy_bear = Dialogue("Daisy", "Maybe this could be a good gift to Mr Owl and Mrs Mouse?", textureID);*/
 	
 
-	dialogueSequences[0].push_back(teddy_bear);
+	//dialogueSequences[0].push_back(teddy_bear);
 
 
 
-	//Books
-	textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
-	Dialogue trinket = Dialogue("Daisy", "Object 2", textureID);
-	trinket.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(moonTrinket, 1); });
-	dialogueSequences[1].push_back(trinket);
+	////Books
+	//textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
+	//Dialogue trinket = Dialogue("Daisy", "Object 2", textureID);
+	//trinket.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(moonTrinket, 1); });
+	//dialogueSequences[1].push_back(trinket);
 
-	textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
-	Dialogue books_dialogue = Dialogue("Daisy", "Object 3", textureID);
-	books_dialogue.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(books, 2); });
-	dialogueSequences[2].push_back(books_dialogue);
+	//textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
+	//Dialogue books_dialogue = Dialogue("Daisy", "Object 3", textureID);
+	//books_dialogue.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(books, 2); });
+	//dialogueSequences[2].push_back(books_dialogue);
 
 }
 

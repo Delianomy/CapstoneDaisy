@@ -47,6 +47,17 @@ std::string Inventory::ToString() {
 	return result;
 }
 
+Ref<PickableItem> Inventory::GetItemByName(std::string name_) const
+{
+
+	for (int i = 0; i < inventorySize; i++) {
+		if (items[i] && items[i]->name == name_) {
+			return  items[i];
+		}
+	}
+	return nullptr;
+}
+
 void Inventory::RemoveItem(Ref<PickableItem> item){
 	for (int i = 0; i < inventorySize; i++) {
 		if (items[i] == item) {

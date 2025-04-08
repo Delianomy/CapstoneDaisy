@@ -51,7 +51,7 @@ class CapstoneScene : public Scene
 
 	Ref<AudioManager> audioManager;
 	Ref<DialogueSystem> dialogueSystem;
-
+	std::shared_ptr<PickableItem> bearInInventory;
 	Ref<PickableItem> bear;
 	Ref<PickableItem> moonTrinket;
 

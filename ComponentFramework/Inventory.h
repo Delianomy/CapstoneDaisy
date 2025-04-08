@@ -58,5 +58,7 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	std::string ToString();
+
+	Ref<PickableItem> GetItemByName(std::string name_) const;
 };
 

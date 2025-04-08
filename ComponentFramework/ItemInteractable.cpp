@@ -1,7 +1,7 @@
 #include "ItemInteractable.h"
 
-ItemInteractable::ItemInteractable(Ref<AssetManager> assMan, std::string correctItemName, Vec3 pos, float triggerRadius, Vec3 scale, std::shared_ptr<MaterialComponent> material) :
-	InteractableActor(assMan, pos, triggerRadius, scale, material)
+ItemInteractable::ItemInteractable(Ref<AssetManager> assMan, std::string correctItemName, Vec3 pos, float triggerRadius, Vec3 scale, std::shared_ptr<MaterialComponent> material, std::shared_ptr<ShaderComponent> shader) :
+	InteractableActor(assMan, pos, triggerRadius, scale, material, shader)
 {
 	correctItem = correctItemName;
 }

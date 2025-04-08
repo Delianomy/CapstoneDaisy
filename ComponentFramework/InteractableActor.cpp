@@ -4,16 +4,16 @@
 #include "TriggerComponent.h"
 #include "ShaderComponent.h"
 #include "MeshComponent.h"
+#include "PhysicsComponent.h"
 
-InteractableActor::InteractableActor(Ref<AssetManager> assMan, Vec3 pos, float triggerRadius, Vec3 scale, std::shared_ptr<MaterialComponent> material) : Actor(nullptr) {
-	AddComponent<TransformComponent>(this, pos, Quaternion());
-	//AddComponent<ShaderComponent>(assMan->GetComponent<ShaderComponent>("TextureShader"));
-
-	AddComponent<ShaderComponent>(assMan->GetComponent<ShaderComponent>("SimpleTextureShader"));
-	//Ref<ShaderComponent> simpleTextureShader = assetManager->GetComponent<ShaderComponent>("SimpleTextureShader");
+InteractableActor::InteractableActor(Ref<AssetManager> assMan, Vec3 pos, float triggerRadius, Vec3 scale, std::shared_ptr<MaterialComponent> material, std::shared_ptr<ShaderComponent> shader) : Actor(nullptr) {
+	AddComponent<PhysicsComponent>(this, pos, Quaternion());
 	AddComponent<TriggerComponent>(this, triggerRadius);
 	AddComponent<MeshComponent>(assMan->GetComponent<MeshComponent>("Plane"));
 	GetComponent<TransformComponent>()->SetScale(scale);
+
+	if (shader != nullptr) { AddComponent<ShaderComponent>(shader); }
+	else { AddComponent<ShaderComponent>(assMan->GetComponent<ShaderComponent>("SimpleTextureShader")); }
 
 	if (material != nullptr) { AddComponent<MaterialComponent>(material); }
 	else { AddComponent<MaterialComponent>(assMan->GetComponent<MaterialComponent>("ChessBoard")); }

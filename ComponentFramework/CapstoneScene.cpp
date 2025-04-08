@@ -80,7 +80,8 @@ bool CapstoneScene::OnCreate() {
 			Vec3(-0.80f, -1.5f, 3.99f),                           // Vec3 pos // Quaternion orient
 			1.0f,                                                  // float triggerRadius
 			Vec3(0.1f, 0.1f, 0.1f),                               // Vec3 scale
-			assetManager->GetComponent<MaterialComponent>("Bear") // std::shared_ptr<MaterialComponent> material   // std::shared_ptr<MeshComponent> mesh
+			assetManager->GetComponent<MaterialComponent>("Bear"),// std::shared_ptr<MaterialComponent> material   // std::shared_ptr<MeshComponent> mesh
+			assetManager->GetComponent<ShaderComponent>("simpleTextureShader")
 		);
 		triggerSystem.AddActor(bear);
 		AddTransparentActor(bear);
@@ -99,6 +100,7 @@ bool CapstoneScene::OnCreate() {
 			1.0f,                                                  // float triggerRadius
 			Vec3(0.25f, 0.25f, 0.25f),                               // Vec3 scale
 			assetManager->GetComponent<MaterialComponent>("MoonTrinket") // std::shared_ptr<MaterialComponent> material   // std::shared_ptr<MeshComponent> mesh
+			, assetManager->GetComponent<ShaderComponent>("simpleTextureShader")
 		);
 		triggerSystem.AddActor(moonTrinket);
 		AddTransparentActor(moonTrinket);
@@ -118,7 +120,9 @@ bool CapstoneScene::OnCreate() {
 			1.0f,                                                  // float triggerRadius
 			Vec3(0.15f, 0.15f, 0.15f),                               // Vec3 scale
 			assetManager->GetComponent<MaterialComponent>("Books") // std::shared_ptr<MaterialComponent> material   // std::shared_ptr<MeshComponent> mesh
+		, assetManager->GetComponent<ShaderComponent>("simpleTextureShader")
 		);
+		
 		triggerSystem.AddActor(books);
 		AddTransparentActor(books);
 		AddActor(books);	

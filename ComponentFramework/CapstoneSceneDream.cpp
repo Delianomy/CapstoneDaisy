@@ -58,23 +58,18 @@ bool CapstoneSceneDream::OnCreate() {
 
 
 
+	//Ref<AssetManager> assMan, Vec3 pos, float triggerRadius = 0.5f, Vec3 scale = Vec3(0.1f, 0.1f, 0.1f), std::shared_ptr<MaterialComponent> material = nullptr
 
-	mermaid = std::make_shared<Actor>(nullptr);
+	mermaid = std::make_shared<InteractableActor>(assetManager, Vec3(0.0f, -1.0f, 0.0f), 0.5f, Vec3(0.1f, 0.1f, 0.1f), assetManager->GetComponent<MaterialComponent>("Mermaid"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
 	mermaid->NPCid = 1;
-	mermaid->AddComponent<PhysicsComponent>(nullptr, Vec3(1.0f, 0.0f, 0.0f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	mermaid->GetComponent<PhysicsComponent>()->SetScale(Vec3(2.0f, 2.0f, 1.0f));
-	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
 	mermaid->AddComponent<CollisionComponent>(nullptr, 0.8f);
-	mermaid->GetComponent<PhysicsComponent>()->isStatic = true;
-	mermaid->GetComponent<PhysicsComponent>()->mass = 1.0f;
-	mermaid->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
-	mermaid->AddComponent<ShaderComponent>(shader);
-	mermaid->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Mermaid"));
-	mermaid->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	triggerSystem.AddActor(mermaid);
 	AddTransparentActor(mermaid);
+
+
+
+
+
 
 
 	mrOwl = std::make_shared<Actor>(nullptr);

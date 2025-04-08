@@ -48,10 +48,14 @@ class CapstoneSceneDream : public Scene
 	Ref<Actor> player;
 	Ref<Actor> cube;
 	Ref<Actor> skybox;
-	Ref<Actor> mermaid;
 	Ref<Actor> mrOwl;
 	Ref<Actor> mrsMouse;
 	Ref<Actor> fairy;
+
+
+
+	Ref<InteractableActor> mermaid;
+
 
 
 	Ref<Actor> Ocean;

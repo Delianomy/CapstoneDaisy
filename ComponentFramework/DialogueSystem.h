@@ -13,9 +13,11 @@ public:
 	const char* NPCname;
 	const char* dialogueText;
     unsigned int textureID;
-
+    std::function<void()> onItemTaken;
 	Dialogue(const char* NPCname_, const char* dialogueText_, unsigned int textureID_) :NPCname(NPCname_), dialogueText(dialogueText_), textureID(textureID_) {}
-
+    void SetOnItemTaken(std::function<void()> onItemTaken_) {
+        onItemTaken = onItemTaken_;
+    }
 };
 
 class DialogueSystem
@@ -32,7 +34,7 @@ class DialogueSystem
 	bool isDialogueOpen = false;
     bool wasDialogueOpen = false;
     
-    std::function<void()> onItemTaken;
+
 public:
   
     DialogueSystem() {
@@ -40,9 +42,7 @@ public:
       
     }
 
-    void SetOnItemTaken(std::function<void()> onItemTaken_) {
-        onItemTaken = onItemTaken_;
-    }
+   
 
     void SetAudioManager(Ref<AudioManager> audio) {
         audioManager = audio;
@@ -151,10 +151,9 @@ public:
         ImGui::SetCursorPosY(160);// Position button to the right
 
         if (ImGui::Button("Take item")) {
-            onItemTaken();
-            
-            
-          
+
+            currentDialogue.onItemTaken();
+           
         }
 
         ImGui::End();

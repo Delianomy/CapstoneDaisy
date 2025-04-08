@@ -170,7 +170,7 @@ bool CapstoneSceneDream::OnCreate() {
 	camera->OnCreate();
 	camera->GetProjectionMatrix().print("ProjectionMatrix");
 	camera->GetViewMatrix().print("ViewMatrix");
-
+	AddActor(camera);
 
 	skybox = std::make_shared<SkyBox>(nullptr, "textures/Skyboxes/Overworld/px.png", "textures/Skyboxes/Overworld/nx.png",
 		"textures/Skyboxes/Overworld/py.png", "textures/Skyboxes/Overworld/ny.png", "textures/Skyboxes/Overworld/pz.png",

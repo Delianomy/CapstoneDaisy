@@ -25,7 +25,7 @@ struct ViewPort {
 
 class Scene{
 protected:
-	std::vector<Ref<Actor>> actors;
+	
 
 	ViewPort viewport;
 	SceneManager* sceneMan = nullptr;
@@ -33,6 +33,7 @@ public:
 	TriggerSystem triggerSystem;
 	std::vector<Ref<Actor>> opaqueActors;
 	std::vector<Ref<Actor>> transparentActors;
+	std::vector<Ref<Actor>> actors;
 	virtual ~Scene() {}
 	virtual bool OnCreate() = 0;
 	virtual void OnDestroy() = 0;

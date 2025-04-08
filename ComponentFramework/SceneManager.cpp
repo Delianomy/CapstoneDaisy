@@ -4,13 +4,12 @@
 #include "Window.h"
 #include "CapstoneScene.h"
 #include "CapstoneSceneDream.h"
-#include "CameraActor.h"
 #include "SandboxAdriel.h"
+#include "CameraActor.h"
 #include "ShaderTestScene.h"
 #include "MainMenu.h"
 
-
-SceneManager::SceneManager(): 
+SceneManager::SceneManager() :
 	currentScene(nullptr), window(nullptr), timer(nullptr),
 	fps(60), isRunning(false), fullScreen(false) {
 	Debug::Info("Starting the SceneManager", __FILE__, __LINE__);
@@ -63,14 +62,16 @@ bool SceneManager::Initialize(std::string name_, int width_, int height_) {
 	ImGui_ImplSDL2_InitForOpenGL(window->getWindow(), window->getContext());
 	ImGui_ImplOpenGL3_Init();
 
-
-	/// Creates the capstone scenes
-	if (!BuildCapstoneScenes()) { return false; }
-	currentScene = bedroomScene;
-
 	/********************************   Default first scene   ***********************/
-	//BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE);
-	
+	BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE);
+	//bedroomScene = new CapstoneScene();
+	//bedroomScene->OnCreate();
+
+	//dreamScene = new CapstoneSceneDream();
+	//dreamScene->OnCreate();
+
+	//currentScene = bedroomScene;
+
 	return true;
 }
 
@@ -104,13 +105,13 @@ void SceneManager::HandleEvents() {
 
 			case SDL_SCANCODE_F1:
 
-				currentScene = bedroomScene;
-				//BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE);
+				//currentScene = bedroomScene;
+				BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE);
 				break;
 
 			case SDL_SCANCODE_F2:
-				currentScene = dreamScene;
-				//BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE_DREAM);
+				//currentScene = dreamScene;
+				BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE_DREAM);
 				break;
 			case SDL_SCANCODE_F3:
 				BuildNewScene(SCENE_NUMBER::SCENE_SHADER_TEST);
@@ -119,7 +120,7 @@ void SceneManager::HandleEvents() {
 				BuildNewScene(SCENE_NUMBER::SCENE_MAIN_MENU);
 				break;
 			case SDL_SCANCODE_F11:
-				BuildNewScene(SCENE_NUMBER::SCENE_SANDBOX_ADRIEL);
+				BuildNewScene(SCENE_NUMBER::SCENE0);
 				break;
 			}
 		}
@@ -133,7 +134,7 @@ void SceneManager::HandleEvents() {
 }
 
 void SceneManager::BuildNewScene(SCENE_NUMBER scene) {
-	bool status; 
+	bool status;
 
 	if (currentScene != nullptr) {
 		currentScene->OnDestroy();
@@ -142,7 +143,7 @@ void SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 	}
 
 	switch (scene) {
-	
+
 	case SCENE_NUMBER::SCENE_CAPSTONE:
 		currentScene = new CapstoneScene();
 		currentScene->SetSceneManager(this);
@@ -170,7 +171,7 @@ void SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 		Debug::Error("Incorrect scene number assigned in the manager", __FILE__, __LINE__);
 		currentScene = nullptr;
 		break;
-	}	
+	}
 }
 
 void SceneManager::AddItemToInventory(std::shared_ptr<Actor> other, int index)
@@ -242,3 +243,21 @@ Vec2 SceneManager::WorldToScreenCoordinates(Vec3 coords, CameraActor* camera){
 	Vec2 screenSpaceCoords = Vec2((NDC.x + 1) / 2 * getWindowWidth(), (1 - NDC.y) / 2 * getWindowHeight());
 	return screenSpaceCoords;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

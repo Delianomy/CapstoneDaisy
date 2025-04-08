@@ -47,13 +47,14 @@ class CapstoneScene : public Scene
 	Ref<CameraActor> camera;
 	Ref<LightActor> light;
 	Ref<Actor> player;
-	Ref<Actor> bear;
 	Ref<Actor> books;
-	Ref<Actor> moonTrinket;
+
 	Ref<AudioManager> audioManager;
 	Ref<DialogueSystem> dialogueSystem;
 
-	Ref<PickableItem> test;
+	Ref<PickableItem> bear;
+	Ref<PickableItem> moonTrinket;
+
 	Ref<Actor> room;
 	//Ref<Actor> doll;
 	float playerAngle;

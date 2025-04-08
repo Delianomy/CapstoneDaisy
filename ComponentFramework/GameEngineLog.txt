@@ -1,4 +1,4 @@
-Tue Apr  8 10:40:46 2025
+Tue Apr  8 10:58:52 2025
 [INFO]: Starting the SceneManager
 [INFO]: OpenGL version: 4.6.0 NVIDIA 546.80
 [INFO]: Graphics card vendor NVIDIA Corporation
@@ -212,6 +212,8 @@ Tue Apr  8 10:40:46 2025
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
+[INFO]: Deleting assets for Actor: 
+[INFO]: Deleting assets for Actor: 
 [INFO]: Created Scene Dream: 
 [INFO]: Loading assets Scene Dream: 
 [INFO]: Uniforms:
@@ -305,7 +307,6 @@ Tue Apr  8 10:40:46 2025
 "skybox" loc:2
 "viewMatrix" loc:3
 
-[INFO]: Deleting Scene Dream: 
 [INFO]: Deleted Scene Dream: 
 [INFO]: Deleting Scene Dream: 
 [INFO]: Deleting assets for Actor: 
@@ -317,104 +318,6 @@ Tue Apr  8 10:40:46 2025
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Created Scene Bedroom: 
-[INFO]: Loading assets Scene Dream: 
-[INFO]: Uniforms:
-"modelMatrix" loc:0
-"projectionMatrix" loc:1
-"viewMatrix" loc:2
-
-[INFO]: Uniforms:
-"NPC_id" loc:0
-"NPCanimIndex" loc:1
-"colour" loc:-1
-"modelMatrix" loc:2
-"myTexture" loc:3
-"playeranimIndex" loc:4
-"position" loc:-1
-"projection" loc:-1
-"view" loc:-1
-
-[INFO]: Uniforms:
-"color" loc:2
-"modelMatrix" loc:1
-"projection" loc:-1
-"view" loc:-1
-
-[INFO]: Uniforms:
-"colorID" loc:4
-"modelMatrix" loc:1
-"projectionMatrix" loc:3
-"viewMatrix" loc:2
-
-[INFO]: Uniforms:
-"depthProjectionMatrix" loc:0
-"depthViewMatrix" loc:1
-"modelMatrix" loc:2
-
-[INFO]: Uniforms:
-"modelMatrix" loc:1
-"projection" loc:-1
-"view" loc:-1
-
-[INFO]: Uniforms:
-"colour" loc:-1
-"modelMatrix" loc:2
-"myTexture" loc:0
-"position" loc:-1
-"projection" loc:-1
-"view" loc:-1
-
-[INFO]: Uniforms:
-"iTime" loc:0
-"modelMatrix" loc:1
-"projection" loc:-1
-"view" loc:-1
-
-[INFO]: Uniforms:
-"iResolution" loc:0
-"iTime" loc:1
-"modelMatrix" loc:2
-"projection" loc:-1
-"view" loc:-1
-
-[INFO]: Uniforms:
-"colour" loc:-1
-"modelMatrix" loc:2
-"myTexture" loc:0
-"position" loc:-1
-"projection" loc:-1
-"view" loc:-1
-
-[INFO]: Uniforms:
-"colorID" loc:4
-"modelMatrix" loc:1
-"projectionMatrix" loc:3
-"viewMatrix" loc:2
-
-[INFO]: Uniforms:
-"screenTexture" loc:0
-
-[INFO]: Uniforms:
-"modelMatrix" loc:0
-"normalMap" loc:1
-"projectionMatrix" loc:2
-"time" loc:3
-"viewMatrix" loc:4
-
-[INFO]: Creating values for CameraActor: 
-[INFO]: Uniforms:
-"modelMatrix" loc:0
-"projectionMatrix" loc:1
-"skybox" loc:2
-"viewMatrix" loc:3
-
-[INFO]: Deleted Scene Bedroom: 
-[INFO]: Deleting assets Scene Bedroom: 
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 

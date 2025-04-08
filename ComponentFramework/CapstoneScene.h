@@ -47,16 +47,21 @@ class CapstoneScene : public Scene
 	Ref<CameraActor> camera;
 	Ref<LightActor> light;
 	Ref<Actor> player;
-	Ref<Actor> books;
+
 
 	Ref<AudioManager> audioManager;
 	Ref<DialogueSystem> dialogueSystem;
-	std::shared_ptr<PickableItem> bearInInventory;
+
 	Ref<PickableItem> bear;
 	Ref<PickableItem> moonTrinket;
+	Ref<PickableItem> books;
+
+	std::shared_ptr<PickableItem> bearInInventory;
+	std::shared_ptr<PickableItem> booksInInventory;
+	std::shared_ptr<PickableItem> moonInInventory;
+
 
 	Ref<Actor> room;
-	//Ref<Actor> doll;
 	float playerAngle;
 	
 	std::vector<std::vector<Dialogue>> dialogueSequences;

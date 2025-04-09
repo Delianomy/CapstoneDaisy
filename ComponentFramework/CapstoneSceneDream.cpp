@@ -70,7 +70,7 @@ bool CapstoneSceneDream::OnCreate() {
 		//make an actor
 	player = std::make_shared<Actor>(nullptr);
 	player->NPCid = 0;
-	player->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, 0.0f, 0.0f),/// pos
+	player->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -2.5f, 0.0f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
@@ -1087,6 +1087,12 @@ void CapstoneSceneDream::InitializeDialogue()
 	dialogueSequences[5].push_back(fairy_d6);
 
 
+
+	textureID = assetManager->GetComponent<MaterialComponent>("Fairy_1")->getTextureID();
+	Dialogue fairy_d7("Little fairy", "Oh thanks! Maybe I'll do some reading to lighten the mood", textureID);
+	dialogueSequences[6].push_back(fairy_d7);
+
+
 }
 
 
@@ -1097,7 +1103,7 @@ void CapstoneSceneDream::Render() const {
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		DebugUI();
+		//DebugUI();
 
 		glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
 		glBindBuffer(GL_UNIFORM_BUFFER, light->GetLightID());
@@ -1124,7 +1130,7 @@ void CapstoneSceneDream::Render() const {
 			opaqueActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
 		}
 
-		RenderColliders();
+		//RenderColliders();
 		std::vector<Ref<Actor>> sortedTransparentActors = transparentActors;
 		std::sort(sortedTransparentActors.begin(), sortedTransparentActors.end(),
 			[this](const Ref<Actor>& a, const Ref<Actor>& b) {
@@ -1656,7 +1662,7 @@ void CapstoneSceneDream::UpdateLevelQuests() {
 	}
 	if (sceneMan->questManager->quests.find(1) != sceneMan->questManager->quests.end()) {
 		if (sceneMan->questManager->quests[1].state == QuestState::InProgress) {
-			Ref<ItemInteractable> fairy_inter = std::make_shared<ItemInteractable>(assetManager, "Item2", Vec3(2.0f, -0.5f, 0.0f), 1.5f);
+			Ref<ItemInteractable> fairy_inter = std::make_shared<ItemInteractable>(assetManager, "Item3", Vec3(2.0f, -0.5f, 0.0f), 1.5f);
 			fairy_inter->BindToOnCorrect([this, fairy_inter]() {
 				std::cout << "Are you in ? ? ? " << std::endl;
 				if (1 < dialogueSequences.size()) {
@@ -1664,15 +1670,15 @@ void CapstoneSceneDream::UpdateLevelQuests() {
 					dialogueSystem->ClearDialogues();
 
 					// Add the dialogues for this object
-					for (const auto& dialogue : dialogueSequences[2]) {
+					for (const auto& dialogue : dialogueSequences[6]) {
 						dialogueSystem->AddDialogueToSequence(dialogue);
 					}
 
-					dialogueSystem->OpenDialogue(0);
+					dialogueSystem->OpenDialogue(5);
 				}
-				sceneMan->inventory.RemoveItem(0);
+				sceneMan->inventory.RemoveItem(2);
 
-				sceneMan->questManager->quests[0].state = QuestState::Completed;
+				sceneMan->questManager->quests[2].state = QuestState::Completed;
 				triggerSystem.RemoveActor(fairy_inter);
 				});
 			fairy_inter->BindToOnReject([this]() {

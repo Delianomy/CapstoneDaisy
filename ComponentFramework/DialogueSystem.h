@@ -84,8 +84,8 @@ public:
 
 
     void Render() {
-        int screenWidth = 1366;
-        int screenHeight = 768;
+        int screenWidth = 1920;
+        int screenHeight = 1080;
         int dialogueWidth = 600; // Full width
         int dialogueHeight = 700; // 
         wasDialogueOpen = isDialogueOpen;

@@ -101,6 +101,8 @@ AssetManager::AssetManager() {
 	AddComponent<MaterialComponent>("number 3", nullptr, "textures/UI_elements/number_3.png");
 
 	AddComponent<MaterialComponent>("Game Title", nullptr, "textures/UI_elements/Game Title.png");
+	AddComponent<MaterialComponent>("quest", nullptr, "textures/UI_elements/cursor/cursor_hovered.png");
+
 
 	//Dialogue design
 	AddComponent<MaterialComponent>("Dialogue_profileFrame", nullptr, "textures/UI_elements/frame.png");
@@ -121,7 +123,10 @@ AssetManager::AssetManager() {
 
 	AddComponent<MaterialComponent>("Owl_1", nullptr, "textures/UI_elements/pfps/mrOwl_1.png");
 	AddComponent<MaterialComponent>("Owl_2", nullptr, "textures/UI_elements/pfps/mrOwl_2.png");
-
+	AddComponent<MaterialComponent>("Fairy_1", nullptr, "textures/UI_elements/pfps/fairy_1.png");
+	AddComponent<MaterialComponent>("Fairy_2", nullptr, "textures/UI_elements/pfps/fairy_2.png");
+	AddComponent<MaterialComponent>("Mouse_1", nullptr, "textures/UI_elements/pfps/mrsMouse_1.png");
+	AddComponent<MaterialComponent>("Mouse_2", nullptr, "textures/UI_elements/pfps/mrsMouse_2.png");
 
 
 	
@@ -132,6 +137,7 @@ AssetManager::AssetManager() {
 
 	AddComponent<MaterialComponent>("arrowLeft", nullptr, "textures/UI_elements/arrow_L.png");
 	AddComponent<MaterialComponent>("arrowRight", nullptr, "textures/UI_elements/arrow_r.png");
+
 
 
 	//AddComponent<MaterialComponent>("Doll", nullptr, "textures/doll.png");

@@ -110,7 +110,7 @@ bool CapstoneSceneDream::OnCreate() {
 	//AddTransparentActor(mermaid);
 
 
-	mrOwl = std::make_shared<InteractableActor>(assetManager, Vec3(9.5f, -0.5f, 1.0f), 0.8f, Vec3(0.15f, 0.15f, 0.15f), assetManager->GetComponent<MaterialComponent>("Owl"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
+	mrOwl = std::make_shared<InteractableActor>(assetManager, Vec3(12.3f, -0.7f, 1.6f), 0.8f, Vec3(0.15f, 0.15f, 0.15f), assetManager->GetComponent<MaterialComponent>("Owl"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
 	mrOwl->NPCid = 2;
 	mrOwl->Bind([this]() {
 		///Check if the quest actually exists in the quest manager
@@ -151,7 +151,17 @@ bool CapstoneSceneDream::OnCreate() {
 	mrsMouse->NPCid = 3;
 	mrsMouse->Bind([this]() {
 		/*	inventoryButtonPressed = !inventoryButtonPressed;*/
+		if (3 < dialogueSequences.size()) {
+			// Clear any existing dialogues
+			dialogueSystem->ClearDialogues();
 
+			// Add the dialogues for this object
+			for (const auto& dialogue : dialogueSequences[3]) {
+				dialogueSystem->AddDialogueToSequence(dialogue);
+			}
+
+			dialogueSystem->OpenDialogue(0);
+		}
 		std::cout << "Interacted with owl";
 		});
 	mrsMouse->AddComponent<CollisionComponent>(nullptr, 0.5f);
@@ -166,7 +176,21 @@ bool CapstoneSceneDream::OnCreate() {
 	fairy->Bind([this]() {
 		/*	inventoryButtonPressed = !inventoryButtonPressed;*/
 
-		std::cout << "Interacted with owl";
+		/// If the quest has not started
+	
+			if (4 < dialogueSequences.size()) {
+				// Clear any existing dialogues
+				dialogueSystem->ClearDialogues();
+
+				// Add the dialogues for this object
+				for (const auto& dialogue : dialogueSequences[4]) {
+					dialogueSystem->AddDialogueToSequence(dialogue);
+				}
+
+				dialogueSystem->OpenDialogue(0);
+			}
+			//sceneMan->questManager->quests[0].state = QuestState::InProgress;
+		
 		});
 	fairy->AddComponent<CollisionComponent>(nullptr, 0.5f);
 	triggerSystem.AddActor(fairy);
@@ -495,32 +519,6 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("TextureShader");
 
 
-	/*Ref<Actor> bush1 = std::make_shared<Actor>(nullptr);
-	bush1->AddComponent<PhysicsComponent>(nullptr, Vec3(10.0f, 0.0f, 1.0f),/// pos
-		QMath::angleAxisRotation(0, Vec3(0.0, 1.0f, 0.0f)),
-			Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	bush1->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
-	bush1->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Bush_obj"));
-	bush1->GetComponent<PhysicsComponent>()->isStatic = true;
-
-	bush1->AddComponent<ShaderComponent>(shader);
-	bush1->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Bush_mat"));
-	bush1->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	AddTransparentActor(bush1);
-
-
-	Ref<Actor> grass = std::make_shared<Actor>(nullptr);
-	grass->AddComponent<PhysicsComponent>(nullptr, Vec3(10.0f, -1.0f, 1.0f),/// pos
-		QMath::angleAxisRotation(0, Vec3(1.0, 0.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	grass->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
-	grass->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Grass1_obj"));
-	grass->AddComponent<ShaderComponent>(shader);
-	grass->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Grass1_mat"));
-	grass->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	AddTransparentActor(grass);*/
 
 
 	//island in the centre
@@ -595,47 +593,6 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 
 
-	//////Small island 2
-	//Ref<Actor>Island4 = std::make_shared<Actor>(nullptr);
-	//Island4->tag = GROUND;
-	//Island4->AddComponent<PhysicsComponent>(nullptr, Vec3(5.3f, -2.4f, 2.0f),/// pos
-	//	QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
-	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	//);
-	//cubeCollider.center = Island4->GetComponent<PhysicsComponent>()->GetPosition();
-	//cubeCollider.rx = 0.55f;
-	//cubeCollider.ry = 0.25f;
-	//cubeCollider.rz = 0.55f;
-	//Island4->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.2f, 0.2f, 0.2f));
-	//Island4->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
-	//Island4->GetComponent<PhysicsComponent>()->isStatic = true;
-	//Island4->AddComponent<ShaderComponent>(CubeShader);
-	//Island4->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
-	//Island4->AddComponent<CollisionComponent>(nullptr, cubeCollider);
-	//AddOpaqueActor(Island4);
-	//physicsSystem.AddActor(Island4);
-	//collisionSystem.AddActor(Island4);
-
-
-
-	////Small island 3
-	//Ref<Actor>Island5 = std::make_shared<Actor>(nullptr);
-	//Island5->AddComponent<PhysicsComponent>(nullptr, Vec3(6.8f, -2.0f, 0.0f),/// pos
-	//	QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
-	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	//);
-	//Island5->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.2f, 0.2f, 0.2f));
-	//Island5->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
-	//Island5->GetComponent<PhysicsComponent>()->isStatic = true;
-	//Island5->AddComponent<ShaderComponent>(CubeShader);
-	//Island5->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
-	//Island5->AddComponent<CollisionComponent>(nullptr, 0.5f);
-	//AddOpaqueActor(Island5);
-	//physicsSystem.AddActor(Island5);
-	//collisionSystem.AddActor(Island5);
-
-
-
 	Ref<Actor>BottomOfTheOcean = std::make_shared<Actor>(nullptr);
 	BottomOfTheOcean->AddComponent<PhysicsComponent>(nullptr, Vec3(18.0f, -30.0f, 0.0f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
@@ -686,7 +643,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 
 	Ref<Actor>Flower_1 = std::make_shared<Actor>(nullptr);
-	Flower_1->AddComponent<PhysicsComponent>(nullptr, Vec3(8.8f, -1.30f, 2.0f),/// pos
+	Flower_1->AddComponent<PhysicsComponent>(nullptr, Vec3(8.8f, -1.4f, 2.0f),/// pos
 		QMath::angleAxisRotation(20.0f, Vec3(-15.0f, 1.0f, -1.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
@@ -702,7 +659,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 
 	Ref<Actor>Flower_2 = std::make_shared<Actor>(nullptr);
-	Flower_2->AddComponent<PhysicsComponent>(nullptr, Vec3(11.3f, -1.20f, 2.8f),/// pos
+	Flower_2->AddComponent<PhysicsComponent>(nullptr, Vec3(11.3f, -1.2f, 2.8f),/// pos
 		QMath::angleAxisRotation(20.0f, Vec3(1.0f, 1.0f, 1.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
@@ -716,7 +673,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 
 	Ref<Actor>Flower_3 = std::make_shared<Actor>(nullptr);
-	Flower_3->AddComponent<PhysicsComponent>(nullptr, Vec3(12.3f, 0.0f, 1.3f),/// pos
+	Flower_3->AddComponent<PhysicsComponent>(nullptr, Vec3(12.3f, -1.0f, 1.3f),/// pos
 		QMath::angleAxisRotation(50.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
@@ -730,8 +687,8 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 
 	Ref<Actor>Flower_4 = std::make_shared<Actor>(nullptr);
-	Flower_4->AddComponent<PhysicsComponent>(nullptr, Vec3(12.3f, -0.25f, -0.9f),/// pos
-		QMath::angleAxisRotation(20.0f, Vec3(-1.0f, 1.0f, 0.0f)),
+	Flower_4->AddComponent<PhysicsComponent>(nullptr, Vec3(12.3f, -0.30f, -0.9f),/// pos
+		QMath::angleAxisRotation(20.0f, Vec3(.0f, 1.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
 	Flower_4->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.25f, 0.25f, 0.25f));
@@ -1002,13 +959,60 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 
 void CapstoneSceneDream::InitializeDialogue()
 {
-	dialogueSequences.resize(3);
+	dialogueSequences.resize(6);
 	unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Owl_2")->getTextureID();
-	Dialogue owl_d1("Owl", "Who who who are you?", textureID);
+	Dialogue owl_d1("Mr. Owl", "Who who who are you?", textureID);
 	dialogueSequences[2].push_back(owl_d1);
+
+	textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
+	Dialogue owl_d3("Daisy", "Hi, I'm Daisy!", textureID);
+	dialogueSequences[2].push_back(owl_d3);
+
+
 	textureID = assetManager->GetComponent<MaterialComponent>("Owl_1")->getTextureID();
-	Dialogue owl_d2("Owl", "Ah its you Daisy?", textureID);
-	dialogueSequences[2].push_back(owl_d2);
+	Dialogue owl_d4("Mr. Owl", "Ah! Its you Daisy? We have been waiting for you! Im Mr. Owl!", textureID);
+	dialogueSequences[2].push_back(owl_d4);
+
+	textureID = assetManager->GetComponent<MaterialComponent>("Player_laugh")->getTextureID();
+	Dialogue owl_d5("Diasy", "Pleasure to meet you, good sir!", textureID);
+	dialogueSequences[2].push_back(owl_d5);
+
+
+	textureID = assetManager->GetComponent<MaterialComponent>("Owl_2")->getTextureID();
+	Dialogue owl_d6("Mr. Owl", "Finally that you are here, you can stay with us!", textureID);
+	dialogueSequences[2].push_back(owl_d6);
+
+
+	textureID = assetManager->GetComponent<MaterialComponent>("Player_surprise")->getTextureID();
+	Dialogue owl_d7("Daisy", "But, Mr Owl, I was invited to a ball. I need to get there. Could you please help me?", textureID);
+	dialogueSequences[2].push_back(owl_d7);
+
+
+	textureID = assetManager->GetComponent<MaterialComponent>("Owl_1")->getTextureID();
+	Dialogue owl_d8("Mr. Owl", "But Daisy, we really wanted to meet you. Why do you have to leave so soon? We will miss you. No we want you to stay. Besides, balls are too dangerous.", textureID);
+	dialogueSequences[2].push_back(owl_d8);
+
+	textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
+	Dialogue owl_d9("Daisy (thoughs)", "/Hmm... mayebe if i bring something that could make Mr. Owl happy he will help me?/" , textureID);
+	dialogueSequences[2].push_back(owl_d9);
+
+	textureID = assetManager->GetComponent<MaterialComponent>("quest")->getTextureID();
+	Dialogue owl_d10("New Quest", "Find a good substitution", textureID);
+	dialogueSequences[2].push_back(owl_d10);
+
+
+	textureID = assetManager->GetComponent<MaterialComponent>("Fairy_1")->getTextureID();
+	Dialogue owl_d11("Little fairy", "What are you looking at?", textureID);
+	dialogueSequences[4].push_back(owl_d11);
+
+
+	textureID = assetManager->GetComponent<MaterialComponent>("Fairy_1")->getTextureID();
+	Dialogue owl_d12("Little fairy", "Sigh I'm bored... ", textureID);
+	dialogueSequences[4].push_back(owl_d12);
+
+	textureID = assetManager->GetComponent<MaterialComponent>("Fairy_1")->getTextureID();
+	Dialogue owl_d13("Little fairy", "Leave already will ya? ", textureID);
+	dialogueSequences[4].push_back(owl_d13);
 }
 
 
@@ -1551,7 +1555,7 @@ void CapstoneSceneDream::UpdateLevelQuests() {
 	/// Mr owl's quest
 	if (sceneMan->questManager->quests.find(0) != sceneMan->questManager->quests.end()) {
 		if (sceneMan->questManager->quests[0].state == QuestState::InProgress) {
-			Ref<ItemInteractable> mrOwl = std::make_shared<ItemInteractable>(assetManager, "Item1", Vec3(9.5f, -0.5f, 1.0f), 1.5f);
+			Ref<ItemInteractable> mrOwl = std::make_shared<ItemInteractable>(assetManager, "Item1", Vec3(12.3f, -0.7f, 1.6f), 1.5f);
 			mrOwl->BindToOnCorrect([this, mrOwl]() {
 				sceneMan->questManager->quests[0].state = QuestState::Completed;
 				triggerSystem.RemoveActor(mrOwl);

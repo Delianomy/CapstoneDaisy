@@ -149,7 +149,7 @@ public:
                 // Don't call ClearDialogues() here
             }
         }
-        ImGui::SetCursorPosX(dialogueWidth - 200);
+        ImGui::SetCursorPosX(dialogueWidth - 400);
         ImGui::SetCursorPosY(160);// Position button to the right
 
         if (ImGui::Button("Take item")) {

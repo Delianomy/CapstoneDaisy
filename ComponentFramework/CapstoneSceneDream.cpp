@@ -48,12 +48,12 @@ bool CapstoneSceneDream::OnCreate() {
 
 
 	Ocean = std::make_shared<Actor>(nullptr);
-	Ocean->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -8.0f, 0.0f),/// pos
+	Ocean->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -13.0f, 0.0f),/// pos
 		QMath::angleAxisRotation(90.0f, Vec3(0.0f, 1.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
-	Ocean->GetComponent<PhysicsComponent>()->SetScale(Vec3(20.0f, 0.0f, 20.0f));
-	Ocean->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
+	Ocean->GetComponent<PhysicsComponent>()->SetScale(Vec3(20.0f, 10.0f, 20.0f));
+	Ocean->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Sphere"));
 	Ocean->AddComponent<ShaderComponent>(WaterShader);
 	Ocean->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Water_normal"));
 	AABB oceanCollider = AABB(Vec3(0.0f, -3.0f, 0.0f), Vec3(20.0f, 5.0f, 20.0f));
@@ -942,8 +942,7 @@ void CapstoneSceneDream::Render() const {
 		glUseProgram(0);
 
 		glDisable(GL_BLEND);
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS);
+		//glDepthFunc(GL_LESS);
 
 		for (auto opaqueActor : opaqueActors) {
 			glUseProgram(opaqueActor->GetComponent<ShaderComponent>()->GetProgram());
@@ -977,18 +976,31 @@ void CapstoneSceneDream::Render() const {
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glDepthMask(GL_FALSE);
+		glDepthMask(GL_TRUE);
+		glEnable(GL_CULL_FACE);
+		//glCullFace(GL_FRONT);
+
+		Matrix4 cameraWorldMatrix = camera->orient; // This is the camera's world transform
+		Vec3 cameraPosition = Vec3(cameraWorldMatrix[12], cameraWorldMatrix[13], cameraWorldMatrix[14]);
 
 		glUseProgram(Ocean->GetComponent<ShaderComponent>()->GetProgram());
+
 		glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, Ocean->GetModelMatrix());
 		glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, MMath::inverse(camera->orient));
 		glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
+		glUniform3fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("cameraPos"), 1, cameraPosition);
 		glUniform1f(Ocean->GetComponent<ShaderComponent>()->GetUniformID("time"), currentTime);
 
+		// Bind the texture and assign to sampler2D
 		if (Ocean->GetComponent<MaterialComponent>()) {
-			glBindTexture(GL_TEXTURE_2D, Ocean->GetComponent<MaterialComponent>()->getTextureID());
+			glActiveTexture(GL_TEXTURE0); // Select texture unit 0
+			glBindTexture(GL_TEXTURE_2D, Ocean->GetComponent<MaterialComponent>()->getTextureID()); // Bind water normal map
+			glUniform1i(Ocean->GetComponent<ShaderComponent>()->GetUniformID("waterNormalMap"), 0); // Set uniform sampler to use texture unit 0
+
 			Ocean->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
 		}
+
+
 
 
 		glDepthMask(GL_TRUE);

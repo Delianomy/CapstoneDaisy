@@ -1,56 +1,40 @@
 #version 450
-out vec4 FragColor;
-in vec2 texCoords;
-in vec3 worldPos;
-in vec3 viewDir;
-uniform sampler2D normalMap;
+layout(location = 0) in vec2 fragUV;
+layout(location = 1) in vec3 fragNormal;
+layout(location = 2) in vec3 fragPos;
+layout(location = 0) out vec4 outColor;
+uniform sampler2D waterNormalMap;
+uniform vec3 cameraPos;
 uniform float time;
 void main() {
-    // Create slower UV animations with reduced speed factors
-    vec2 uv = texCoords.xy;
+    // Mix world position with time-based animation
+    vec2 worldBasedUV = fragPos.xz * 0.1;
     
-    // First normal layer - larger waves - reduced speed by factor of 10
-    vec2 uv1 = uv + time * vec2(0.003, 0.005);
-    vec3 normal1 = texture(normalMap, uv1).xyz * 2.0 - 1.0;
+    // Use fixed world-space animation vectors that don't depend on camera movement
+    vec2 flowDirection1 = vec2(1.0, 0.0);
+    vec2 flowDirection2 = vec2(0.0, 1.0);
     
-    // Second normal layer - smaller waves - reduced speed
-    vec2 uv2 = uv - time * vec2(0.004, 0.003);
-    vec3 normal2 = texture(normalMap, uv2 * 1.2).xyz * 2.0 - 1.0; // Reduced scaling from 1.5 to 1.2
+    // Create two layers of animation moving in different directions
+    vec2 animatedUV1 = worldBasedUV + flowDirection1 * time * 0.05;
+    vec2 animatedUV2 = worldBasedUV + flowDirection2 * time * 0.03;
     
-    // Third normal layer - smallest detail waves - reduced speed and impact
-    vec2 uv3 = uv + time * vec2(-0.002, 0.006);
-    vec3 normal3 = texture(normalMap, uv3 * 1.8).xyz * 2.0 - 1.0; // Reduced scaling from 2.5 to 1.8
+    // Sample normal map twice and blend
+    vec3 normalMap1 = texture(waterNormalMap, animatedUV1).rgb * 2.0 - 1.0;
+    vec3 normalMap2 = texture(waterNormalMap, animatedUV2).rgb * 2.0 - 1.0;
+    vec3 blendedNormal = normalize(normalMap1 + normalMap2);
     
-    // Combine normals with different weights - increased weight of main waves, reduced detail
-    vec3 normal = normalize(normal1 * 0.7 + normal2 * 0.2 + normal3 * 0.1);
+    vec3 normal = normalize(mix(fragNormal, blendedNormal, 0.7));
     
-    // Lighting calculation
-    vec3 lightDir = normalize(vec3(0.5, 1.0, 0.3));
-    float diffuse = max(dot(normal, lightDir), 0.0);
+    // Lighting
+    vec3 lightDir = normalize(vec3(0.3, 1.0, 0.4));
+    float diff = max(dot(normal, lightDir), 0.0);
     
-    // Significantly reduced specular highlight
+    // Specular highlight
+    vec3 viewDir = normalize(cameraPos - fragPos);
     vec3 reflectDir = reflect(-lightDir, normal);
-    float specular = pow(max(dot(viewDir, reflectDir), 0.0), 16.0) * 0.15; // Reduced exponent and multiplier
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
     
-    // Reduced fresnel effect
-    float fresnel = pow(1.0 - max(dot(normal, viewDir), 0.0), 3.0) * 0.5; // Reduced exponent and added multiplier
-    
-    // Deeper, more muted water colors
-    vec3 deepColor = vec3(0.0, 0.08, 0.15); // Darker deep color
-    vec3 shallowColor = vec3(0.0, 0.3, 0.5); // Less saturated shallow color
-    
-    // Mix colors based on normal direction (simulating depth)
-    float waterDepth = normal.y * 0.5 + 0.5;
-    vec3 waterColor = mix(deepColor, shallowColor, waterDepth);
-    
-    // Add lighting effects with reduced specular
-    vec3 finalColor = waterColor * (0.7 + 0.3 * diffuse) + vec3(0.8, 0.9, 1.0) * specular;
-    
-    // Much subtler rim lighting
-    finalColor = mix(finalColor, vec3(0.1, 0.4, 0.5), fresnel * 0.2);
-    
-    // Slightly more consistent transparency
-    float alpha = mix(0.75, 0.82, fresnel);
-    
-    FragColor = vec4(finalColor, alpha);
+    vec3 waterColor = vec3(0.1, 0.4, 0.7);
+    vec3 color = waterColor * diff + vec3(0.5) * spec;
+    outColor = vec4(color, 0.8); // Added some transparency
 }

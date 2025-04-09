@@ -1,4 +1,4 @@
-Tue Apr  8 16:59:55 2025
+Tue Apr  8 21:49:21 2025
 [INFO]: Starting the SceneManager
 [INFO]: OpenGL version: 4.6.0 NVIDIA 546.80
 [INFO]: Graphics card vendor NVIDIA Corporation
@@ -83,11 +83,12 @@ Tue Apr  8 16:59:55 2025
 "screenTexture" loc:0
 
 [INFO]: Uniforms:
-"modelMatrix" loc:0
-"normalMap" loc:1
+"cameraPos" loc:0
+"modelMatrix" loc:1
 "projectionMatrix" loc:2
 "time" loc:3
 "viewMatrix" loc:4
+"waterNormalMap" loc:5
 
 [ERROR]: Can't fint requested component in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 31
 [ERROR]: The Actor must have a CollisionComponent - ignored  in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\CollisionSystem.h on line: 19

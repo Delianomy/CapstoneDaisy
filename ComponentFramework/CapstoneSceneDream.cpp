@@ -38,6 +38,7 @@ bool CapstoneSceneDream::OnCreate() {
 
 	currentAnim = PlayerAnimType::Idle;
 	dialogueSystem = std::make_shared<DialogueSystem>();
+	audioManager = std::make_shared<AudioManager>();
 	dialogueSystem->SetAudioManager(audioManager);
 
 
@@ -293,6 +294,12 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 			break;
 		case SDL_SCANCODE_E:
 			inventoryButtonPressed = !inventoryButtonPressed;
+			if (inventoryButtonPressed) {
+				audioManager->Play(0, 0.5f);
+			}
+			else {
+				audioManager->Play(1, 0.1f);
+			}
 
 			//Pend the item to the inventory
 			//The function already checks if it's nullptr so don't worry about it

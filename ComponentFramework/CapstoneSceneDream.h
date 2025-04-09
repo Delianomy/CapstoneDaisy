@@ -146,6 +146,8 @@ class CapstoneSceneDream : public Scene
 	GLuint VBO;
 
 public:
+	bool playerIsFacingLeft = false;
+
 	std::vector<std::vector<Dialogue>> dialogueSequences;
 	Matrix4 orient;
 	explicit CapstoneSceneDream(SceneManager* scenemanager);

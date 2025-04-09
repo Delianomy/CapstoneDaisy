@@ -1,4 +1,4 @@
-Wed Apr  9 08:18:57 2025
+Wed Apr  9 08:48:21 2025
 [INFO]: Starting the SceneManager
 [INFO]: OpenGL version: 4.6.0 NVIDIA 546.80
 [INFO]: Graphics card vendor NVIDIA Corporation
@@ -15,9 +15,10 @@ Wed Apr  9 08:18:57 2025
 "NPC_id" loc:0
 "NPCanimIndex" loc:1
 "colour" loc:-1
+"isFacingLeft" loc:3
 "modelMatrix" loc:2
-"myTexture" loc:3
-"playeranimIndex" loc:4
+"myTexture" loc:4
+"playeranimIndex" loc:5
 "position" loc:-1
 "projection" loc:-1
 "view" loc:-1

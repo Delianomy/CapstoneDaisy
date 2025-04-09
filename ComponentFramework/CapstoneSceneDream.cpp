@@ -954,6 +954,17 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 			playerPhysics->SetVel(Vec3(currentVel.x, jumpSpeed * deltaTime, currentVel.z));
 		}
 	}
+
+	if (moveDir.x > 0.0f) {
+		playerIsFacingLeft = false;
+	}
+	else if(moveDir.x == 0.0f){
+		playerIsFacingLeft = false;
+	}
+	else {
+		playerIsFacingLeft = true;
+	}
+
 	NPCcurrentTime += deltaTime * 0.4f;
 	NPCanimIndex = static_cast<int>(NPCcurrentTime / frameSpeed) % 17;
 
@@ -1069,6 +1080,7 @@ void CapstoneSceneDream::Render() const {
 			glUniform1i(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("talking"), true);
 			glUniform2f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("playeranimIndex"), animIndex.x, animIndex.y);
 			glUniform2f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("NPCanimIndex"), NPCanimIndex, 0);
+			glUniform1f(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("isFacingLeft"), playerIsFacingLeft);
 
 			glUniformMatrix4fv(transparentActor->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, transparentActor->GetModelMatrix());
 			if (transparentActor->GetComponent<MaterialComponent>()) {

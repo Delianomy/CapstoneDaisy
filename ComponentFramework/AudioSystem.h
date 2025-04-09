@@ -15,7 +15,7 @@ public:
     std::vector<Sound*> sounds;
 
     //bool PlaySound(const std::string& filePath);
-    bool LoadAudio(const char* filePath);
+    bool LoadAudio(const char* filePath, bool loop);
     bool OnCreate();
     void OnDestroy();
     void Play(int trackIndex, float volume);

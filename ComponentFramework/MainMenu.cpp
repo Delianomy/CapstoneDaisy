@@ -24,6 +24,7 @@ using namespace MATH;
 
 
 MainMenu::MainMenu(SceneManager* scenemanager) :drawNormals(false), drawOverlay(false) {
+
 	Debug::Info("Created Scene Dream: ", __FILE__, __LINE__);
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	this->sceneManagerRef = scenemanager;

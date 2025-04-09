@@ -191,6 +191,9 @@ bool CapstoneSceneDream::OnCreate() {
 	triggerSystem.AddActor(player);
 
 
+
+	audioManager->Play(7, 0.04f);
+
 	////FrameBuffer
 	//glGenFramebuffers(1, &frameBuffer);
 	//glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);

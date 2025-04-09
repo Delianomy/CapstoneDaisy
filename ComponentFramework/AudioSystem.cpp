@@ -22,29 +22,39 @@ bool AudioManager::OnCreate()
     //LOAD ALL THE AUDIO HERE
 
     //0
-    if (LoadAudio("ost/UI_sounds/Zipper_open.mp3") == false) {
+    if (LoadAudio("ost/UI_sounds/Zipper_open.mp3", false) == false) {
         return false;
     }
     //1
-    if (LoadAudio("ost/UI_sounds/Zipper_close.wav") == false) {
+    if (LoadAudio("ost/UI_sounds/Zipper_close.wav", false) == false) {
         return false;
     }
     //2
-    if (LoadAudio("ost/UI_sounds/Nature_13_4.wav") == false) {
+    if (LoadAudio("ost/UI_sounds/Nature_13_4.wav", false) == false) {
         return false;
     }
     //3
-    if (LoadAudio("ost/UI_sounds/Abstract1.mp3") == false) {
+    if (LoadAudio("ost/UI_sounds/Abstract1.mp3", false) == false) {
         return false;
     }
     //4
-    if (LoadAudio("ost/UI_sounds/Nature_13_6.wav") == false) {
+    if (LoadAudio("ost/UI_sounds/Nature_13_6.wav", false) == false) {
         return false;
     }
     //5
-    if (LoadAudio("ost/1.mp3") == false) {
+    if (LoadAudio("ost/1.mp3", false) == false) {
         return false;
     }
+    //6
+    if (LoadAudio("ost/bedRoom.mp3", true) == false){ 
+        return false;
+    }
+    //7
+    if (LoadAudio("ost/Overworld.mp3", true) == false) {
+        return false;
+    }
+
+
 
     return true;
 }
@@ -60,10 +70,14 @@ AudioManager::~AudioManager()
     system->release();
 }
 
-bool AudioManager::LoadAudio(const char* filePath)
+bool AudioManager::LoadAudio(const char* filePath, bool loop)
 {
     Sound* sound{};
-    FMOD_RESULT result = system->createStream(filePath, FMOD_DEFAULT, nullptr, &sound);
+    FMOD_MODE mode = FMOD_DEFAULT;
+    if (loop) {
+        mode |= FMOD_LOOP_NORMAL;  // Enable looping
+    }
+    FMOD_RESULT result = system->createStream(filePath, mode, nullptr, &sound);
     if (result != FMOD_OK) {
         std::cerr << "Failed to load sound: " << FMOD_ErrorString(result) << std::endl;
         return false;

@@ -130,8 +130,8 @@ bool CapstoneScene::OnCreate() {
 	}
 
 	
-
-
+	audioManager->Play(6, 0.13f);
+	
 
 	InitializeDialogue();
 	room = std::make_shared<Room>(nullptr, "textures/SkyBoxes/Room/1.png", "textures/SkyBoxes/Room/2.png",
@@ -548,8 +548,7 @@ void CapstoneScene::InitializeDialogue() {
 
 	//Teddy Bear
 
-	if (sceneMan->questManager->quests[0].state == QuestState::InProgress) {
-		if (!bearInInventory) {
+	if (!bearInInventory) {
 			unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
 			Dialogue teddy_bear = Dialogue("Daisy", "Oh! Thats my Teddy bear!", textureID);
 			teddy_bear.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(bear, 0); });
@@ -561,26 +560,34 @@ void CapstoneScene::InitializeDialogue() {
 
 			textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
 			teddy_bear = Dialogue("Daisy", "Maybe this could be a good gift to Mr Owl and Mrs Mouse?", textureID);
-		}
-	
 	}
 	
 
-	//if (!moonInInventory) {
-	//
-	//	unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
-	//	Dialogue trinket = Dialogue("Daisy", "Object 2", textureID);
-	//	trinket.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(moonTrinket, 1); });
-	//	dialogueSequences[1].push_back(trinket);
-	//}
+	if (!moonInInventory) {
+	
+		unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
+		Dialogue trinket = Dialogue("Daisy", "This is my favourite thing. Cant tell whats it made of.", textureID);
+		trinket.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(moonTrinket, 1); });
+		dialogueSequences[1].push_back(trinket);
 
-	//if (!booksInInventory) {
+		textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
+		trinket = Dialogue("Daisy", "But in the night when the light hits it, its very shiny.", textureID);
+		trinket.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(moonTrinket, 1); });
+		dialogueSequences[1].push_back(trinket);
+	}
 
-	//	unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
-	//	Dialogue books_dialogue = Dialogue("Daisy", "Object 3", textureID);
-	//	books_dialogue.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(books, 2); });
-	//	dialogueSequences[2].push_back(books_dialogue);
-	//}
+	if (!booksInInventory) {
+
+		unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_surprise")->getTextureID();
+		Dialogue books_dialogue = Dialogue("Daisy", "I think my mom put those books here, because she wanted to read them", textureID);
+		books_dialogue.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(books, 2); });
+		dialogueSequences[2].push_back(books_dialogue);
+
+		textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
+		books_dialogue = Dialogue("Daisy", "Eh. Reading is not as fun as drawing anyways.", textureID);
+		books_dialogue.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(books, 2); });
+		dialogueSequences[2].push_back(books_dialogue);
+	}
 
 }
 

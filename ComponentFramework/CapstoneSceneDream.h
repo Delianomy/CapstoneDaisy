@@ -101,6 +101,7 @@ class CapstoneSceneDream : public Scene
 	bool playerIsGrounded = false;
 	Ray groundCheckRay = Ray(Vec3(), Vec3());
 	bool underwater = false;
+	bool anyInputPressed = false;
 
 	//invetory UI imput
 	bool inventoryButtonPressed = true;

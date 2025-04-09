@@ -274,6 +274,10 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 	/// Handle Camera movement 
 	switch (sdlEvent.type) {
 	case SDL_KEYDOWN:
+		if (!anyInputPressed) {
+			player->GetComponent<PhysicsComponent>()->useGravity = true;
+			anyInputPressed = true;
+		}
 		cameraTC = camera->GetComponent<TransformComponent>();
 		switch (sdlEvent.key.keysym.scancode) {
 
@@ -912,13 +916,13 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	animIndex = GetAnimIndex(deltaTime, currentTime, currentAnim, frameSpeed);
 	Vec3 moveResult;
 	if (underwater) {
-		playerPhysics->useGravity = false;
+		if(anyInputPressed) playerPhysics->useGravity = false;
 		playerPhysics->SetVel(playerPhysics->GetVel() * 0.98f);
 		moveResult = moveDir * swimSpeed;
 		playerPhysics->ApplyForce(moveResult);
 	}
 	else {
-		playerPhysics->useGravity = true;
+		if(anyInputPressed) playerPhysics->useGravity = true;
 		//Change accel depending if the player is grounded or not
 		if (playerIsGrounded) {
 			walkSpeed = groudAccel;

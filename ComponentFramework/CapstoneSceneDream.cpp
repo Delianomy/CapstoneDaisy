@@ -110,7 +110,7 @@ bool CapstoneSceneDream::OnCreate() {
 	//AddTransparentActor(mermaid);
 
 
-	mrOwl = std::make_shared<InteractableActor>(assetManager, Vec3(0.0f, 0.0f, 0.0f), 0.8f, Vec3(0.2f, 0.2f, 0.2f), assetManager->GetComponent<MaterialComponent>("Owl"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
+	mrOwl = std::make_shared<InteractableActor>(assetManager, Vec3(9.5f, -0.5f, 1.0f), 0.8f, Vec3(0.15f, 0.15f, 0.15f), assetManager->GetComponent<MaterialComponent>("Owl"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
 	mrOwl->NPCid = 2;
 	mrOwl->Bind([this]() {
 		///Check if the quest actually exists in the quest manager
@@ -136,7 +136,7 @@ bool CapstoneSceneDream::OnCreate() {
 
 
 
-	mrsMouse = std::make_shared<InteractableActor>(assetManager, Vec3(8.7f, -0.18f, -0.05f), 1.0f, Vec3(0.1f, 0.1f, 0.1f), assetManager->GetComponent<MaterialComponent>("Mouse"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
+	mrsMouse = std::make_shared<InteractableActor>(assetManager, Vec3(9.3f, -0.18f, -0.05f), 1.0f, Vec3(0.1f, 0.1f, 0.1f), assetManager->GetComponent<MaterialComponent>("Mouse"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
 	mrsMouse->NPCid = 3;
 	mrsMouse->Bind([this]() {
 		/*	inventoryButtonPressed = !inventoryButtonPressed;*/
@@ -365,6 +365,8 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 			//Skip if that's the case
 			if (std::dynamic_pointer_cast<PickableItem>(currentInteraction) != nullptr) { break; }
 
+			if (std::dynamic_pointer_cast<ItemInteractable>(currentInteraction) != nullptr) { break; }
+
 			//Calls the callback function
 			currentInteraction->Invoke();
 			break;
@@ -478,7 +480,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("TextureShader");
 
 
-	Ref<Actor> bush1 = std::make_shared<Actor>(nullptr);
+	/*Ref<Actor> bush1 = std::make_shared<Actor>(nullptr);
 	bush1->AddComponent<PhysicsComponent>(nullptr, Vec3(10.0f, 0.0f, 1.0f),/// pos
 		QMath::angleAxisRotation(0, Vec3(0.0, 1.0f, 0.0f)),
 			Vec3(0.0f, 0.0f, 0.0f) ///velocity
@@ -503,7 +505,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	grass->AddComponent<ShaderComponent>(shader);
 	grass->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Grass1_mat"));
 	grass->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	AddTransparentActor(grass);
+	AddTransparentActor(grass);*/
 
 
 	//island in the centre
@@ -536,12 +538,17 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
-	Island2->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 0.76f, 1.0f));
+	Island2->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 0.6f, 1.0f));
 	Island2->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
 	Island2->GetComponent<PhysicsComponent>()->isStatic = true;
 	Island2->AddComponent<ShaderComponent>(CubeShader);
 	Island2->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
-	Island2->AddComponent<CollisionComponent>(nullptr, 1.0f);
+	cubeCollider;
+	cubeCollider.center = Island2->GetComponent<PhysicsComponent>()->GetPosition();
+	cubeCollider.rx = 3.18f;
+	cubeCollider.ry = 0.51f;
+	cubeCollider.rz = 2.8f;
+	Island2->AddComponent<CollisionComponent>(nullptr, cubeCollider);
 	AddOpaqueActor(Island2);
 	physicsSystem.AddActor(Island2);
 	collisionSystem.AddActor(Island2);
@@ -551,17 +558,17 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	////Small island
 	Ref<Actor>Island3 = std::make_shared<Actor>(nullptr);
 	Island3->tag = GROUND;
-	Island3->AddComponent<PhysicsComponent>(nullptr, Vec3(2.5f, -1.9f, 4.2f),/// pos
+	Island3->AddComponent<PhysicsComponent>(nullptr, Vec3(6.2f, -1.9f, 1.2f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
 	cubeCollider;
 	cubeCollider.center = Island3->GetComponent<PhysicsComponent>()->GetPosition();
-	cubeCollider.rx = 0.5f;
+	cubeCollider.rx = 1.0f;
 	cubeCollider.ry = 0.3f;
-	cubeCollider.rz = 0.5f;
+	cubeCollider.rz = 1.0f;
 
-	Island3->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.1f, 0.1f, 0.1f));
+	Island3->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.3f, 0.2f, 0.3f));
 	Island3->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
 	Island3->GetComponent<PhysicsComponent>()->isStatic = true;
 	Island3->AddComponent<ShaderComponent>(CubeShader);
@@ -573,26 +580,26 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 
 
-	////Small island 2
-	Ref<Actor>Island4 = std::make_shared<Actor>(nullptr);
-	Island4->tag = GROUND;
-	Island4->AddComponent<PhysicsComponent>(nullptr, Vec3(5.3f, -2.4f, 2.0f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	cubeCollider.center = Island4->GetComponent<PhysicsComponent>()->GetPosition();
-	cubeCollider.rx = 0.55f;
-	cubeCollider.ry = 0.25f;
-	cubeCollider.rz = 0.55f;
-	Island4->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.2f, 0.2f, 0.2f));
-	Island4->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
-	Island4->GetComponent<PhysicsComponent>()->isStatic = true;
-	Island4->AddComponent<ShaderComponent>(CubeShader);
-	Island4->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
-	Island4->AddComponent<CollisionComponent>(nullptr, cubeCollider);
-	AddOpaqueActor(Island4);
-	physicsSystem.AddActor(Island4);
-	collisionSystem.AddActor(Island4);
+	//////Small island 2
+	//Ref<Actor>Island4 = std::make_shared<Actor>(nullptr);
+	//Island4->tag = GROUND;
+	//Island4->AddComponent<PhysicsComponent>(nullptr, Vec3(5.3f, -2.4f, 2.0f),/// pos
+	//	QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
+	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	//);
+	//cubeCollider.center = Island4->GetComponent<PhysicsComponent>()->GetPosition();
+	//cubeCollider.rx = 0.55f;
+	//cubeCollider.ry = 0.25f;
+	//cubeCollider.rz = 0.55f;
+	//Island4->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.2f, 0.2f, 0.2f));
+	//Island4->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
+	//Island4->GetComponent<PhysicsComponent>()->isStatic = true;
+	//Island4->AddComponent<ShaderComponent>(CubeShader);
+	//Island4->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
+	//Island4->AddComponent<CollisionComponent>(nullptr, cubeCollider);
+	//AddOpaqueActor(Island4);
+	//physicsSystem.AddActor(Island4);
+	//collisionSystem.AddActor(Island4);
 
 
 
@@ -640,7 +647,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 
 	Ref<Actor>House = std::make_shared<Actor>(nullptr);
-	House->AddComponent<PhysicsComponent>(nullptr, Vec3(8.8f, -0.3f, -0.5f),/// pos
+	House->AddComponent<PhysicsComponent>(nullptr, Vec3(9.3f, -0.3f, -0.5f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
@@ -676,10 +683,6 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	Flower_1->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Flower_v1_mat"));
 	Flower_1->AddComponent<TriggerComponent>(nullptr, 1.0f);
 	AddOpaqueActor(Flower_1);
-
-	
-
-	
 
 
 
@@ -759,7 +762,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	cubeCollider.rx = 0.2f;
 	cubeCollider.ry = 0.7f;
 	cubeCollider.rz = 0.2f;
-	Beanstalk2->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.3f, 0.2f, 0.3f));
+	Beanstalk2->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.2f, 0.22f, 0.2f));
 	Beanstalk2->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Beanstalk_obj"));
 	Beanstalk2->GetComponent<PhysicsComponent>()->isStatic = true;
 	Beanstalk2->AddComponent<CollisionComponent>(nullptr, cubeCollider);
@@ -773,7 +776,7 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 
 	Ref<Actor>Leaf3 = std::make_shared<Actor>(nullptr);
-	Leaf3->AddComponent<PhysicsComponent>(nullptr, Vec3(-2.5f, 0.2f, 0.9f),/// pos
+	Leaf3->AddComponent<PhysicsComponent>(nullptr, Vec3(-2.8f, 1.2f, 0.1f),/// pos
 		QMath::angleAxisRotation(35.0f, Vec3(1.0f, 1.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
@@ -786,8 +789,8 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	AddOpaqueActor(Leaf3);
 
 
-	Ref<Actor>Leaf4 = std::make_shared<Actor>(nullptr);
-	Leaf4->AddComponent<PhysicsComponent>(nullptr, Vec3(-2.5f, 0.5f, 0.0f),/// pos
+	/*Ref<Actor>Leaf4 = std::make_shared<Actor>(nullptr);
+	Leaf4->AddComponent<PhysicsComponent>(nullptr, Vec3(-2.5f, 1.5f, 0.0f),/// pos
 		QMath::angleAxisRotation(90.0f, Vec3(1.0f, 1.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
@@ -797,12 +800,12 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	Leaf4->AddComponent<ShaderComponent>(CubeShader);
 	Leaf4->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Leaf_mat"));
 	Leaf4->AddComponent<TriggerComponent>(nullptr, 1.0f);
-	AddOpaqueActor(Leaf4);
+	AddOpaqueActor(Leaf4);*/
 
 
 
 	Ref<Actor>Leaf1 = std::make_shared<Actor>(nullptr);
-	Leaf1->AddComponent<PhysicsComponent>(nullptr, Vec3(2.3f, 1.5f, -1.55f),/// pos
+	Leaf1->AddComponent<PhysicsComponent>(nullptr, Vec3(2.3f, 2.5f, -1.55f),/// pos
 		QMath::angleAxisRotation(35.0f, Vec3(1.0f, 1.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
@@ -894,7 +897,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 
 	Ref<PhysicsComponent> playerPhysics = player->GetComponent<PhysicsComponent>();
 	//Reset the player when below a specific Y value
-	if (playerPhysics->GetPosition().y < -900.0f) {
+	if (playerPhysics->GetPosition().y < -15.0f) {
 		playerPhysics->SetVel(Vec3());
 		playerPhysics->SetPosition(Vec3());
 		playerPhysics->useGravity = false;
@@ -1014,7 +1017,7 @@ void CapstoneSceneDream::Render() const {
 		glUseProgram(0);
 
 		glDisable(GL_BLEND);
-		//glDepthFunc(GL_LESS);
+		glDepthFunc(GL_LESS);
 
 		for (auto opaqueActor : opaqueActors) {
 			glUseProgram(opaqueActor->GetComponent<ShaderComponent>()->GetProgram());
@@ -1046,14 +1049,14 @@ void CapstoneSceneDream::Render() const {
 			});
 
 
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glDepthMask(GL_TRUE);
-		glEnable(GL_CULL_FACE);
-		//glCullFace(GL_FRONT);
+		//glEnable(GL_BLEND);
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		//glDepthMask(GL_TRUE);
+		//glEnable(GL_CULL_FACE);
+		////glCullFace(GL_FRONT);
 
-		Matrix4 cameraWorldMatrix = camera->orient; // This is the camera's world transform
-		Vec3 cameraPosition = Vec3(cameraWorldMatrix[12], cameraWorldMatrix[13], cameraWorldMatrix[14]);
+		//Matrix4 cameraWorldMatrix = camera->orient; // This is the camera's world transform
+		//Vec3 cameraPosition = Vec3(cameraWorldMatrix[12], cameraWorldMatrix[13], cameraWorldMatrix[14]);
 
 		//glUseProgram(Ocean->GetComponent<ShaderComponent>()->GetProgram());
 
@@ -1529,7 +1532,7 @@ void CapstoneSceneDream::UpdateLevelQuests() {
 	/// Mr owl's quest
 	if (sceneMan->questManager->quests.find(0) != sceneMan->questManager->quests.end()) {
 		if (sceneMan->questManager->quests[0].state == QuestState::InProgress) {
-			Ref<ItemInteractable> mrOwl = std::make_shared<ItemInteractable>(assetManager, "Item1", Vec3(0.0f, 0.0f, 0.0f), 1.5f);
+			Ref<ItemInteractable> mrOwl = std::make_shared<ItemInteractable>(assetManager, "Item1", Vec3(9.5f, -0.5f, 1.0f), 1.5f);
 			mrOwl->BindToOnCorrect([this, mrOwl]() {
 				sceneMan->questManager->quests[0].state = QuestState::Completed;
 				triggerSystem.RemoveActor(mrOwl);

@@ -126,6 +126,9 @@ AssetManager::AssetManager() {
 	AddComponent<MaterialComponent>("Bear", nullptr, "textures/Items/item_bear.png");
 	AddComponent<MaterialComponent>("MoonTrinket", nullptr, "textures/Items/moon_trinket.png");
 
+	AddComponent<MaterialComponent>("arrowLeft", nullptr, "textures/UI_elements/arrow_L.png");
+	AddComponent<MaterialComponent>("arrowRight", nullptr, "textures/UI_elements/arrow_r.png");
+
 
 	//AddComponent<MaterialComponent>("Doll", nullptr, "textures/doll.png");
 	OnCreate();

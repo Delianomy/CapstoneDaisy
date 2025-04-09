@@ -82,6 +82,8 @@ class CapstoneScene : public Scene
 	bool drawNormals;
 	bool drawOverlay;
 	bool inventoryButtonPressed = true;
+
+	bool rotateRight = false;
 public:
 	Matrix4 orient;
 	explicit CapstoneScene();

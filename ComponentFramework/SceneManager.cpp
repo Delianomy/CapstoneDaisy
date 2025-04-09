@@ -9,6 +9,52 @@
 #include "ShaderTestScene.h"
 #include "MainMenu.h"
 
+enum class QuestState { NotStarted, InProgress, Completed };
+
+struct Quest {
+	std::string id;
+	std::string name;
+	QuestState state = QuestState::NotStarted;
+
+	// Optional callbacks
+	std::function<void()> OnStart;
+	std::function<void()> OnComplete;
+};
+
+
+class QuestManager {
+	std::unordered_map<std::string, Quest> quests;
+
+public:
+	void AddQuest(const Quest& quest) {
+		quests[quest.id] = quest;
+	}
+
+	void StartQuest(const std::string& id) {
+		if (quests[id].state == QuestState::NotStarted) {
+			quests[id].state = QuestState::InProgress;
+			if (quests[id].OnStart) quests[id].OnStart();
+		}
+	}
+
+	void CompleteQuest(const std::string& id) {
+		if (quests[id].state == QuestState::InProgress) {
+			quests[id].state = QuestState::Completed;
+			if (quests[id].OnComplete) quests[id].OnComplete();
+		}
+	}
+
+	QuestState GetState(const std::string& id) {
+		return quests[id].state;
+	}
+
+	bool IsActive(const std::string& id) {
+		return quests[id].state == QuestState::InProgress;
+	}
+};
+
+
+
 SceneManager::SceneManager():
 	currentScene(nullptr), window(nullptr), timer(nullptr),
 	fps(60), isRunning(false), fullScreen(false) {
@@ -220,33 +266,6 @@ Vec2 SceneManager::WorldToScreenCoordinates(Vec3 coords, CameraActor* camera){
 	Vec2 screenSpaceCoords = Vec2((NDC.x + 1) / 2 * getWindowWidth(), (1 - NDC.y) / 2 * getWindowHeight());
 	return screenSpaceCoords;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

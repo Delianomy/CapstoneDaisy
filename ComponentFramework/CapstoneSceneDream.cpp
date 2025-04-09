@@ -33,10 +33,13 @@ bool CapstoneSceneDream::OnCreate() {
 	assetManager = std::make_shared<AssetManager>();
 	interactionManager = std::make_shared<InteractionManager>();
 
-
+	InitializeDialogue();
 	//SDL_SetCursor(SDL_GetDefaultCursor());
 
 	currentAnim = PlayerAnimType::Idle;
+	dialogueSystem = std::make_shared<DialogueSystem>();
+	dialogueSystem->SetAudioManager(audioManager);
+
 
 	//Shaders used in the scene
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("TextureShader");
@@ -74,7 +77,7 @@ bool CapstoneSceneDream::OnCreate() {
 	);
 	player->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
 	/// This makes a Sphere Collision Component because of the argument list - just the radius. 
-	player->AddComponent<CollisionComponent>(nullptr, 0.8f);
+	player->AddComponent<CollisionComponent>(nullptr, 0.5f);
 	player->GetComponent<PhysicsComponent>()->isStatic = false;
 	player->GetComponent<PhysicsComponent>()->useGravity = false;
 	player->GetComponent<PhysicsComponent>()->mass = 1.0f;
@@ -90,8 +93,17 @@ bool CapstoneSceneDream::OnCreate() {
 	mermaid = std::make_shared<InteractableActor>(assetManager, Vec3(0.0f, 0.0f, 0.0f), 1.5f, Vec3(0.5f, 0.5f, 0.5f), assetManager->GetComponent<MaterialComponent>("Mermaid"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
 	mermaid->NPCid = 1;
 	mermaid->Bind([this]() {
+		int index = mermaid->NPCid;
 	/*	inventoryButtonPressed = !inventoryButtonPressed;*/
+		if (index >= 0 && index < dialogueSequences.size()) {
+			dialogueSystem->ClearDialogues();
 
+			for (const auto& dialogue : dialogueSequences[index]) {
+				dialogueSystem->AddDialogueToSequence(dialogue);
+			}
+
+			dialogueSystem->OpenDialogue(0);
+		}
 		std::cout << "Interacted with mermaid";
 		});
 	mermaid->AddComponent<CollisionComponent>(nullptr, 0.5f);
@@ -395,6 +407,8 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 
 		}
 	case SDL_MOUSEBUTTONDOWN:
+		if (ImGui::GetIO().WantCaptureMouse) break;
+
 		if (sdlEvent.button.button == (SDL_BUTTON_RIGHT)) {
 			rotatePlayerRight = true;
 			break;
@@ -512,63 +526,69 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 
 
 
-	//////Small island
-	//Ref<Actor>Island3 = std::make_shared<Actor>(nullptr);
-	//Island3->AddComponent<PhysicsComponent>(nullptr, Vec3(2.5f, -2.3f, 4.2f),/// pos
-	//	QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
-	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	//);
-	//cubeCollider;
-	//cubeCollider.center = Island1->GetComponent<PhysicsComponent>()->GetPosition();
-	//cubeCollider.rx = 2.8f;
-	//cubeCollider.ry = 2.0f;
-	//cubeCollider.rz = 2.8f;
+	////Small island
+	Ref<Actor>Island3 = std::make_shared<Actor>(nullptr);
+	Island3->tag = GROUND;
+	Island3->AddComponent<PhysicsComponent>(nullptr, Vec3(2.5f, -1.9f, 4.2f),/// pos
+		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	cubeCollider;
+	cubeCollider.center = Island3->GetComponent<PhysicsComponent>()->GetPosition();
+	cubeCollider.rx = 0.5f;
+	cubeCollider.ry = 0.3f;
+	cubeCollider.rz = 0.5f;
 
-	//Island3->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.1f, 0.1f, 0.1f));
-	//Island3->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
-	//Island3->GetComponent<PhysicsComponent>()->isStatic = true;
-	//Island3->AddComponent<ShaderComponent>(CubeShader);
-	//Island3->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
-	//Island3->AddComponent<CollisionComponent>(nullptr, cubeCollider);
-	//AddOpaqueActor(Island3);
-	//physicsSystem.AddActor(Island3);
-	//collisionSystem.AddActor(Island3);
+	Island3->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.1f, 0.1f, 0.1f));
+	Island3->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
+	Island3->GetComponent<PhysicsComponent>()->isStatic = true;
+	Island3->AddComponent<ShaderComponent>(CubeShader);
+	Island3->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
+	Island3->AddComponent<CollisionComponent>(nullptr, cubeCollider);
+	AddOpaqueActor(Island3);
+	physicsSystem.AddActor(Island3);
+	collisionSystem.AddActor(Island3);
 
 
 
-	//Small island 2
+	////Small island 2
 	Ref<Actor>Island4 = std::make_shared<Actor>(nullptr);
+	Island4->tag = GROUND;
 	Island4->AddComponent<PhysicsComponent>(nullptr, Vec3(5.3f, -2.4f, 2.0f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
+	cubeCollider.center = Island4->GetComponent<PhysicsComponent>()->GetPosition();
+	cubeCollider.rx = 0.55f;
+	cubeCollider.ry = 0.25f;
+	cubeCollider.rz = 0.55f;
 	Island4->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.2f, 0.2f, 0.2f));
 	Island4->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
 	Island4->GetComponent<PhysicsComponent>()->isStatic = true;
 	Island4->AddComponent<ShaderComponent>(CubeShader);
 	Island4->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
-	Island4->AddComponent<CollisionComponent>(nullptr, 0.57f);
+	Island4->AddComponent<CollisionComponent>(nullptr, cubeCollider);
 	AddOpaqueActor(Island4);
 	physicsSystem.AddActor(Island4);
 	collisionSystem.AddActor(Island4);
 
 
 
-	//Small island 3
-	Ref<Actor>Island5 = std::make_shared<Actor>(nullptr);
-	Island5->AddComponent<PhysicsComponent>(nullptr, Vec3(6.8f, -2.0f, 0.0f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	Island5->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.2f, 0.2f, 0.2f));
-	Island5->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
-	Island5->GetComponent<PhysicsComponent>()->isStatic = true;
-	Island5->AddComponent<ShaderComponent>(CubeShader);
-	Island5->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
-	Island5->AddComponent<CollisionComponent>(nullptr, 0.5f);
-	AddOpaqueActor(Island5);
-	physicsSystem.AddActor(Island5);
-	collisionSystem.AddActor(Island5);
+	////Small island 3
+	//Ref<Actor>Island5 = std::make_shared<Actor>(nullptr);
+	//Island5->AddComponent<PhysicsComponent>(nullptr, Vec3(6.8f, -2.0f, 0.0f),/// pos
+	//	QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
+	//	Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	//);
+	//Island5->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.2f, 0.2f, 0.2f));
+	//Island5->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
+	//Island5->GetComponent<PhysicsComponent>()->isStatic = true;
+	//Island5->AddComponent<ShaderComponent>(CubeShader);
+	//Island5->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
+	//Island5->AddComponent<CollisionComponent>(nullptr, 0.5f);
+	//AddOpaqueActor(Island5);
+	//physicsSystem.AddActor(Island5);
+	//collisionSystem.AddActor(Island5);
 
 
 
@@ -836,6 +856,8 @@ return true;
 
 void CapstoneSceneDream::Update(const float deltaTime) {
 	DrawUI_imgui();
+	dialogueSystem->Render();
+
 	PlayerGroundCheck();
 	iTime += deltaTime;
 	interactionManager->Reset();
@@ -916,6 +938,15 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 
 	underwater = false;
 	triggerSystem.Update(deltaTime);
+}
+
+
+void CapstoneSceneDream::InitializeDialogue()
+{
+	dialogueSequences.resize(2);
+	unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
+	Dialogue mermaid_d1("Mermaid", "Have you found something from the sea?", textureID);
+	dialogueSequences[1].push_back(mermaid_d1);
 }
 
 void CapstoneSceneDream::Render() const {
@@ -1505,3 +1536,5 @@ void CapstoneSceneDream::PlayerTriggerCallback(Ref<Actor> other) {
 		return;
 	}
 }
+
+

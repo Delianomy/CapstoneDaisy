@@ -15,6 +15,8 @@
 #include "Inventory.h"
 #include "ItemInteractable.h"
 #include "InteractionManager.h"
+#include "AudioSystem.h" 
+#include "DialogueSystem.h"
 #include <algorithm>
 using namespace MATH;
 
@@ -24,6 +26,7 @@ class CameraActor;
 class LightActor;
 class Actor;
 class SkyBox;
+class DialogueSystem;
 
 #include "Scene.h"
 
@@ -42,8 +45,10 @@ struct AnimationInfo {
 
 class CapstoneSceneDream : public Scene 
 {
+	Ref<DialogueSystem> dialogueSystem;
 	Ref<AssetManager> assetManager;
 	Ref<InteractionManager> interactionManager;
+	Ref<AudioManager> audioManager;
  	Ref<CameraActor> camera;
 	Ref<LightActor> light;
 
@@ -140,6 +145,7 @@ class CapstoneSceneDream : public Scene
 	GLuint VBO;
 
 public:
+	std::vector<std::vector<Dialogue>> dialogueSequences;
 	Matrix4 orient;
 	explicit CapstoneSceneDream(SceneManager* scenemanager);
 	bool CreateLevelLayout();
@@ -175,11 +181,12 @@ public:
 	void DropItemFromInventory(int index);
 	void PlayerTriggerCallback(Ref<Actor> other);
 
+	void InitializeDialogue();
 
 	Vec2 GetAnimIndex(float deltaTime, float& currentTime, PlayerAnimType animType, float frameSpeed) {
 
 		auto& anim = animTable[animType];
-		int xIndex = static_cast<int>(currentTime / frameSpeed) % anim.frameCount;
+		int xIndex = static_cast<int>(currentTime / frameSpeed*1.2f) % anim.frameCount;
 		int yIndex = anim.row;
 		return Vec2(static_cast<float>(xIndex), static_cast<float>(yIndex));
 	}

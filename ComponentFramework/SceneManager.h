@@ -4,6 +4,9 @@
 #include <string>
 #include "Window.h"
 #include "Inventory.h"
+#include "imgui.h"
+#include "backends/imgui_impl_sdl2.h"
+#include "backends/imgui_impl_opengl3.h"
 
 class CameraActor;
 
@@ -61,6 +64,8 @@ public:
 
 class SceneManager  {
 public:
+	ImFont* customFont;
+	
 	Inventory inventory;
 	SceneManager();
 	~SceneManager();

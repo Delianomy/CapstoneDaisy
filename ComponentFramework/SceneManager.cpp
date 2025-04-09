@@ -10,6 +10,7 @@
 #include "MainMenu.h"
 
 
+
 SceneManager::SceneManager():
 	currentScene(nullptr), window(nullptr), timer(nullptr),
 	fps(60), isRunning(false), fullScreen(false) {
@@ -65,6 +66,9 @@ bool SceneManager::Initialize(std::string name_, int width_, int height_) {
 	// Setup Platform/Renderer backends
 	ImGui_ImplSDL2_InitForOpenGL(window->getWindow(), window->getContext());
 	ImGui_ImplOpenGL3_Init();
+
+
+	customFont= io.Fonts->AddFontFromFileTTF("fonts/lunchds.ttf", 20.0f);
 
 	/********************************   Default first scene   ***********************/
 	BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE_DREAM);

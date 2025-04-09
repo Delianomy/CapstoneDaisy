@@ -40,7 +40,7 @@ bool CapstoneScene::OnCreate() {
 	audioManager = std::make_shared<AudioManager>();
 	dialogueSystem = std::make_shared<DialogueSystem>();
 	dialogueSystem->SetAudioManager(audioManager);
-	
+	dialogueSystem->SetSceneManager(sceneMan);
 
 	if (defaultCursorTexture && hoveredCursorTexture) {
 		SDL_SetColorKey(defaultCursorTexture, SDL_TRUE, SDL_MapRGB(defaultCursorTexture->format, 255, 0, 255));
@@ -551,6 +551,7 @@ void CapstoneScene::InitializeDialogue() {
 	if (!bearInInventory) {
 			unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
 			Dialogue teddy_bear = Dialogue("Daisy", "Oh! Thats my Teddy bear!", textureID);
+			teddy_bear.isFromPickableItem = true;
 			teddy_bear.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(bear, 0); });
 			dialogueSequences[0].push_back(teddy_bear);
 
@@ -569,6 +570,7 @@ void CapstoneScene::InitializeDialogue() {
 		unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
 		Dialogue trinket = Dialogue("Daisy", "This is my favourite thing. Cant tell whats it made of.", textureID);
 		trinket.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(moonTrinket, 1); });
+		trinket.isFromPickableItem = true;
 		dialogueSequences[1].push_back(trinket);
 
 		textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
@@ -582,6 +584,7 @@ void CapstoneScene::InitializeDialogue() {
 		unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_surprise")->getTextureID();
 		Dialogue books_dialogue = Dialogue("Daisy", "I think my mom put those books here, because she wanted to read them", textureID);
 		books_dialogue.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(books, 2); });
+		books_dialogue.isFromPickableItem = true;
 		dialogueSequences[2].push_back(books_dialogue);
 
 		textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();

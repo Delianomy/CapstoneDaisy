@@ -39,6 +39,7 @@ bool CapstoneSceneDream::OnCreate() {
 	dialogueSystem = std::make_shared<DialogueSystem>();
 	audioManager = std::make_shared<AudioManager>();
 	dialogueSystem->SetAudioManager(audioManager);
+	dialogueSystem->SetSceneManager(sceneMan);
 
 	//Shaders used in the scene
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("TextureShader");
@@ -1674,7 +1675,7 @@ void CapstoneSceneDream::UpdateLevelQuests() {
 						dialogueSystem->AddDialogueToSequence(dialogue);
 					}
 
-					dialogueSystem->OpenDialogue(5);
+					dialogueSystem->OpenDialogue(0);
 				}
 				sceneMan->inventory.RemoveItem(2);
 

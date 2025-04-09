@@ -13,6 +13,7 @@ public:
 	const char* NPCname;
 	const char* dialogueText;
     unsigned int textureID;
+    bool isFromPickableItem = false;
     std::function<void()> onItemTaken;
 	Dialogue(const char* NPCname_, const char* dialogueText_, unsigned int textureID_) :NPCname(NPCname_), dialogueText(dialogueText_), textureID(textureID_) {}
     void SetOnItemTaken(std::function<void()> onItemTaken_) {
@@ -24,10 +25,10 @@ class DialogueSystem
 {
     SceneManager* sceneManager;
     ImGuiIO& io = ImGui::GetIO();
-    ImFont* customFont;
+
     Ref<AssetManager> assetMan;
     Ref<AudioManager> audioManager;
-
+   
 
 	std::vector<Dialogue> dialogues;
 	int currentDialogueIndex = 0;
@@ -38,7 +39,7 @@ class DialogueSystem
 public:
   
     DialogueSystem() {
-       /// customFont = io.Fonts->AddFontFromFileTTF("fonts/lunchds.ttf", 20.0f);
+      
       
     }
 
@@ -50,6 +51,7 @@ public:
 
     void SetSceneManager(SceneManager* sceneManager_) {
         sceneManager = sceneManager_;
+        std::cout <<"--------------------------------------------------------------------SCENE MANAGER " << sceneManager << std::endl;
     }
 
     void ClearDialogues() {
@@ -128,8 +130,8 @@ public:
 
         // **Right Column: Dialogue Text (Starts Lower & Is Larger)**
         ImGui::SetCursorPosY(40); 
-        ImGui::PushFont(ImGui::GetFont()->Scale > 1.2f ? ImGui::GetFont() : ImGui::GetFont()); 
-        //ImGui::PushFont(customFont);
+        //ImGui::PushFont(ImGui::GetFont()->Scale > 1.2f ? ImGui::GetFont() : ImGui::GetFont()); 
+        ImGui::PushFont(sceneManager->customFont);
         ImGui::TextWrapped(currentDialogue.dialogueText);
         ImGui::PopFont();
 
@@ -151,12 +153,14 @@ public:
         }
         ImGui::SetCursorPosX(dialogueWidth - 400);
         ImGui::SetCursorPosY(160);// Position button to the right
+        if (currentDialogue.isFromPickableItem) {
+            if (ImGui::Button("Take item")) {
 
-        if (ImGui::Button("Take item")) {
+                currentDialogue.onItemTaken();
 
-            currentDialogue.onItemTaken();
-           
+            }
         }
+      
 
         ImGui::End();
         ImGui::PopStyleVar();

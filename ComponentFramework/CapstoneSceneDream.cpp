@@ -16,7 +16,6 @@
 #include "TriggerComponent.h"
 #include <random>
 #include <sstream>
-
 #include "SkyBox.h"
 #include <string>
 using namespace MATH;
@@ -40,7 +39,6 @@ bool CapstoneSceneDream::OnCreate() {
 	dialogueSystem = std::make_shared<DialogueSystem>();
 	audioManager = std::make_shared<AudioManager>();
 	dialogueSystem->SetAudioManager(audioManager);
-
 
 	//Shaders used in the scene
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("TextureShader");
@@ -91,33 +89,44 @@ bool CapstoneSceneDream::OnCreate() {
 	AddTransparentActor(player);
 
 
-	mermaid = std::make_shared<InteractableActor>(assetManager, Vec3(0.0f, 0.0f, 0.0f), 1.5f, Vec3(0.5f, 0.5f, 0.5f), assetManager->GetComponent<MaterialComponent>("Mermaid"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
-	mermaid->NPCid = 1;
-	mermaid->Bind([this]() {
-		int index = mermaid->NPCid;
-	/*	inventoryButtonPressed = !inventoryButtonPressed;*/
-		if (index >= 0 && index < dialogueSequences.size()) {
-			dialogueSystem->ClearDialogues();
+	//mermaid = std::make_shared<InteractableActor>(assetManager, Vec3(0.0f, 0.0f, 0.0f), 1.5f, Vec3(0.5f, 0.5f, 0.5f), assetManager->GetComponent<MaterialComponent>("Mermaid"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
+	//mermaid->NPCid = 1;
+	//mermaid->Bind([this]() {
+	//	int index = mermaid->NPCid;
+	///*	inventoryButtonPressed = !inventoryButtonPressed;*/
+	//	if (index >= 0 && index < dialogueSequences.size()) {
+	//		dialogueSystem->ClearDialogues();
 
-			for (const auto& dialogue : dialogueSequences[index]) {
-				dialogueSystem->AddDialogueToSequence(dialogue);
-			}
+	//		for (const auto& dialogue : dialogueSequences[index]) {
+	//			dialogueSystem->AddDialogueToSequence(dialogue);
+	//		}
 
-			dialogueSystem->OpenDialogue(0);
-		}
-		std::cout << "Interacted with mermaid";
-		});
-	mermaid->AddComponent<CollisionComponent>(nullptr, 0.5f);
-	triggerSystem.AddActor(mermaid);
-	AddTransparentActor(mermaid);
+	//		dialogueSystem->OpenDialogue(0);
+	//	}
+	//	std::cout << "Interacted with mermaid";
+	//	});
+	//mermaid->AddComponent<CollisionComponent>(nullptr, 0.5f);
+	//triggerSystem.AddActor(mermaid);
+	//AddTransparentActor(mermaid);
 
 
-	mrOwl = std::make_shared<InteractableActor>(assetManager, Vec3(11.0f, -0.2f, 1.0f), 1.5f, Vec3(0.2f, 0.2f, 0.2f), assetManager->GetComponent<MaterialComponent>("Owl"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
+	mrOwl = std::make_shared<InteractableActor>(assetManager, Vec3(0.0f, 0.0f, 0.0f), 0.8f, Vec3(0.2f, 0.2f, 0.2f), assetManager->GetComponent<MaterialComponent>("Owl"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
 	mrOwl->NPCid = 2;
 	mrOwl->Bind([this]() {
-	/*	inventoryButtonPressed = !inventoryButtonPressed;*/
+		///Check if the quest actually exists in the quest manager
+		if (sceneMan->questManager->quests.find(0) != sceneMan->questManager->quests.end()) {
 
-		std::cout << "Interacted with owl";
+			/// If the quest has not started
+			if (sceneMan->questManager->quests[0].state == QuestState::NotStarted) {
+				std::cout << "Find my bear pls\n";
+				sceneMan->questManager->quests[0].state = QuestState::InProgress;
+			}
+
+			/// If the quest has been completed
+			if (sceneMan->questManager->quests[0].state == QuestState::Completed) {
+				std::cout << "Thanks for the bear";
+			}
+		}
 		});
 	mrOwl->AddComponent<CollisionComponent>(nullptr, 0.5f);
 	triggerSystem.AddActor(mrOwl);
@@ -166,7 +175,7 @@ bool CapstoneSceneDream::OnCreate() {
 
 
 	CreateLevelLayout();
-
+	UpdateLevelQuests();
 	
 
 	camera = std::make_shared<CameraActor>(player.get());
@@ -264,7 +273,6 @@ void CapstoneSceneDream::OnDestroy() {
 }
 
 void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
-
 	static int objID = -1;
 	static Vec2 currentMousePos;
 	static Vec2	lastMousePos;
@@ -313,38 +321,38 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 			PendItemToInventory(interactionManager->GetCurrentInteraction());
 			break;
 		case SDL_SCANCODE_1:
-			if (inventoryButtonPressed) {
+			if (!inventoryButtonPressed) {
 				std::shared_ptr<ItemInteractable> itemInteraction = std::dynamic_pointer_cast<ItemInteractable>(interactionManager->GetCurrentInteraction());
 				if (itemInteraction != nullptr) {
-					itemInteraction->TryItem(inventory->items[0]);
+					itemInteraction->TryItem(sceneMan->inventory.items[0]);
 					break;
 				}
 
-				AddItemToInventory(inventory->pendingItem, 0);
+				AddItemToInventory(sceneMan->inventory.pendingItem, 0);
 			}
 			break;
 
 		case SDL_SCANCODE_2:
-			if (inventoryButtonPressed) {
+			if (!inventoryButtonPressed) {
 				std::shared_ptr<ItemInteractable> itemInteraction = std::dynamic_pointer_cast<ItemInteractable>(interactionManager->GetCurrentInteraction());
 				if (itemInteraction != nullptr) {
-					itemInteraction->TryItem(inventory->items[1]);
+					itemInteraction->TryItem(sceneMan->inventory.items[1]);
 					break;
 				}
 
-				AddItemToInventory(inventory->pendingItem, 1);
+				AddItemToInventory(sceneMan->inventory.pendingItem, 1);
 			}
 			break;
 
 		case SDL_SCANCODE_3:
-			if (inventoryButtonPressed) {
+			if (!inventoryButtonPressed) {
 				std::shared_ptr<ItemInteractable> itemInteraction = std::dynamic_pointer_cast<ItemInteractable>(interactionManager->GetCurrentInteraction());
 				if (itemInteraction != nullptr) {
-					itemInteraction->TryItem(inventory->items[2]);
+					itemInteraction->TryItem(sceneMan->inventory.items[2]);
 					break;
 				}
 
-				AddItemToInventory(inventory->pendingItem, 2);
+				AddItemToInventory(sceneMan->inventory.pendingItem, 2);
 			}
 			break;
 
@@ -872,8 +880,6 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	DrawUI_imgui();
 	dialogueSystem->Render();
 
-
-
 	PlayerGroundCheck();
 	iTime += deltaTime;
 	interactionManager->Reset();
@@ -888,7 +894,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 
 	Ref<PhysicsComponent> playerPhysics = player->GetComponent<PhysicsComponent>();
 	//Reset the player when below a specific Y value
-	if (playerPhysics->GetPosition().y < -1000) {
+	if (playerPhysics->GetPosition().y < -900.0f) {
 		playerPhysics->SetVel(Vec3());
 		playerPhysics->SetPosition(Vec3());
 		playerPhysics->useGravity = false;
@@ -976,7 +982,6 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	triggerSystem.Update(deltaTime);
 }
 
-
 void CapstoneSceneDream::InitializeDialogue()
 {
 	dialogueSequences.resize(2);
@@ -1050,22 +1055,22 @@ void CapstoneSceneDream::Render() const {
 		Matrix4 cameraWorldMatrix = camera->orient; // This is the camera's world transform
 		Vec3 cameraPosition = Vec3(cameraWorldMatrix[12], cameraWorldMatrix[13], cameraWorldMatrix[14]);
 
-		glUseProgram(Ocean->GetComponent<ShaderComponent>()->GetProgram());
+		//glUseProgram(Ocean->GetComponent<ShaderComponent>()->GetProgram());
 
-		glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, Ocean->GetModelMatrix());
-		glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, MMath::inverse(camera->orient));
-		glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
-		glUniform3fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("cameraPos"), 1, cameraPosition);
-		glUniform1f(Ocean->GetComponent<ShaderComponent>()->GetUniformID("time"), currentTime);
+		//glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("modelMatrix"), 1, GL_FALSE, Ocean->GetModelMatrix());
+		//glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("viewMatrix"), 1, GL_FALSE, MMath::inverse(camera->orient));
+		//glUniformMatrix4fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
+		//glUniform3fv(Ocean->GetComponent<ShaderComponent>()->GetUniformID("cameraPos"), 1, cameraPosition);
+		//glUniform1f(Ocean->GetComponent<ShaderComponent>()->GetUniformID("time"), currentTime);
 
-		// Bind the texture and assign to sampler2D
-		if (Ocean->GetComponent<MaterialComponent>()) {
-			glActiveTexture(GL_TEXTURE0); // Select texture unit 0
-			glBindTexture(GL_TEXTURE_2D, Ocean->GetComponent<MaterialComponent>()->getTextureID()); // Bind water normal map
-			glUniform1i(Ocean->GetComponent<ShaderComponent>()->GetUniformID("waterNormalMap"), 0); // Set uniform sampler to use texture unit 0
+		//// Bind the texture and assign to sampler2D
+		//if (Ocean->GetComponent<MaterialComponent>()) {
+		//	glActiveTexture(GL_TEXTURE0); // Select texture unit 0
+		//	glBindTexture(GL_TEXTURE_2D, Ocean->GetComponent<MaterialComponent>()->getTextureID()); // Bind water normal map
+		//	glUniform1i(Ocean->GetComponent<ShaderComponent>()->GetUniformID("waterNormalMap"), 0); // Set uniform sampler to use texture unit 0
 
-			Ocean->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
-		}
+		//	Ocean->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
+		//}
 
 
 
@@ -1453,6 +1458,7 @@ void CapstoneSceneDream::DebugUI() const {
 	ImGui::Text("Player Grounded: %s", (playerIsGrounded) ? "True" : "False");
 	ImGui::Text("Player Underwater: %s", (underwater) ? "True" : "False");
 
+	//Printing the player's force, accel, and vel
 	Vec3 playerForce = player->GetComponent<PhysicsComponent>()->GetForce();
 	ImGui::Text("Player Force: (%.3f, %.3f, %.3f)", playerForce.x, playerForce.y, playerForce.z);
 
@@ -1468,6 +1474,27 @@ void CapstoneSceneDream::DebugUI() const {
 
 	ImGui::Text("Ray Origin: (%.3f, %.3f, %.3f)", rayOrigin.x, rayOrigin.y, rayOrigin.z);
 	ImGui::Text("Ray End   : (%.3f, %.3f, %.3f)", rayEnd.x, rayEnd.y, rayEnd.z);
+
+	//Printing all the quests
+	ImGui::SeparatorText("Quests");
+	for (auto quest : sceneMan->questManager->quests) {
+		std::string questStatus = "";
+		switch (quest.second.state) {
+		case QuestState::NotStarted:
+			questStatus = "Not Started";
+			break;
+		case QuestState::InProgress:
+			questStatus = "In Progress";
+			break;
+
+		case QuestState::Completed:
+			questStatus = "Completed";
+			break;
+		}
+
+		ImGui::Text("%s: %s", quest.second.name.c_str(), questStatus.c_str());
+	}
+
 
 	ImGui::SeparatorText("CollidedActors");
 	ImGui::Text("%s", rayCollidedActors.c_str());
@@ -1498,6 +1525,23 @@ void CapstoneSceneDream::DebugUI() const {
 	ImGui::PopStyleVar();
 }
 
+void CapstoneSceneDream::UpdateLevelQuests() {
+	/// Mr owl's quest
+	if (sceneMan->questManager->quests.find(0) != sceneMan->questManager->quests.end()) {
+		if (sceneMan->questManager->quests[0].state == QuestState::InProgress) {
+			Ref<ItemInteractable> mrOwl = std::make_shared<ItemInteractable>(assetManager, "Item1", Vec3(0.0f, 0.0f, 0.0f), 1.5f);
+			mrOwl->BindToOnCorrect([this, mrOwl]() {
+				sceneMan->questManager->quests[0].state = QuestState::Completed;
+				triggerSystem.RemoveActor(mrOwl);
+				});
+			mrOwl->BindToOnReject([this]() {
+				std::cout << "This is the wrong item\n";
+				});
+			triggerSystem.AddActor(mrOwl);
+		}
+	}
+}
+
 void CapstoneSceneDream::PendItemToInventory(std::shared_ptr<Actor> other)
 {
 	Ref<PickableItem> item;
@@ -1508,22 +1552,21 @@ void CapstoneSceneDream::PendItemToInventory(std::shared_ptr<Actor> other)
 		//But removing it from the triggerSystem array should do the trick (hopefully)
 		//for(int i = 0; i < inventory->inventorySize; i++){}
 
-		inventory->pendingItem = nullptr;
-		inventory->pendingItem = item;
+		sceneMan->inventory.pendingItem = nullptr;
+		sceneMan->inventory.pendingItem = item;
 	}
 }
-
 
 void CapstoneSceneDream::AddItemToInventory(std::shared_ptr<Actor> other, int index) {
 	//Check if it's a pickable item
 	if (std::dynamic_pointer_cast<PickableItem>(other) != nullptr) {
 		//Drops the item
-		if (inventory->items[index] != nullptr) {
+		if (sceneMan->inventory.items[index] != nullptr) {
 			DropItemFromInventory(index);
 		}
 
 		//Add the item to the inventory
-		inventory->AddItem(std::dynamic_pointer_cast<PickableItem>(other), index);
+		sceneMan->inventory.AddItem(std::dynamic_pointer_cast<PickableItem>(other), index);
 
 		//Remove the item from the triggerSystem
 		int index = 0;
@@ -1547,16 +1590,14 @@ void CapstoneSceneDream::AddItemToInventory(std::shared_ptr<Actor> other, int in
 	}
 }
 
-
 void CapstoneSceneDream::DropItemFromInventory(int index) {
 	//Add the object back into the actor vectors
-	transparentActors.push_back(inventory->items[index]);
-	triggerSystem.AddActor(inventory->items[index]);
+	transparentActors.push_back(sceneMan->inventory.items[index]);
+	triggerSystem.AddActor(sceneMan->inventory.items[index]);
 
 	//Remove the item from the inventory
-	inventory->RemoveItem(index);
+	sceneMan->inventory.RemoveItem(index);
 }
-
 
 void CapstoneSceneDream::PlayerTriggerCallback(Ref<Actor> other) {
 	//Check if it's an item

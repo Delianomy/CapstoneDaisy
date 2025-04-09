@@ -35,7 +35,19 @@ public:
 	bool SphereAABBCollisionDetection(const Sphere& s, const AABB& aabb) const;
 	
 	void Update(const float deltaTime);
+	void RemoveActor(Ref<Actor> actor_) {
+		int index = 0;
+		bool found = false;
+		for (auto actor : triggeringActors) {
+			if (actor == actor_) {
+				found = true;
+				break;
+			}
+			index++;
+		}
 
+		if (found) { triggeringActors.erase(triggeringActors.begin() + index); }
+	}
 
 };
 

@@ -53,6 +53,7 @@ bool SceneManager::Initialize(std::string name_, int width_, int height_) {
 	}
 
 	questManager = new QuestManager();
+	CreateQuests();
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -131,8 +132,6 @@ void SceneManager::HandleEvents() {
 	}
 }
 
-
-
 void SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 	bool status;
 
@@ -176,14 +175,10 @@ void SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 
 void SceneManager::CreateQuests()
 {
-	currentQuest = Quest(0, "Bring The Bear", QuestState::NotStarted);
-	questManager->AddQuest(currentQuest);
-
-	currentQuest = Quest(1, "Talk to Fairy", QuestState::NotStarted);
-	questManager->AddQuest(currentQuest);
-
-	currentQuest = Quest(1, "Bring the enchanted teddy", QuestState::NotStarted);
-	questManager->AddQuest(currentQuest);
+	/// Start quest by talking to owl
+	questManager->AddQuest(Quest(0, "Bring The Bear", QuestState::NotStarted));
+	questManager->AddQuest(Quest(1, "Talk to Fairy", QuestState::NotStarted));
+	questManager->AddQuest(Quest(2, "Bring the enchanted teddy", QuestState::NotStarted));
 }
 
 void SceneManager::AddItemToInventory(std::shared_ptr<Actor> other, int index)
@@ -227,7 +222,6 @@ void SceneManager::DropItemFromInventory(int index) {
 	//Remove the item from the inventory
 	inventory.RemoveItem(index);
 }
-
 
 Vec2 SceneManager::WorldToScreenCoordinates(Vec3 coords, CameraActor* camera){
 	Vec4 screenPos = camera->GetProjectionMatrix() * camera->GetViewMatrix() * Vec4(coords, 1.0f);

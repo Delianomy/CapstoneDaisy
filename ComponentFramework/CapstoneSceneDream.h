@@ -109,9 +109,6 @@ class CapstoneSceneDream : public Scene
 	bool select_item_2 = false;
 	bool select_item_3 = false;
 
-	//Inventory system
-	Inventory* inventory;
-
 	//Debug Meshes
 	Ref<Actor> DebugSphere;
 	Ref<Actor> DebugCube;
@@ -176,8 +173,12 @@ public:
 	void RenderColliders() const;
 	void CreateDebugMeshes();
 	void DebugUI() const;
-	void OnEnterOcean(Ref<Actor> other) { underwater = true; }
-
+	void OnEnterOcean(Ref<Actor> other) { if(other->tag == PLAYER) underwater = true; }
+	/// <summary>
+	/// Updates the level's objects based on quests that are completed or not
+	/// Called on the OnCreate when you reload the scene
+	/// </summary>
+	void UpdateLevelQuests(); 
 
 	void PendItemToInventory(std::shared_ptr<Actor> other);
 	void AddItemToInventory(std::shared_ptr<Actor> other, int index);

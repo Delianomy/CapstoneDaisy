@@ -11,9 +11,7 @@ class CameraActor;
 enum class QuestState { NotStarted, InProgress, Completed };
 
 struct Quest {
-	Quest() {
-	
-	};
+	Quest() {}
 	Quest(int id_, std::string name_, QuestState state_) {
 		id = id_;
 		name = name_;

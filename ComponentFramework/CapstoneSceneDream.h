@@ -96,7 +96,7 @@ class CapstoneSceneDream : public Scene
 	float walkSpeed = 10.0f;
 	float jumpSpeed = 200.0f;
 	float groudAccel = 20.0f;
-	float airAccel = 3.0f;
+	float airAccel = 2.0f;
 	float swimSpeed = 5.0f;
 	bool playerIsGrounded = false;
 	Ray groundCheckRay = Ray(Vec3(), Vec3());

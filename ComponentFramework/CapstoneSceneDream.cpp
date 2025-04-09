@@ -869,9 +869,12 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	DrawUI_imgui();
 	dialogueSystem->Render();
 
+
+
 	PlayerGroundCheck();
 	iTime += deltaTime;
 	interactionManager->Reset();
+
 	//change in angle 
 	if (rotatePlayerLeft) {
 		playerAngle -= 0.4f;
@@ -881,6 +884,14 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	}
 
 	Ref<PhysicsComponent> playerPhysics = player->GetComponent<PhysicsComponent>();
+	//Reset the player when below a specific Y value
+	if (playerPhysics->GetPosition().y < -1000) {
+		playerPhysics->SetVel(Vec3());
+		playerPhysics->SetPosition(Vec3());
+		playerPhysics->useGravity = false;
+		anyInputPressed = false;
+
+	}
 
 	//Update players rotation 
 	if (rotatePlayerLeft || rotatePlayerRight) {

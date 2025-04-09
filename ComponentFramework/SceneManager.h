@@ -7,6 +7,60 @@
 
 class CameraActor;
 
+
+enum class QuestState { NotStarted, InProgress, Completed };
+
+struct Quest {
+	Quest() {
+	
+	};
+	Quest(int id_, std::string name_, QuestState state_) {
+		id = id_;
+		name = name_;
+		state = state_;
+	};
+	int id;
+	std::string name;
+	QuestState state = QuestState::NotStarted;
+
+	// Optional callbacks
+	std::function<void()> OnStart;
+	std::function<void()> OnComplete;
+};
+
+
+class QuestManager {
+	
+
+public:
+	std::unordered_map<int, Quest> quests;
+	void AddQuest(const Quest& quest) {
+		quests[quest.id] = quest;
+	}
+
+	void StartQuest(int id) {
+		if (quests[id].state == QuestState::NotStarted) {
+			quests[id].state = QuestState::InProgress;
+			if (quests[id].OnStart) quests[id].OnStart();
+		}
+	}
+
+	void CompleteQuest(int id) {
+		if (quests[id].state == QuestState::InProgress) {
+			quests[id].state = QuestState::Completed;
+			if (quests[id].OnComplete) quests[id].OnComplete();
+		}
+	}
+
+	QuestState GetState(int id) {
+		return quests[id].state;
+	}
+
+	bool IsActive(int id) {
+		return quests[id].state == QuestState::InProgress;
+	}
+};
+
 class SceneManager  {
 public:
 	Inventory inventory;
@@ -44,6 +98,9 @@ private:
 	bool fullScreen;
 	void BuildNewScene(SCENE_NUMBER scene_);
 public:
+	QuestManager* questManager;
+	Quest currentQuest;
+	void CreateQuests();
 	int getWindowHeight() { return window->getHeight(); };
 	int getWindowWidth() { return window->getWidth(); };
 	void AddItemToInventory(std::shared_ptr<Actor> other, int index);

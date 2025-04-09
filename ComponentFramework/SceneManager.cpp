@@ -9,51 +9,6 @@
 #include "ShaderTestScene.h"
 #include "MainMenu.h"
 
-enum class QuestState { NotStarted, InProgress, Completed };
-
-struct Quest {
-	std::string id;
-	std::string name;
-	QuestState state = QuestState::NotStarted;
-
-	// Optional callbacks
-	std::function<void()> OnStart;
-	std::function<void()> OnComplete;
-};
-
-
-class QuestManager {
-	std::unordered_map<std::string, Quest> quests;
-
-public:
-	void AddQuest(const Quest& quest) {
-		quests[quest.id] = quest;
-	}
-
-	void StartQuest(const std::string& id) {
-		if (quests[id].state == QuestState::NotStarted) {
-			quests[id].state = QuestState::InProgress;
-			if (quests[id].OnStart) quests[id].OnStart();
-		}
-	}
-
-	void CompleteQuest(const std::string& id) {
-		if (quests[id].state == QuestState::InProgress) {
-			quests[id].state = QuestState::Completed;
-			if (quests[id].OnComplete) quests[id].OnComplete();
-		}
-	}
-
-	QuestState GetState(const std::string& id) {
-		return quests[id].state;
-	}
-
-	bool IsActive(const std::string& id) {
-		return quests[id].state == QuestState::InProgress;
-	}
-};
-
-
 
 SceneManager::SceneManager():
 	currentScene(nullptr), window(nullptr), timer(nullptr),
@@ -96,6 +51,8 @@ bool SceneManager::Initialize(std::string name_, int width_, int height_) {
 		Debug::FatalError("Failed to initialize Timer object", __FILE__, __LINE__);
 		return false;
 	}
+
+	questManager = new QuestManager();
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -215,6 +172,18 @@ void SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 		currentScene = nullptr;
 		break;
 	}
+}
+
+void SceneManager::CreateQuests()
+{
+	currentQuest = Quest(0, "Bring The Bear", QuestState::NotStarted);
+	questManager->AddQuest(currentQuest);
+
+	currentQuest = Quest(1, "Talk to Fairy", QuestState::NotStarted);
+	questManager->AddQuest(currentQuest);
+
+	currentQuest = Quest(1, "Bring the enchanted teddy", QuestState::NotStarted);
+	questManager->AddQuest(currentQuest);
 }
 
 void SceneManager::AddItemToInventory(std::shared_ptr<Actor> other, int index)

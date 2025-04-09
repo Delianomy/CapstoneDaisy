@@ -194,6 +194,7 @@ public:
 		int yIndex = anim.row;
 		return Vec2(static_cast<float>(xIndex), static_cast<float>(yIndex));
 	}
+	
 };
 
 #endif // CAPSTONESCENE_DREAM_H

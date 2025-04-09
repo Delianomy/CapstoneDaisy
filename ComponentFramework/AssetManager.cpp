@@ -119,6 +119,10 @@ AssetManager::AssetManager() {
 	AddComponent<MaterialComponent>("Player_smile", nullptr, "textures/UI_elements/pfps/player_4.png");
 
 
+	AddComponent<MaterialComponent>("Owl_1", nullptr, "textures/UI_elements/pfps/mrOwl_1.png");
+	AddComponent<MaterialComponent>("Owl_2", nullptr, "textures/UI_elements/pfps/mrOwl_2.png");
+
+
 
 	
 	//Pickable objects ROOM

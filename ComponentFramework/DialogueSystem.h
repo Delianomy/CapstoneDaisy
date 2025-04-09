@@ -141,10 +141,12 @@ public:
             }
             if (currentDialogueIndex < dialogues.size() - 1) {
                 currentDialogueIndex++;
+                std::cout << "Moving to next dialogue: " << currentDialogueIndex << std::endl;
             }
             else {
-                 isDialogueOpen = false;
-                 ClearDialogues();
+                std::cout << "Closing dialogue" << std::endl;
+                isDialogueOpen = false;
+                // Don't call ClearDialogues() here
             }
         }
         ImGui::SetCursorPosX(dialogueWidth - 200);
@@ -161,8 +163,10 @@ public:
         ImGui::PopStyleColor();
         if (wasDialogueOpen && !isDialogueOpen && audioManager) {
             std::cout << "Playing closing sound..." << std::endl;
+            ClearDialogues();
             audioManager->Play(4, 1.0f);
         }
+     
     }
 
 

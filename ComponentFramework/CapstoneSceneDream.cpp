@@ -116,9 +116,20 @@ bool CapstoneSceneDream::OnCreate() {
 		///Check if the quest actually exists in the quest manager
 		if (sceneMan->questManager->quests.find(0) != sceneMan->questManager->quests.end()) {
 
+
 			/// If the quest has not started
 			if (sceneMan->questManager->quests[0].state == QuestState::NotStarted) {
-				std::cout << "Find my bear pls\n";
+				if (2 < dialogueSequences.size()) {
+					// Clear any existing dialogues
+					dialogueSystem->ClearDialogues();
+
+					// Add the dialogues for this object
+					for (const auto& dialogue : dialogueSequences[2]) {
+						dialogueSystem->AddDialogueToSequence(dialogue);
+					}
+
+					dialogueSystem->OpenDialogue(0);
+				}
 				sceneMan->questManager->quests[0].state = QuestState::InProgress;
 			}
 
@@ -203,6 +214,8 @@ bool CapstoneSceneDream::OnCreate() {
 
 	audioManager->Play(7, 0.04f);
 
+	
+
 	////FrameBuffer
 	//glGenFramebuffers(1, &frameBuffer);
 	//glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
@@ -283,7 +296,9 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 	Vec3 cameraNewPos;
 	Ref<InteractableActor> currentInteraction;
 	/// Handle Camera movement 
+	ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
 	switch (sdlEvent.type) {
+		
 	case SDL_KEYDOWN:
 		if (!anyInputPressed) {
 			player->GetComponent<PhysicsComponent>()->useGravity = true;
@@ -434,12 +449,12 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 		if (ImGui::GetIO().WantCaptureMouse) break;
 
 		if (sdlEvent.button.button == (SDL_BUTTON_RIGHT)) {
-			rotatePlayerRight = true;
+		/*	rotatePlayerRight = true;*/
 			break;
 		}
 		if (sdlEvent.button.button == (SDL_BUTTON_LEFT)) {
-			rotatePlayerLeft = true;
-
+			//rotatePlayerLeft = true;
+			
 			break;
 		}
 		break;
@@ -448,11 +463,11 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 	{
 
 		if (sdlEvent.button.button == (SDL_BUTTON_RIGHT)) {
-			rotatePlayerRight = false;
+			/*rotatePlayerRight = false;*/
 			break;
 		}
 		if (sdlEvent.button.button == (SDL_BUTTON_LEFT)) {
-			rotatePlayerLeft = false;
+			/*rotatePlayerLeft = false;*/
 			break;
 		}
 		break;
@@ -471,7 +486,7 @@ void CapstoneSceneDream::HandleEvents(const SDL_Event& sdlEvent) {
 		break;
 	}
 
-	ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
+
 	}
 }
 
@@ -987,11 +1002,15 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 
 void CapstoneSceneDream::InitializeDialogue()
 {
-	dialogueSequences.resize(2);
-	unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
-	Dialogue mermaid_d1("Mermaid", "Have you found something from the sea?", textureID);
-	dialogueSequences[1].push_back(mermaid_d1);
+	dialogueSequences.resize(3);
+	unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Owl_2")->getTextureID();
+	Dialogue owl_d1("Owl", "Who who who are you?", textureID);
+	dialogueSequences[2].push_back(owl_d1);
+	textureID = assetManager->GetComponent<MaterialComponent>("Owl_1")->getTextureID();
+	Dialogue owl_d2("Owl", "Ah its you Daisy?", textureID);
+	dialogueSequences[2].push_back(owl_d2);
 }
+
 
 void CapstoneSceneDream::Render() const {
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
@@ -1113,9 +1132,9 @@ void CapstoneSceneDream::Render() const {
 	//glDrawArrays(GL_TRIANGLES, 0, 3);
 	//glBindVertexArray(0);
 
+		ImGui::Render();
 
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 }
 

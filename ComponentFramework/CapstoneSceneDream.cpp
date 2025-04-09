@@ -135,7 +135,8 @@ bool CapstoneSceneDream::OnCreate() {
 
 			/// If the quest has been completed
 			if (sceneMan->questManager->quests[0].state == QuestState::Completed) {
-				std::cout << "Thanks for the bear";
+				/// If the quest has not started
+				
 			}
 		}
 		});
@@ -143,6 +144,62 @@ bool CapstoneSceneDream::OnCreate() {
 	triggerSystem.AddActor(mrOwl);
 	AddTransparentActor(mrOwl);
 
+
+
+	fairy = std::make_shared<InteractableActor>(assetManager, Vec3(2.0f, -0.5f, 0.0f), 1.0f, Vec3(0.1f, 0.1f, 0.1f), assetManager->GetComponent<MaterialComponent>("Fairy"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
+	fairy->NPCid = 4;
+	fairy->Bind([this]() {
+		/*	inventoryButtonPressed = !inventoryButtonPressed;*/
+
+		/// If the quest has not started
+		if (sceneMan->questManager->quests.find(1) != sceneMan->questManager->quests.end()) {
+			if (sceneMan->questManager->quests[1].state == QuestState::NotStarted && sceneMan->questManager->quests[0].state == QuestState::InProgress) {
+				std::cout << "Are we still here?" << std::endl;
+
+				if (4 < dialogueSequences.size()) {
+					// Clear any existing dialogues
+					dialogueSystem->ClearDialogues();
+
+					// Add the dialogues for this object
+					for (const auto& dialogue : dialogueSequences[4]) {
+						dialogueSystem->AddDialogueToSequence(dialogue);
+					}
+
+					dialogueSystem->OpenDialogue(0);
+				}
+			}
+
+			if (sceneMan->questManager->quests[1].state == QuestState::NotStarted && sceneMan->questManager->quests[0].state == QuestState::Completed) {
+				std::cout << "Or here??" << std::endl;
+				if (5 < dialogueSequences.size()) {
+					// Clear any existing dialogues
+					dialogueSystem->ClearDialogues();
+
+					// Add the dialogues for this object
+					for (const auto& dialogue : dialogueSequences[5]) {
+						dialogueSystem->AddDialogueToSequence(dialogue);
+					}
+
+
+					dialogueSystem->OpenDialogue(0);
+				}	
+				sceneMan->questManager->quests[1].state = QuestState::InProgress;
+			}
+
+		}
+		/// If the quest has been completed
+		if (sceneMan->questManager->quests[1].state == QuestState::Completed) {
+			/// If the quest has not started
+
+		}
+		
+		//sceneMan->questManager->quests[0].state = QuestState::InProgress;
+
+
+		});
+	fairy->AddComponent<CollisionComponent>(nullptr, 0.5f);
+	triggerSystem.AddActor(fairy);
+	AddTransparentActor(fairy);
 
 
 
@@ -170,31 +227,6 @@ bool CapstoneSceneDream::OnCreate() {
 
 
 
-
-	fairy = std::make_shared<InteractableActor>(assetManager, Vec3(2.0f, 0.0f, 0.0f), 1.0f, Vec3(0.1f, 0.1f, 0.1f), assetManager->GetComponent<MaterialComponent>("Fairy"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
-	fairy->NPCid = 4;
-	fairy->Bind([this]() {
-		/*	inventoryButtonPressed = !inventoryButtonPressed;*/
-
-		/// If the quest has not started
-	
-			if (4 < dialogueSequences.size()) {
-				// Clear any existing dialogues
-				dialogueSystem->ClearDialogues();
-
-				// Add the dialogues for this object
-				for (const auto& dialogue : dialogueSequences[4]) {
-					dialogueSystem->AddDialogueToSequence(dialogue);
-				}
-
-				dialogueSystem->OpenDialogue(0);
-			}
-			//sceneMan->questManager->quests[0].state = QuestState::InProgress;
-		
-		});
-	fairy->AddComponent<CollisionComponent>(nullptr, 0.5f);
-	triggerSystem.AddActor(fairy);
-	AddTransparentActor(fairy);
 
 
 
@@ -959,8 +991,31 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 
 void CapstoneSceneDream::InitializeDialogue()
 {
-	dialogueSequences.resize(6);
-	unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Owl_2")->getTextureID();
+	dialogueSequences.resize(10);
+
+	unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Owl_1")->getTextureID();
+	Dialogue owl_d14("Mr. Owl", "Aw what is it? So cute", textureID);
+	dialogueSequences[1].push_back(owl_d14);
+
+	textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
+	Dialogue owl_d15("Daisy", "A gift for you to feel less lonely once I leave to the ball.", textureID);
+	dialogueSequences[1].push_back(owl_d15);
+
+	textureID = assetManager->GetComponent<MaterialComponent>("Owl_2")->getTextureID();
+	Dialogue owl_d16("Mr. Owl", "Daisy, this teddy bear is very cute. But it would never substitude you.", textureID);
+	dialogueSequences[1].push_back(owl_d16);
+
+	textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
+	Dialogue owl_d17("Daisy (thoughts)", "/I need to find someone to help me with that bear. Maybe... someone with magic powers?/", textureID);
+	dialogueSequences[1].push_back(owl_d17);
+
+	textureID = assetManager->GetComponent<MaterialComponent>("quest")->getTextureID();
+	Dialogue owl_d18("New Quest", "Talk to someone with magic to help you.", textureID);
+	dialogueSequences[1].push_back(owl_d18);
+
+
+
+	textureID = assetManager->GetComponent<MaterialComponent>("Owl_2")->getTextureID();
 	Dialogue owl_d1("Mr. Owl", "Who who who are you?", textureID);
 	dialogueSequences[2].push_back(owl_d1);
 
@@ -993,7 +1048,7 @@ void CapstoneSceneDream::InitializeDialogue()
 	dialogueSequences[2].push_back(owl_d8);
 
 	textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
-	Dialogue owl_d9("Daisy (thoughs)", "/Hmm... mayebe if i bring something that could make Mr. Owl happy he will help me?/" , textureID);
+	Dialogue owl_d9("Daisy (thoughts)", "/Hmm... maybe if I bring something that could make Mr. Owl happy he will help me?/" , textureID);
 	dialogueSequences[2].push_back(owl_d9);
 
 	textureID = assetManager->GetComponent<MaterialComponent>("quest")->getTextureID();
@@ -1001,18 +1056,37 @@ void CapstoneSceneDream::InitializeDialogue()
 	dialogueSequences[2].push_back(owl_d10);
 
 
+	//FAIRY
+
 	textureID = assetManager->GetComponent<MaterialComponent>("Fairy_1")->getTextureID();
-	Dialogue owl_d11("Little fairy", "What are you looking at?", textureID);
-	dialogueSequences[4].push_back(owl_d11);
+	Dialogue fairy_d1("Little fairy", "What are you looking at?", textureID);
+	dialogueSequences[4].push_back(fairy_d1);
+
+	textureID = assetManager->GetComponent<MaterialComponent>("Fairy_1")->getTextureID();
+	Dialogue fairy_d2("Little fairy", "Sigh I'm bored... ", textureID);
+	dialogueSequences[4].push_back(fairy_d2);
+
+	textureID = assetManager->GetComponent<MaterialComponent>("Fairy_1")->getTextureID();
+	Dialogue fairy_d3("Little fairy", "Leave already will ya? ", textureID);
+	dialogueSequences[4].push_back(fairy_d3);
+
+
 
 
 	textureID = assetManager->GetComponent<MaterialComponent>("Fairy_1")->getTextureID();
-	Dialogue owl_d12("Little fairy", "Sigh I'm bored... ", textureID);
-	dialogueSequences[4].push_back(owl_d12);
+	Dialogue fairy_d4("Little fairy", "What now??", textureID);
+	dialogueSequences[5].push_back(fairy_d4);
+
+
+	textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
+	Dialogue fairy_d5("Daisy", "Can you help me with something? ", textureID);
+	dialogueSequences[5].push_back(fairy_d5);
 
 	textureID = assetManager->GetComponent<MaterialComponent>("Fairy_1")->getTextureID();
-	Dialogue owl_d13("Little fairy", "Leave already will ya? ", textureID);
-	dialogueSequences[4].push_back(owl_d13);
+	Dialogue fairy_d6("Little fairy", "Dont you see im NOT in the mood? ", textureID);
+	dialogueSequences[5].push_back(fairy_d6);
+
+
 }
 
 
@@ -1557,6 +1631,20 @@ void CapstoneSceneDream::UpdateLevelQuests() {
 		if (sceneMan->questManager->quests[0].state == QuestState::InProgress) {
 			Ref<ItemInteractable> mrOwl = std::make_shared<ItemInteractable>(assetManager, "Item1", Vec3(12.3f, -0.7f, 1.6f), 1.5f);
 			mrOwl->BindToOnCorrect([this, mrOwl]() {
+				std::cout << "Are you in ? ? ? " << std::endl;
+				if (1 < dialogueSequences.size()) {
+					// Clear any existing dialogues
+					dialogueSystem->ClearDialogues();
+
+					// Add the dialogues for this object
+					for (const auto& dialogue : dialogueSequences[1]) {
+						dialogueSystem->AddDialogueToSequence(dialogue);
+					}
+
+					dialogueSystem->OpenDialogue(0);
+				}
+				sceneMan->inventory.RemoveItem(0);
+
 				sceneMan->questManager->quests[0].state = QuestState::Completed;
 				triggerSystem.RemoveActor(mrOwl);
 				});
@@ -1564,6 +1652,33 @@ void CapstoneSceneDream::UpdateLevelQuests() {
 				std::cout << "This is the wrong item\n";
 				});
 			triggerSystem.AddActor(mrOwl);
+		}
+	}
+	if (sceneMan->questManager->quests.find(1) != sceneMan->questManager->quests.end()) {
+		if (sceneMan->questManager->quests[1].state == QuestState::InProgress) {
+			Ref<ItemInteractable> fairy_inter = std::make_shared<ItemInteractable>(assetManager, "Item2", Vec3(2.0f, -0.5f, 0.0f), 1.5f);
+			fairy_inter->BindToOnCorrect([this, fairy_inter]() {
+				std::cout << "Are you in ? ? ? " << std::endl;
+				if (1 < dialogueSequences.size()) {
+					// Clear any existing dialogues
+					dialogueSystem->ClearDialogues();
+
+					// Add the dialogues for this object
+					for (const auto& dialogue : dialogueSequences[2]) {
+						dialogueSystem->AddDialogueToSequence(dialogue);
+					}
+
+					dialogueSystem->OpenDialogue(0);
+				}
+				sceneMan->inventory.RemoveItem(0);
+
+				sceneMan->questManager->quests[0].state = QuestState::Completed;
+				triggerSystem.RemoveActor(fairy_inter);
+				});
+			fairy_inter->BindToOnReject([this]() {
+				std::cout << "This is the wrong item\n";
+				});
+			triggerSystem.AddActor(fairy_inter);
 		}
 	}
 }

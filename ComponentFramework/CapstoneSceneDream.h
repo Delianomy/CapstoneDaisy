@@ -17,6 +17,7 @@
 #include "InteractionManager.h"
 #include "AudioSystem.h" 
 #include "DialogueSystem.h"
+#include "Profiler.h" 
 #include <algorithm>
 using namespace MATH;
 
@@ -46,7 +47,7 @@ struct AnimationInfo {
 class CapstoneSceneDream : public Scene 
 {
 	Ref<DialogueSystem> dialogueSystem;
-	Ref<AssetManager> assetManager;
+	AssetManager* assetManager;
 	Ref<InteractionManager> interactionManager;
 	Ref<AudioManager> audioManager;
  	Ref<CameraActor> camera;

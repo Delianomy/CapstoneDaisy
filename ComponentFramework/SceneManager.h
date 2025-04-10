@@ -67,14 +67,15 @@ public:
 	ImFont* customFont;
 	
 	Inventory inventory;
-	SceneManager();
+
 	~SceneManager();
 	void Run();
 	bool Initialize(std::string name_, int width_, int height_);
 	void HandleEvents();
-	
+	SceneManager();
 	
 private:
+	
 	enum class SCENE_NUMBER {
 		SCENE0 = 0,
 		SCENE1,

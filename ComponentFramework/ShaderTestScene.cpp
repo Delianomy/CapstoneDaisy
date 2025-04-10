@@ -24,7 +24,7 @@ ShaderTestScene::ShaderTestScene() :drawNormals(false), drawOverlay(false) {
 
 bool ShaderTestScene::OnCreate() {
 	Debug::Info("Loading assets Scene SHADER TEST: ", __FILE__, __LINE__);
-	assetManager = std::make_shared<AssetManager>();
+	//assetManager = std::make_shared<AssetManager>();
 
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("TextureShader");
 	Ref<ShaderComponent> CubeShader = assetManager->GetComponent<ShaderComponent>("RefularTexture");

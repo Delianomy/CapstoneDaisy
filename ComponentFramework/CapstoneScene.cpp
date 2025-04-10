@@ -28,7 +28,7 @@ CapstoneScene::CapstoneScene() :drawNormals(false), drawOverlay(false) {
 
 bool CapstoneScene::OnCreate() {
 	Debug::Info("Loading assets Scene Dream: ", __FILE__, __LINE__);
-	assetManager = std::make_shared<AssetManager>();
+	assetManager = AssetManager::GetInstance();
 
 	defaultCursorTexture = IMG_Load("textures/UI_elements/cursor/cursor_normal.png");
 	hoveredCursorTexture = IMG_Load("textures/UI_elements/cursor//cursor_hovered.png");
@@ -73,7 +73,7 @@ bool CapstoneScene::OnCreate() {
 	bearInInventory = sceneMan->inventory.GetItemByName("Item1");
 	if(bearInInventory == nullptr){
 		bear = std::make_shared<PickableItem>(
-			assetManager,                                          // Ref<AssetManager> assMan
+			assetManager,                                          // AssetManager* assMan
 			"Item1",                                               // std::string name_
 			Vec3(-0.80f, -1.5f, 3.99f),                           // Vec3 pos // Quaternion orient
 			1.0f,                                                  // float triggerRadius

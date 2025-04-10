@@ -27,7 +27,7 @@ class SkyBox;
 #include "Scene.h"
 class SandboxAdriel : public Scene 
 {
-	Ref<AssetManager> assetManager;
+	AssetManager* assetManager;
 	Ref<CameraActor> camera;
 	Ref<LightActor> light;
 

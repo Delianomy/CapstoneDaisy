@@ -43,7 +43,7 @@ class CapstoneScene : public Scene
 
 		
 
-	Ref<AssetManager> assetManager;
+	AssetManager* assetManager;
 	Ref<CameraActor> camera;
 	Ref<LightActor> light;
 	Ref<Actor> player;

@@ -53,30 +53,10 @@ void MeshComponent::LoadModel(const char* filename) {
 
             vertices.push_back(vertex);
             normals.push_back(normal);
-            uvCoords.push_back(uvCoord);
-         
-           
+            uvCoords.push_back(uvCoord);   
         }
          std::cout << filename<< std::endl;
-
-         
-       /*  std::cout << "MAX X " << MEW::GetMaxX(vertices) << std::endl;
-         std::cout << "MAX Y " << MEW::GetMaxY(vertices) << std::endl;
-         std::cout << "MAX Z " << MEW::GetMaxZ(vertices) << std::endl;
-
-         std::cout << "MIN X " << MEW::GetMinX(vertices) << std::endl;
-         std::cout << "MIN Y " << MEW::GetMinY(vertices) << std::endl;
-         std::cout << "MIN Z " << MEW::GetMinZ(vertices) << std::endl;
-
-         maxX = MEW::GetMaxX(vertices);
-         maxY = MEW::GetMaxY(vertices);
-         maxZ = MEW::GetMaxZ(vertices);
-
-         minX = MEW::GetMinX(vertices);
-         minY = MEW::GetMinY(vertices);
-         minZ = MEW::GetMinZ(vertices);*/
     } 
- 
 }
 
 void MeshComponent::StoreMeshData(GLenum drawmode_) {

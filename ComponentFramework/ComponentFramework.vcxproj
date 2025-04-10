@@ -232,6 +232,7 @@
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="PickableItem.h" />
     <ClInclude Include="PlayerControls.h" />
+    <ClInclude Include="Profiler.h" />
     <ClInclude Include="QMath.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="resource.h" />

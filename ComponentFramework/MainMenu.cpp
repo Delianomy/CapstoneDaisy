@@ -32,7 +32,7 @@ MainMenu::MainMenu(SceneManager* scenemanager) :drawNormals(false), drawOverlay(
 
 bool MainMenu::OnCreate() {
 	Debug::Info("Loading assets Scene MAIN MENU: ", __FILE__, __LINE__);
-	assetManager = std::make_shared<AssetManager>();
+	//assetManager = std::make_shared<AssetManager>();
 
 	Ref<ShaderComponent> shader = assetManager->GetComponent<ShaderComponent>("TextureShader");
 	Ref<ShaderComponent> regularTextureShader = assetManager->GetComponent<ShaderComponent>("RefularTexture");

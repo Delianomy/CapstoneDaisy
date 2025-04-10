@@ -26,7 +26,7 @@ class DialogueSystem
     SceneManager* sceneManager;
     ImGuiIO& io = ImGui::GetIO();
 
-    Ref<AssetManager> assetMan;
+    AssetManager* assetMan;
     Ref<AudioManager> audioManager;
    
 

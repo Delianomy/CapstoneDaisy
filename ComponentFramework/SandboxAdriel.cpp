@@ -27,7 +27,7 @@ SandboxAdriel::SandboxAdriel(SceneManager* scenemanager) :drawNormals(false), dr
 
 bool SandboxAdriel::OnCreate() {
 	Debug::Info("Loading assets Scene Dream: ", __FILE__, __LINE__);
-	assetManager = std::make_shared<AssetManager>();
+	//assetManager = new AssetManager();
 	inventory = new Inventory();
 	interactionManager = new InteractionManager();
 	inventoryButtonPressed = false;

@@ -25,7 +25,7 @@ class Room;
 #include "Scene.h"
 class MainMenu : public Scene
 {
-	Ref<AssetManager> assetManager;
+	AssetManager* assetManager;
 	Ref<CameraActor> camera;
 	Ref<LightActor> light;
 	Ref<Actor> player;

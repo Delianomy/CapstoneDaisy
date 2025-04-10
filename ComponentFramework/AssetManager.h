@@ -4,13 +4,20 @@
 #include <unordered_map> 
 #include "Component.h"
 #include "Debug.h"
-
+#include "Profiler.h"
 class AssetManager {
 private:
 	std::unordered_map<const char* , Ref<Component> > componentCatalog;
+	AssetManager();
+	static AssetManager* instance;
 
 public:
-	AssetManager();
+	static AssetManager* GetInstance() {
+		if (instance == nullptr) {
+			instance = new AssetManager();
+		}
+		return instance;
+	};
 	~AssetManager();
 	bool OnCreate();
 

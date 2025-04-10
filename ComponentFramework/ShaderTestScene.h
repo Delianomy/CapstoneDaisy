@@ -20,7 +20,7 @@ class SkyBox;
 #include "Scene.h"
 class ShaderTestScene : public Scene
 {
-	Ref<AssetManager> assetManager;
+	AssetManager* assetManager;
 	Ref<CameraActor> camera;
 	Ref<LightActor> light;
 	Ref<Actor> player;

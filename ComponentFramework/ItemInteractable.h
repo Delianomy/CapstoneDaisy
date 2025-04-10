@@ -10,7 +10,7 @@ private:
 
 
 public:
-    ItemInteractable(Ref<AssetManager> assMan, std::string correctItemName, Vec3 pos, float triggerRadius = 0.5f, Vec3 scale = Vec3(0.1f, 0.1f, 0.1f), std::shared_ptr<MaterialComponent> material = nullptr, std::shared_ptr<ShaderComponent> shader =nullptr);
+    ItemInteractable(AssetManager* assMan, std::string correctItemName, Vec3 pos, float triggerRadius = 0.5f, Vec3 scale = Vec3(0.1f, 0.1f, 0.1f), std::shared_ptr<MaterialComponent> material = nullptr, std::shared_ptr<ShaderComponent> shader =nullptr);
 
     /// <summary>
     /// The name of the correct item that is accepted

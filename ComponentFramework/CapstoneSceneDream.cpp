@@ -29,7 +29,13 @@ CapstoneSceneDream::CapstoneSceneDream(SceneManager* scenemanager) :drawNormals(
 
 bool CapstoneSceneDream::OnCreate() {
 	Debug::Info("Loading assets Scene Dream: ", __FILE__, __LINE__);
-	assetManager = std::make_shared<AssetManager>();
+	{ 
+		Profiler profiler("asset manager timer");
+		assetManager = AssetManager::GetInstance();
+	
+	}
+
+
 	interactionManager = std::make_shared<InteractionManager>();
 
 	InitializeDialogue();
@@ -71,7 +77,7 @@ bool CapstoneSceneDream::OnCreate() {
 		//make an actor
 	player = std::make_shared<Actor>(nullptr);
 	player->NPCid = 0;
-	player->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -2.5f, 0.0f),/// pos
+	player->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -0.9f, 0.0f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);

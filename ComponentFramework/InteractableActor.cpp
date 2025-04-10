@@ -6,7 +6,7 @@
 #include "MeshComponent.h"
 #include "PhysicsComponent.h"
 
-InteractableActor::InteractableActor(Ref<AssetManager> assMan, Vec3 pos, float triggerRadius, Vec3 scale, std::shared_ptr<MaterialComponent> material, std::shared_ptr<ShaderComponent> shader) : Actor(nullptr) {
+InteractableActor::InteractableActor(AssetManager* assMan, Vec3 pos, float triggerRadius, Vec3 scale, std::shared_ptr<MaterialComponent> material, std::shared_ptr<ShaderComponent> shader) : Actor(nullptr) {
 	AddComponent<PhysicsComponent>(this, pos, Quaternion());
 	AddComponent<TriggerComponent>(this, triggerRadius);
 	AddComponent<MeshComponent>(assMan->GetComponent<MeshComponent>("Plane"));

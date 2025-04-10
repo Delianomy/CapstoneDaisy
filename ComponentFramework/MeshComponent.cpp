@@ -60,7 +60,7 @@ void MeshComponent::LoadModel(const char* filename) {
          std::cout << filename<< std::endl;
 
          
-         std::cout << "MAX X " << MEW::GetMaxX(vertices) << std::endl;
+       /*  std::cout << "MAX X " << MEW::GetMaxX(vertices) << std::endl;
          std::cout << "MAX Y " << MEW::GetMaxY(vertices) << std::endl;
          std::cout << "MAX Z " << MEW::GetMaxZ(vertices) << std::endl;
 
@@ -74,7 +74,7 @@ void MeshComponent::LoadModel(const char* filename) {
 
          minX = MEW::GetMinX(vertices);
          minY = MEW::GetMinY(vertices);
-         minZ = MEW::GetMinZ(vertices);
+         minZ = MEW::GetMinZ(vertices);*/
     } 
  
 }

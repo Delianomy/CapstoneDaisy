@@ -68,7 +68,7 @@ bool SceneManager::Initialize(std::string name_, int width_, int height_) {
 	ImGui_ImplOpenGL3_Init();
 
 
-	customFont= io.Fonts->AddFontFromFileTTF("fonts/lunchds.ttf", 20.0f);
+	customFont= io.Fonts->AddFontFromFileTTF("fonts/dpcomic.ttf", 20.0f);
 
 	/********************************   Default first scene   ***********************/
 	BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE_DREAM);

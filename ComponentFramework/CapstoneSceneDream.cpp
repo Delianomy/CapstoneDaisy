@@ -1191,16 +1191,33 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	}
 
 	currentTime += deltaTime;
-	if (!playerIsGrounded) {
-		currentSkybox = underwaterSkybox;
-		currentAnim = PlayerAnimType::Jumping;
-	}
-	else if (VMath::mag(movementInput) > 0.0f) {
-		currentAnim = PlayerAnimType::Walking;
+	if (!underwater) {
+		if (!playerIsGrounded) {
+			currentSkybox = underwaterSkybox;
+			currentAnim = PlayerAnimType::Jumping;
+		}
+		else if (VMath::mag(movementInput) > 0.0f) {
+			currentAnim = PlayerAnimType::Walking;
+		}
+
+		else {
+			currentAnim = PlayerAnimType::Idle;
+		}
 	}
 	else {
-		currentAnim = PlayerAnimType::Idle;
+		if (VMath::mag(movementInput) == 0.0f) {
+		currentAnim = PlayerAnimType::SwimmingIdle;
+		}
+		else {
+
+			currentAnim = PlayerAnimType::Swimming;
+		}
+	
 	}
+
+
+	
+
 
 
 	/// Adriel's movement input

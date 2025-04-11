@@ -56,7 +56,10 @@ class CapstoneSceneDream : public Scene
 
 	Ref<Actor> player;
 	Ref<Actor> cube;
-	Ref<Actor> skybox;
+	Ref<Actor> currentSkybox;
+
+	Ref<Actor> overworldSkybox;
+	Ref<Actor> underwaterSkybox;
 
 
 
@@ -66,8 +69,8 @@ class CapstoneSceneDream : public Scene
 	Ref<InteractableActor> fairy;
 
 
+	Ref<Actor> Water;
 	Ref<Actor> Ocean;
-
 
 	//Test collisions
 	Ref<Actor> sphere;

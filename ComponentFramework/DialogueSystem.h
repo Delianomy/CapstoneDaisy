@@ -39,7 +39,7 @@ class DialogueSystem
 public:
   
     DialogueSystem() {
-      
+        assetMan = AssetManager::GetInstance();
       
     }
 

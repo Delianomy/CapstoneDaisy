@@ -45,6 +45,7 @@ AssetManager::AssetManager() {
 		
 		AddComponent<MaterialComponent>("Island1_mat", nullptr, "textures/Environment/Island_1_test.png");
 		AddComponent<MaterialComponent>("Island2_mat", nullptr, "textures/Environment/island_2_test_2.png");
+		AddComponent<MaterialComponent>("Island2_mat_2", nullptr, "textures/Environment/island_2_test.png");
 		AddComponent<MaterialComponent>("House_mat", nullptr, "textures/Environment/house_test.png");
 		AddComponent<MaterialComponent>("Flower_v1_mat", nullptr, "textures/Environment/flower_v1.png");
 		AddComponent<MaterialComponent>("Beanstalk_mat", nullptr, "textures/Environment/beanstalk.png");
@@ -53,7 +54,7 @@ AssetManager::AssetManager() {
 		AddComponent<MaterialComponent>("Bridge_mat", nullptr, "textures/Environment/bridge_test.png");
 		AddComponent<MaterialComponent>("Bush_mat", nullptr, "textures/Environment/bush.png");
 		AddComponent<MaterialComponent>("Grass1_mat", nullptr, "textures/Environment/grass_1.png");
-
+		AddComponent<MaterialComponent>("Water", nullptr, "textures/water.png");
 	
 	//25
 

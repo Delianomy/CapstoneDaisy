@@ -56,25 +56,56 @@ bool CapstoneSceneDream::OnCreate() {
 	CreateDebugMeshes();
 
 
-	Ocean = std::make_shared<Actor>(nullptr);
-	Ocean->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -13.0f, 0.0f),/// pos
-		QMath::angleAxisRotation(90.0f, Vec3(0.0f, 1.0f, 0.0f)),
+	//Ref<AssetManager> assMan, Vec3 pos, float triggerRadius = 0.5f, Vec3 scale = Vec3(0.1f, 0.1f, 0.1f), std::shared_ptr<MaterialComponent> material = nullptr
+
+		//make an actor
+	Water = std::make_shared<Actor>(nullptr);
+	Water->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -5.0f, 0.0f),/// pos
+		QMath::angleAxisRotation(90.0f, Vec3(-1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
+
+	Water->GetComponent<PhysicsComponent>()->SetScale(Vec3(10.0f, 1.0f, 10.0f));
+	Water->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Plane"));
+	Water->AddComponent<ShaderComponent>(CubeShader);
+	Water->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Water"));
+	AddTransparentActor(Water);
+
+
+
+
+
+
+	Ocean = std::make_shared<Actor>(nullptr);
+	Ocean->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -13.0f, 0.0f),/// pos
+		QMath::angleAxisRotation(90.0f, Vec3(0.0f, 1.0f, 0.0f)), Vec3(-1.0f, 0.0f, 0.0f));
 	Ocean->GetComponent<PhysicsComponent>()->SetScale(Vec3(20.0f, 10.0f, 20.0f));
 	Ocean->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Sphere"));
 	Ocean->AddComponent<ShaderComponent>(WaterShader);
 	Ocean->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Water_normal"));
-	AABB oceanCollider = AABB(Vec3(0.0f, -3.0f, 0.0f), Vec3(20.0f, 5.0f, 20.0f));
-	Ocean->AddComponent<TriggerComponent>(nullptr, oceanCollider);
+	AABB cubeCollider;
+	cubeCollider.center = Ocean->GetComponent<PhysicsComponent>()->GetPosition();
+	cubeCollider.rx = 10.18f;
+	cubeCollider.ry = 10.51f;
+	cubeCollider.rz = 10.8f;
+	Ocean->AddComponent<TriggerComponent>(nullptr, cubeCollider);
 	Ocean->GetComponent<TriggerComponent>()->SetCallback(TriggerCallbackCreator::CreateTriggerCallback(this, &CapstoneSceneDream::OnEnterOcean));
 	triggerSystem.AddActor(Ocean);
 
 
 
-	//Ref<AssetManager> assMan, Vec3 pos, float triggerRadius = 0.5f, Vec3 scale = Vec3(0.1f, 0.1f, 0.1f), std::shared_ptr<MaterialComponent> material = nullptr
 
-		//make an actor
+
+
+
+
+
+
+
+
+
+
+
 	player = std::make_shared<Actor>(nullptr);
 	player->NPCid = 0;
 	player->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -0.9f, 0.0f),/// pos
@@ -96,25 +127,25 @@ bool CapstoneSceneDream::OnCreate() {
 	AddTransparentActor(player);
 
 
-	//mermaid = std::make_shared<InteractableActor>(assetManager, Vec3(0.0f, 0.0f, 0.0f), 1.5f, Vec3(0.5f, 0.5f, 0.5f), assetManager->GetComponent<MaterialComponent>("Mermaid"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
-	//mermaid->NPCid = 1;
-	//mermaid->Bind([this]() {
-	//	int index = mermaid->NPCid;
-	///*	inventoryButtonPressed = !inventoryButtonPressed;*/
-	//	if (index >= 0 && index < dialogueSequences.size()) {
-	//		dialogueSystem->ClearDialogues();
+	mermaid = std::make_shared<InteractableActor>(assetManager, Vec3(0.0f, -10.4f, 0.0f), 1.5f, Vec3(0.3f, 0.3f, 0.26f), assetManager->GetComponent<MaterialComponent>("Mermaid"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
+	mermaid->NPCid = 1;
+	mermaid->Bind([this]() {
+		int index = mermaid->NPCid;
+	/*	inventoryButtonPressed = !inventoryButtonPressed;*/
+		if (index >= 0 && index < dialogueSequences.size()) {
+			dialogueSystem->ClearDialogues();
 
-	//		for (const auto& dialogue : dialogueSequences[index]) {
-	//			dialogueSystem->AddDialogueToSequence(dialogue);
-	//		}
+			for (const auto& dialogue : dialogueSequences[index]) {
+				dialogueSystem->AddDialogueToSequence(dialogue);
+			}
 
-	//		dialogueSystem->OpenDialogue(0);
-	//	}
-	//	std::cout << "Interacted with mermaid";
-	//	});
-	//mermaid->AddComponent<CollisionComponent>(nullptr, 0.5f);
-	//triggerSystem.AddActor(mermaid);
-	//AddTransparentActor(mermaid);
+			dialogueSystem->OpenDialogue(0);
+		}
+		std::cout << "Interacted with mermaid";
+		});
+	mermaid->AddComponent<CollisionComponent>(nullptr, 0.5f);
+	triggerSystem.AddActor(mermaid);
+	AddTransparentActor(mermaid);
 
 
 	mrOwl = std::make_shared<InteractableActor>(assetManager, Vec3(12.3f, -0.7f, 1.6f), 0.8f, Vec3(0.15f, 0.15f, 0.15f), assetManager->GetComponent<MaterialComponent>("Owl"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
@@ -260,11 +291,18 @@ bool CapstoneSceneDream::OnCreate() {
 	camera->GetViewMatrix().print("ViewMatrix");
 	AddActor(camera);
 
-	skybox = std::make_shared<SkyBox>(nullptr, "textures/Skyboxes/Overworld/px.png", "textures/Skyboxes/Overworld/nx.png",
+	overworldSkybox = std::make_shared<SkyBox>(nullptr, "textures/Skyboxes/Overworld/px.png", "textures/Skyboxes/Overworld/nx.png",
 		"textures/Skyboxes/Overworld/py.png", "textures/Skyboxes/Overworld/ny.png", "textures/Skyboxes/Overworld/pz.png",
 		"textures/Skyboxes/Overworld/nz.png");
+	overworldSkybox->OnCreate();
 
-	skybox->OnCreate();
+
+	underwaterSkybox = std::make_shared<SkyBox>(nullptr, "textures/Skyboxes/Underwater/px.png", "textures/Skyboxes/Underwater/nx.png",
+		"textures/Skyboxes/Underwater/py.png", "textures/Skyboxes/Underwater/ny.png", "textures/Skyboxes/Underwater/pz.png",
+		"textures/Skyboxes/Underwater/nz.png");
+	underwaterSkybox->OnCreate();
+
+	currentSkybox = overworldSkybox;
 
 	light = std::make_shared<LightActor>(camera.get(), LightStyle::DirectionLight, Vec3(0.0f, 5.0f, 1.0f), Vec4(0.85f, 0.6, 0.6f, 0.0f));
 	light->OnCreate();
@@ -583,6 +621,33 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	collisionSystem.AddActor(Island1);
 
 
+	//Ground of the ocean
+	Ref<Actor> BottomOfTheOcean = std::make_shared<Actor>(nullptr);
+	BottomOfTheOcean->tag = GROUND;
+	BottomOfTheOcean->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -12.0f, 0.0f),/// pos
+		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	BottomOfTheOcean->GetComponent<PhysicsComponent>()->SetScale(Vec3(3.0f, 0.2f, 3.0f));
+	BottomOfTheOcean->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
+	cubeCollider;
+	cubeCollider.center = BottomOfTheOcean->GetComponent<PhysicsComponent>()->GetPosition();
+	//Problem, this looks a bit weird cause Y goes very deep in the bottom comparing to the top side, leadingfor stuff to look sketchy 
+	cubeCollider.rx = 10.0f;
+	cubeCollider.ry = 0.3f;
+	cubeCollider.rz = 10.0f;
+	//cube->AddComponent<CollisionComponent>(nullptr, cubeCollider);
+	BottomOfTheOcean->GetComponent<PhysicsComponent>()->isStatic = true;
+	BottomOfTheOcean->AddComponent<ShaderComponent>(CubeShader);
+	BottomOfTheOcean->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat_2"));
+	BottomOfTheOcean->AddComponent<CollisionComponent>(nullptr, cubeCollider);
+	AddOpaqueActor(BottomOfTheOcean);
+	physicsSystem.AddActor(BottomOfTheOcean);
+	collisionSystem.AddActor(BottomOfTheOcean);
+
+
+
+
 	//island with the house
 	Ref<Actor>Island2 = std::make_shared<Actor>(nullptr);
 	Island2->tag = GROUND;
@@ -629,30 +694,6 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	AddOpaqueActor(Island3);
 	physicsSystem.AddActor(Island3);
 	collisionSystem.AddActor(Island3);
-
-
-
-	Ref<Actor>BottomOfTheOcean = std::make_shared<Actor>(nullptr);
-	BottomOfTheOcean->AddComponent<PhysicsComponent>(nullptr, Vec3(18.0f, -30.0f, 0.0f),/// pos
-		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	BottomOfTheOcean->GetComponent<PhysicsComponent>()->SetScale(Vec3(10.0f, 0.1f, 10.0f));
-	BottomOfTheOcean->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
-	cubeCollider;
-	cubeCollider.center = BottomOfTheOcean->GetComponent<PhysicsComponent>()->GetPosition();
-	//Problem, this looks a bit weird cause Y goes very deep in the bottom comparing to the top side, leadingfor stuff to look sketchy 
-	cubeCollider.rx = 3.18f;
-	cubeCollider.ry = 0.51f;
-	cubeCollider.rz = 0.904f;
-	//cube->AddComponent<CollisionComponent>(nullptr, cubeCollider);
-	BottomOfTheOcean->GetComponent<PhysicsComponent>()->isStatic = true;
-	BottomOfTheOcean->AddComponent<ShaderComponent>(CubeShader);
-	BottomOfTheOcean->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat"));
-	//BottomOfTheOcean->AddComponent<CollisionComponent>(nullptr, 1.0f);
-	AddOpaqueActor(BottomOfTheOcean);
-	physicsSystem.AddActor(BottomOfTheOcean);
-	collisionSystem.AddActor(BottomOfTheOcean);
 
 
 
@@ -856,9 +897,101 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	Flower_5->AddComponent<TriggerComponent>(nullptr, 1.0f);
 	AddOpaqueActor(Flower_5);
 
+	//wall on the right
+	Ref<Actor> Bottom1 = std::make_shared<Actor>(nullptr);
+	Bottom1->tag = GROUND;
+	Bottom1->AddComponent<PhysicsComponent>(nullptr, Vec3(9.2f, -12.0f, 0.0f),/// pos
+		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	Bottom1->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 2.0f, 2.0f));
+	Bottom1->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
+	cubeCollider;
+	cubeCollider.center = Bottom1->GetComponent<PhysicsComponent>()->GetPosition();
+	cubeCollider.rx = 4.0f;
+	cubeCollider.ry = 6.0f;
+	cubeCollider.rz = 4.0f;
+	Bottom1->GetComponent<PhysicsComponent>()->isStatic = true;
+	Bottom1->AddComponent<ShaderComponent>(CubeShader);
+	Bottom1->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat_2"));
+	Bottom1->AddComponent<CollisionComponent>(nullptr, cubeCollider);
+	AddOpaqueActor(Bottom1);
+	physicsSystem.AddActor(Bottom1);
+	collisionSystem.AddActor(Bottom1);
 
+
+
+
+	Ref<Actor> Bottom2 = std::make_shared<Actor>(nullptr);
+	Bottom2->tag = GROUND;
+	Bottom2->AddComponent<PhysicsComponent>(nullptr, Vec3(-1.0f, -12.0f, -8.7f),/// pos
+		QMath::angleAxisRotation(130.0f, Vec3(0.0f, 1.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	Bottom2->GetComponent<PhysicsComponent>()->SetScale(Vec3(3.5f, 3.2f, 1.0f));
+	Bottom2->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
+	cubeCollider;
+	cubeCollider.center = Bottom2->GetComponent<PhysicsComponent>()->GetPosition();
+	//Problem, this looks a bit weird cause Y goes very deep in the bottom comparing to the top side, leadingfor stuff to look sketchy 
+	cubeCollider.rx = 10.4f;
+	cubeCollider.ry = 6.0f;
+	cubeCollider.rz = 4.0f;
+	//cube->AddComponent<CollisionComponent>(nullptr, cubeCollider);
+	Bottom2->GetComponent<PhysicsComponent>()->isStatic = true;
+	Bottom2->AddComponent<ShaderComponent>(CubeShader);
+	Bottom2->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat_2"));
+	Bottom2->AddComponent<CollisionComponent>(nullptr, cubeCollider);
+	AddOpaqueActor(Bottom2);
+	physicsSystem.AddActor(Bottom2);
+	collisionSystem.AddActor(Bottom2);
+
+
+
+	Ref<Actor> Bottom4 = std::make_shared<Actor>(nullptr);
+	Bottom4->tag = GROUND;
+	Bottom4->AddComponent<PhysicsComponent>(nullptr, Vec3(-10.5f, -12.0f, -1.7f),/// pos
+		QMath::angleAxisRotation(0.0f, Vec3(0.0f, 1.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	Bottom4->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.1f, 1.5f, 1.2f));
+	Bottom4->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
+	cubeCollider;
+	cubeCollider.center = Bottom4->GetComponent<PhysicsComponent>()->GetPosition();
+	//Problem, this looks a bit weird cause Y goes very deep in the bottom comparing to the top side, leadingfor stuff to look sketchy 
+	cubeCollider.rx = 1.9f;
+	cubeCollider.ry = 6.0f;
+	cubeCollider.rz = 4.0f;
+	//cube->AddComponent<CollisionComponent>(nullptr, cubeCollider);
+	Bottom4->GetComponent<PhysicsComponent>()->isStatic = true;
+	Bottom4->AddComponent<ShaderComponent>(CubeShader);
+	Bottom4->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat_2"));
+	Bottom4->AddComponent<CollisionComponent>(nullptr, cubeCollider);
+	AddOpaqueActor(Bottom4);
+	physicsSystem.AddActor(Bottom4);
+	collisionSystem.AddActor(Bottom4);
+
+
+
+
+	Ref<Actor> Bottom3 = std::make_shared<Actor>(nullptr);
+
+	Bottom3->AddComponent<PhysicsComponent>(nullptr, Vec3(7.0f, -12.0f, -3.9f),/// pos
+		QMath::angleAxisRotation(130.0f, Vec3(0.0f, 1.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	Bottom3->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.7f, 1.2f, 1.0f));
+	Bottom3->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
+	//cube->AddComponent<CollisionComponent>(nullptr, cubeCollider);
+	Bottom3->GetComponent<PhysicsComponent>()->isStatic = true;
+	Bottom3->AddComponent<ShaderComponent>(CubeShader);
+	Bottom3->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat_2"));
+	AddOpaqueActor(Bottom3);
+
+
+
+	//LEft small tower
 	Ref<Actor>Tower1 = std::make_shared<Actor>(nullptr);
-	Tower1->AddComponent<PhysicsComponent>(nullptr, Vec3(-5.3f, -5.0f, 0.3f),/// pos
+	Tower1->AddComponent<PhysicsComponent>(nullptr, Vec3(-5.3f, -9.0f, 0.3f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(-1.0f, 1.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
@@ -871,12 +1004,58 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	AddOpaqueActor(Tower1);
 
 
-	Ref<Actor>Bridge = std::make_shared<Actor>(nullptr);
-	Bridge->AddComponent<PhysicsComponent>(nullptr, Vec3(-6.3f, -5.5f, 0.3f),/// pos
+	//Middle big main
+	Ref<Actor>Tower2 = std::make_shared<Actor>(nullptr);
+	Tower2->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -11.5f, -3.3f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(-1.0f, 1.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
 	);
-	Bridge->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.3f, 0.3f, 0.3f));
+	Tower2->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.0f, 1.0f, 1.0f));
+	Tower2->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Tower_obj"));
+	Tower2->GetComponent<PhysicsComponent>()->isStatic = true;
+	Tower2->AddComponent<ShaderComponent>(CubeShader);
+	Tower2->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Tower_mat"));
+	Tower2->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	AddOpaqueActor(Tower2);
+
+
+	//Right tower
+	Ref<Actor>Tower3 = std::make_shared<Actor>(nullptr);
+	Tower3->AddComponent<PhysicsComponent>(nullptr, Vec3(5.3f, -9.0f, 0.2f),/// pos
+		QMath::angleAxisRotation(0.0f, Vec3(-1.0f, 1.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	Tower3->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.5f, 0.5f, 0.5f));
+	Tower3->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Tower_obj"));
+	Tower3->GetComponent<PhysicsComponent>()->isStatic = true;
+	Tower3->AddComponent<ShaderComponent>(CubeShader);
+	Tower3->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Tower_mat"));
+	Tower3->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	AddOpaqueActor(Tower3);
+
+
+	//Right bridge
+	Ref<Actor>Bridge2 = std::make_shared<Actor>(nullptr);
+	Bridge2->AddComponent<PhysicsComponent>(nullptr, Vec3(5.5f, -9.5f, 0.8f),/// pos
+		QMath::angleAxisRotation(135.0f, Vec3(0.0f, 1.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	Bridge2->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.3f, 0.4f, 0.3f));
+	Bridge2->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Bridge_obj"));
+	Bridge2->GetComponent<PhysicsComponent>()->isStatic = true;
+	Bridge2->AddComponent<ShaderComponent>(CubeShader);
+	Bridge2->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Bridge_mat"));
+	Bridge2->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	AddOpaqueActor(Bridge2);
+
+
+	//Left bridge
+	Ref<Actor>Bridge = std::make_shared<Actor>(nullptr);
+	Bridge->AddComponent<PhysicsComponent>(nullptr, Vec3(-5.5f, -9.5f, 0.8f),/// pos
+		QMath::angleAxisRotation(45.0f, Vec3(0.0f, 1.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	Bridge->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.3f, 0.4f, 0.3f));
 	Bridge->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Bridge_obj"));
 	Bridge->GetComponent<PhysicsComponent>()->isStatic = true;
 	Bridge->AddComponent<ShaderComponent>(CubeShader);
@@ -885,6 +1064,84 @@ bool CapstoneSceneDream::CreateLevelLayout() {
 	AddOpaqueActor(Bridge);
 
 
+
+	//Small tower R
+	Ref<Actor>Tower4 = std::make_shared<Actor>(nullptr);
+	Tower4->AddComponent<PhysicsComponent>(nullptr, Vec3(3.2f, -10.2f, -1.6f),/// pos
+		QMath::angleAxisRotation(0.0f, Vec3(-1.0f, 1.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	Tower4->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.5f, 0.5f, 0.5f));
+	Tower4->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Tower_obj"));
+	Tower4->GetComponent<PhysicsComponent>()->isStatic = true;
+	Tower4->AddComponent<ShaderComponent>(CubeShader);
+	Tower4->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Tower_mat"));
+	Tower4->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	AddOpaqueActor(Tower4);
+
+
+	Ref<Actor>Tower5 = std::make_shared<Actor>(nullptr);
+	Tower5->AddComponent<PhysicsComponent>(nullptr, Vec3(-3.2f, -10.2f, -1.6f),/// pos
+		QMath::angleAxisRotation(0.0f, Vec3(-1.0f, 1.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	Tower5->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.5f, 0.5f, 0.5f));
+	Tower5->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Tower_obj"));
+	Tower5->GetComponent<PhysicsComponent>()->isStatic = true;
+	Tower5->AddComponent<ShaderComponent>(CubeShader);
+	Tower5->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Tower_mat"));
+	Tower5->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	AddOpaqueActor(Tower5);
+
+
+	Ref<Actor>Bridge3 = std::make_shared<Actor>(nullptr);
+	Bridge3->AddComponent<PhysicsComponent>(nullptr, Vec3(3.66f, -10.2f, -1.6f),/// pos
+		QMath::angleAxisRotation(165.0f, Vec3(0.0f, 1.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	Bridge3->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.3f, 0.3f, 0.3f));
+	Bridge3->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Bridge_obj"));
+	Bridge3->GetComponent<PhysicsComponent>()->isStatic = true;
+	Bridge3->AddComponent<ShaderComponent>(CubeShader);
+	Bridge3->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Bridge_mat"));
+	Bridge3->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	AddOpaqueActor(Bridge3);
+
+
+	Ref<Actor>Bridge4 = std::make_shared<Actor>(nullptr);
+	Bridge4->AddComponent<PhysicsComponent>(nullptr, Vec3(-3.66f, -10.2f, -1.6f),/// pos
+		QMath::angleAxisRotation(15.0f, Vec3(0.0f, 1.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	Bridge4->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.3f, 0.3f, 0.3f));
+	Bridge4->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Bridge_obj"));
+	Bridge4->GetComponent<PhysicsComponent>()->isStatic = true;
+	Bridge4->AddComponent<ShaderComponent>(CubeShader);
+	Bridge4->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Bridge_mat"));
+	Bridge4->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	AddOpaqueActor(Bridge4);
+
+
+	Ref<Actor>Island6 = std::make_shared<Actor>(nullptr);
+	Island6->tag = GROUND;
+	Island6->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -11.5f, 0.0f),/// pos
+		QMath::angleAxisRotation(90.0f, Vec3(0.0f, 1.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	Island6->GetComponent<PhysicsComponent>()->SetScale(Vec3(0.2f, 0.3f, 0.2f));
+	Island6->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Island2_obj"));
+	cubeCollider;
+	cubeCollider.center = Island6->GetComponent<PhysicsComponent>()->GetPosition();
+	cubeCollider.rx = 0.8f;
+	cubeCollider.ry = 0.51f;
+	cubeCollider.rz = 0.8f;
+	Island6->AddComponent<CollisionComponent>(nullptr, cubeCollider);
+	Island6->GetComponent<PhysicsComponent>()->isStatic = true;
+	Island6->AddComponent<ShaderComponent>(CubeShader);
+	Island6->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Island2_mat_2"));
+	AddOpaqueActor(Island6);
+	physicsSystem.AddActor(Island6);
+	collisionSystem.AddActor(Island6);
 
 
 return true;
@@ -908,7 +1165,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 
 	Ref<PhysicsComponent> playerPhysics = player->GetComponent<PhysicsComponent>();
 	//Reset the player when below a specific Y value
-	if (playerPhysics->GetPosition().y < -15.0f) {
+	if (playerPhysics->GetPosition().y < -20.0f) {
 		playerPhysics->SetVel(Vec3());
 		playerPhysics->SetPosition(Vec3());
 		playerPhysics->useGravity = false;
@@ -1115,15 +1372,15 @@ void CapstoneSceneDream::Render() const {
 		glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
 		glBindBuffer(GL_UNIFORM_BUFFER, light->GetLightID());
 
-		Ref<ShaderComponent> skyboxShader = skybox->GetComponent<ShaderComponent>();
+		Ref<ShaderComponent> skyboxShader = currentSkybox->GetComponent<ShaderComponent>();
 
 		glUseProgram(skyboxShader->GetProgram());
-		glUniformMatrix4fv(skyboxShader->GetUniformID("modelMatrix"), 1, GL_FALSE, skybox->GetModelMatrix());
+		glUniformMatrix4fv(skyboxShader->GetUniformID("modelMatrix"), 1, GL_FALSE, currentSkybox->GetModelMatrix());
 		glUniformMatrix4fv(skyboxShader->GetUniformID("viewMatrix"), 1, GL_FALSE, MMath::inverse(camera->orient));
 
 		//camera->orient.print("Camera orientation");
 		glUniformMatrix4fv(skyboxShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
-		std::dynamic_pointer_cast<SkyBox>(skybox)->Render();
+		std::dynamic_pointer_cast<SkyBox>(currentSkybox)->Render();
 		glUseProgram(0);
 
 		glDisable(GL_BLEND);
@@ -1137,7 +1394,7 @@ void CapstoneSceneDream::Render() const {
 			opaqueActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
 		}
 
-		//RenderColliders();
+		RenderColliders();
 		std::vector<Ref<Actor>> sortedTransparentActors = transparentActors;
 		std::sort(sortedTransparentActors.begin(), sortedTransparentActors.end(),
 			[this](const Ref<Actor>& a, const Ref<Actor>& b) {
@@ -1184,6 +1441,7 @@ void CapstoneSceneDream::Render() const {
 
 		//	Ocean->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
 		//}
+
 
 
 

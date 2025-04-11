@@ -69,6 +69,19 @@ bool CapstoneSceneDream::OnCreate() {
 	Water->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Plane"));
 	Water->AddComponent<ShaderComponent>(CubeShader);
 	Water->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Water"));
+	/// Note to diana:
+	/// To make the water work you just need the TriggerComponent and set the callback to the OnEnterOcean() function
+	/// I added it for you so just set the collider size
+	/// I haven't been able to test it because the scene is breaking for some reason
+	/// just look at line 82 & 83
+	AABB waterCollider;
+	waterCollider.center = Water->GetComponent<PhysicsComponent>()->GetPosition();
+	waterCollider.rx = 10.18f;
+	waterCollider.ry = 10.51f;
+	waterCollider.rz = 10.8f;
+	Water->AddComponent<TriggerComponent>(nullptr, waterCollider);
+	Water->GetComponent<TriggerComponent>()->SetCallback(TriggerCallbackCreator::CreateTriggerCallback(this, &CapstoneSceneDream::OnEnterOcean));
+	triggerSystem.AddActor(Water);
 	AddTransparentActor(Water);
 
 
@@ -1170,7 +1183,6 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 		playerPhysics->SetPosition(Vec3());
 		playerPhysics->useGravity = false;
 		anyInputPressed = false;
-
 	}
 
 	//Update players rotation 

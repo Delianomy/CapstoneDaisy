@@ -20,11 +20,15 @@ public:
     void OnDestroy();
     void Play(int trackIndex, float volume);
     void Update();
+    void PlayBGmusic(int trackIndex, float volume);
 
 private:
    
     bool succeededOrWarn(const std::string& message, FMOD_RESULT result);
     FMOD::System* system;
     FMOD::ChannelGroup* channelGroup;
+
+    FMOD::Channel* bgMusicChannel = nullptr;
+    int currentTrackIndex = -1;
 };
 #endif // !AUDIO_SYSTEM_H

@@ -53,7 +53,10 @@ bool AudioManager::OnCreate()
     if (LoadAudio("ost/Overworld.mp3", true) == false) {
         return false;
     }
-
+    //8
+    if (LoadAudio("ost/Underwater.mp3", true) == false) {
+        return false;
+    }
 
 
     return true;
@@ -138,4 +141,37 @@ bool AudioManager::succeededOrWarn(const std::string& message, FMOD_RESULT resul
 
 void AudioManager::Update() {
     system->update();
+}
+
+void AudioManager::PlayBGmusic(int trackIndex, float volume)
+{
+    if (trackIndex >= 0 && trackIndex < sounds.size()) {
+        if (trackIndex == currentTrackIndex) {
+            return; // Don't restart same track
+        }
+
+        // Stop current music if playing
+        if (bgMusicChannel) {
+            bool isPlaying = false;
+            bgMusicChannel->isPlaying(&isPlaying);
+            if (isPlaying) {
+                bgMusicChannel->stop();
+            }
+            bgMusicChannel = nullptr;
+        }
+
+        // Play new music
+        FMOD_RESULT result = system->playSound(sounds[trackIndex], nullptr, false, &bgMusicChannel);
+        if (!succeededOrWarn("Failed to play music", result)) return;
+
+        result = bgMusicChannel->setVolume(volume);
+        succeededOrWarn("Failed to set music volume", result);
+
+        currentTrackIndex = trackIndex;
+
+        std::cout << "Now playing music track: " << trackIndex << std::endl;
+    }
+    else {
+        std::cerr << "Invalid music track index: " << trackIndex << std::endl;
+    }
 }

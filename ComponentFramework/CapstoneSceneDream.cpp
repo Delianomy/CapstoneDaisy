@@ -74,13 +74,7 @@ bool CapstoneSceneDream::OnCreate() {
 	/// I added it for you so just set the collider size
 	/// I haven't been able to test it because the scene is breaking for some reason
 	/// just look at line 82 & 83
-	AABB waterCollider;
-	waterCollider.center = Water->GetComponent<PhysicsComponent>()->GetPosition();
-	waterCollider.rx = 10.18f;
-	waterCollider.ry = 10.51f;
-	waterCollider.rz = 10.8f;
-	Water->AddComponent<TriggerComponent>(nullptr, waterCollider);
-	Water->GetComponent<TriggerComponent>()->SetCallback(TriggerCallbackCreator::CreateTriggerCallback(this, &CapstoneSceneDream::OnEnterOcean));
+	//Water->GetComponent<TriggerComponent>()->SetCallback(TriggerCallbackCreator::CreateTriggerCallback(this, &CapstoneSceneDream::OnEnterOcean));
 	triggerSystem.AddActor(Water);
 	AddTransparentActor(Water);
 
@@ -92,8 +86,8 @@ bool CapstoneSceneDream::OnCreate() {
 	Ocean = std::make_shared<Actor>(nullptr);
 	Ocean->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -13.0f, 0.0f),/// pos
 		QMath::angleAxisRotation(90.0f, Vec3(0.0f, 1.0f, 0.0f)), Vec3(-1.0f, 0.0f, 0.0f));
-	Ocean->GetComponent<PhysicsComponent>()->SetScale(Vec3(20.0f, 10.0f, 20.0f));
-	Ocean->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Sphere"));
+	Ocean->GetComponent<PhysicsComponent>()->SetScale(Vec3(20.0f, 20.0f, 20.0f));
+	Ocean->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Cube"));
 	Ocean->AddComponent<ShaderComponent>(WaterShader);
 	Ocean->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Water_normal"));
 	AABB cubeCollider;
@@ -104,7 +98,7 @@ bool CapstoneSceneDream::OnCreate() {
 	Ocean->AddComponent<TriggerComponent>(nullptr, cubeCollider);
 	Ocean->GetComponent<TriggerComponent>()->SetCallback(TriggerCallbackCreator::CreateTriggerCallback(this, &CapstoneSceneDream::OnEnterOcean));
 	triggerSystem.AddActor(Ocean);
-
+	AddTransparentActor(Ocean);
 
 
 
@@ -121,6 +115,7 @@ bool CapstoneSceneDream::OnCreate() {
 
 	player = std::make_shared<Actor>(nullptr);
 	player->NPCid = 0;
+	player->tag = PLAYER;
 	player->AddComponent<PhysicsComponent>(nullptr, Vec3(0.0f, -0.9f, 0.0f),/// pos
 		QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
@@ -1197,6 +1192,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 
 	currentTime += deltaTime;
 	if (!playerIsGrounded) {
+		currentSkybox = underwaterSkybox;
 		currentAnim = PlayerAnimType::Jumping;
 	}
 	else if (VMath::mag(movementInput) > 0.0f) {
@@ -1379,7 +1375,7 @@ void CapstoneSceneDream::Render() const {
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//DebugUI();
+		DebugUI();
 
 		glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
 		glBindBuffer(GL_UNIFORM_BUFFER, light->GetLightID());

@@ -778,7 +778,6 @@ void CapstoneScene::DrawUI_imgui()
 
 	}
 
-
 }
 
 void CapstoneScene::StartGameDialogue()

@@ -188,6 +188,7 @@ bool CapstoneSceneDream::OnCreate() {
 		});
 	mrOwl->AddComponent<CollisionComponent>(nullptr, 0.5f);
 	triggerSystem.AddActor(mrOwl);
+	mrOwl->GetComponent<TriggerComponent>()->SetCallback(TriggerCallbackCreator::CreateTriggerCallback(this, &CapstoneSceneDream::OnShowInteraction));
 	AddTransparentActor(mrOwl);
 
 
@@ -1398,6 +1399,7 @@ void CapstoneSceneDream::InitializeDialogue()
 }
 
 
+
 void CapstoneSceneDream::Render() const {
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 
@@ -1658,6 +1660,25 @@ void CapstoneSceneDream::DrawUI_imgui()
 
 
 	}
+
+
+}
+
+void CapstoneSceneDream::DrawInteraction()
+{
+
+		// Draw an ImGui element
+		ImGui::SetNextWindowPos(ImVec2(1000, 450)); // Set the window position here (x, y)
+		ImGui::SetNextWindowSize(ImVec2(80, 80)); // Set the window size
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		ImGui::Begin("3 button", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoDecoration);
+		ImGui::Image((intptr_t)assetManager->GetComponent<MaterialComponent>("number 3")->getTextureID(), ImVec2(80, 80));
+		ImGui::End();
+		ImGui::PopStyleVar();
+		ImGui::PopStyleColor();
+
+
 }
 
 void CapstoneSceneDream::DrawNormals(const Vec4 color) const {
@@ -2050,6 +2071,8 @@ void CapstoneSceneDream::PlayerTriggerCallback(Ref<Actor> other) {
 		interactionManager->SetCurrentInteraction(actor);
 		return;
 	}
+
+
 }
 
 

@@ -169,6 +169,7 @@ public:
 	void DrawNormals(const Vec4 color) const;
 	void DrawMeshOverlay(const Vec4 color) const;
 	void DrawUI_imgui();
+	void DrawInteraction();
 	
 	///Adriel's land
 	void DrawSphere(Vec3 pos, float radius) const;
@@ -181,6 +182,11 @@ public:
 	void CreateDebugMeshes();
 	void DebugUI() const;
 	void OnEnterOcean(Ref<Actor> other) { if(other->tag == PLAYER) underwater = true; }
+
+	void OnShowInteraction(Ref<Actor> other) {
+		if (other->tag == PLAYER)
+			DrawInteraction();
+	}
 	/// <summary>
 	/// Updates the level's objects based on quests that are completed or not
 	/// Called on the OnCreate when you reload the scene
@@ -202,6 +208,8 @@ public:
 		return Vec2(static_cast<float>(xIndex), static_cast<float>(yIndex));
 	}
 	
+	Ref<InteractableActor> currentInteractableActor;
+	bool isPlayerOverlappingInteractable = false;
 };
 
 #endif // CAPSTONESCENE_DREAM_H

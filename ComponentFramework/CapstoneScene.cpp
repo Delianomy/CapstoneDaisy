@@ -30,7 +30,6 @@ CapstoneScene::CapstoneScene(SceneManager* scenemanager) :drawNormals(false), dr
 bool CapstoneScene::OnCreate() {
 	Debug::Info("Loading assets Scene Dream: ", __FILE__, __LINE__);
 	assetManager = AssetManager::GetInstance();
-
 	defaultCursorTexture = IMG_Load("textures/UI_elements/cursor/cursor_normal.png");
 	hoveredCursorTexture = IMG_Load("textures/UI_elements/cursor//cursor_hovered.png");
 	
@@ -151,17 +150,6 @@ bool CapstoneScene::OnCreate() {
 	AddTransparentActor(travelToDaisyLand);
 	AddActor(travelToDaisyLand);
 
-
-	/*travelToDaisyLand = std::make_shared<Actor>(nullptr);
-	travelToDaisyLand->AddComponent<PhysicsComponent>(nullptr, Vec3(3.99f, -0.6f, -1.65f),/// pos
-		QMath::angleAxisRotation(90.0f, Vec3(0.0f, 1.0f, 0.0f)),
-		Vec3(0.0f, 0.0f, 0.0f) ///velocity
-	);
-	travelToDaisyLand->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.9f, 1.9f, 1.9f));
-	travelToDaisyLand->AddComponent<ShaderComponent>(simpleTextureShader);
-	travelToDaisyLand->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("go to dream"));
-	travelToDaisyLand->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
-	AddTransparentActor(travelToDaisyLand);*/
 
 
 	

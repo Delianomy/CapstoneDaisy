@@ -159,32 +159,58 @@ bool CapstoneSceneDream::OnCreate() {
 	mrOwl = std::make_shared<InteractableActor>(assetManager, Vec3(12.3f, -0.7f, 1.6f), 0.8f, Vec3(0.15f, 0.15f, 0.15f), assetManager->GetComponent<MaterialComponent>("Owl"), assetManager->GetComponent<ShaderComponent>("TextureShader"));
 	mrOwl->NPCid = 2;
 	mrOwl->Bind([this]() {
-		///Check if the quest actually exists in the quest manager
 		if (sceneMan->questManager->quests.find(0) != sceneMan->questManager->quests.end()) {
+			if (sceneMan->questManager->quests[0].state == QuestState::InProgress) {
+				dialogueSystem->ClearDialogues();
+				std::vector<std::vector<Dialogue>> owlSequences;
+				owlSequences.resize(1);
+				unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Owl_2")->getTextureID();
+				Dialogue owl_d14("Mr. Owl", "Ah there you are!", textureID);
+				owlSequences[0].push_back(owl_d14);
 
+				textureID = assetManager->GetComponent<MaterialComponent>("Owl_2")->getTextureID();
+				Dialogue owl_d15("Mr. Owl", "We were waiting for you", textureID);
+				owlSequences[0].push_back(owl_d15);
 
-			/// If the quest has not started
-			if (sceneMan->questManager->quests[0].state == QuestState::NotStarted) {
-				if (2 < dialogueSequences.size()) {
-					// Clear any existing dialogues
-					dialogueSystem->ClearDialogues();
-
-					// Add the dialogues for this object
-					for (const auto& dialogue : dialogueSequences[2]) {
-						dialogueSystem->AddDialogueToSequence(dialogue);
-					}
-
-					dialogueSystem->OpenDialogue(0);
+				for (const auto& dialogue : owlSequences[0]) {
+					dialogueSystem->AddDialogueToSequence(dialogue);
 				}
-				sceneMan->questManager->quests[0].state = QuestState::InProgress;
-			}
+				dialogueSystem->OpenDialogue(0);
 
-			/// If the quest has been completed
-			if (sceneMan->questManager->quests[0].state == QuestState::Completed) {
-				/// If the quest has not started
-				
+				sceneMan->questManager->quests[0].state = QuestState::Completed;
+
+				audioManager->Play(9, 1.0f);
 			}
 		}
+
+
+
+		///Check if the quest actually exists in the quest manager
+		//if (sceneMan->questManager->quests.find(0) != sceneMan->questManager->quests.end()) {
+
+
+		//	/// If the quest has not started
+		//	if (sceneMan->questManager->quests[0].state == QuestState::NotStarted) {
+		//		if (2 < dialogueSequences.size()) {
+		//			// Clear any existing dialogues
+		//			dialogueSystem->ClearDialogues();
+
+		//			// Add the dialogues for this object
+		//			for (const auto& dialogue : dialogueSequences[2]) {
+		//				dialogueSystem->AddDialogueToSequence(dialogue);
+		//			}
+
+		//			dialogueSystem->OpenDialogue(0);
+		//		}
+		//		sceneMan->questManager->quests[0].state = QuestState::InProgress;
+		//	}
+
+		//	/// If the quest has been completed
+		//	if (sceneMan->questManager->quests[0].state == QuestState::Completed) {
+		//		/// If the quest has not started
+		//		
+		//	}
+		//}
 		});
 	mrOwl->AddComponent<CollisionComponent>(nullptr, 0.5f);
 	triggerSystem.AddActor(mrOwl);
@@ -1932,45 +1958,55 @@ void CapstoneSceneDream::DebugUI() const {
 }
 
 void CapstoneSceneDream::UpdateLevelQuests() {
-	/// Mr owl's quest
-
+	// Mr owl's quest
 	if (sceneMan->questManager->quests.find(0) != sceneMan->questManager->quests.end()) {
 		if (sceneMan->questManager->quests[0].state == QuestState::InProgress) {
-			Ref<ItemInteractable> mrOwl = std::make_shared<ItemInteractable>(assetManager, "Bear", Vec3(12.3f, -0.7f, 1.6f), 1.5f);
-			mrOwl->BindToOnCorrect([this, mrOwl]() {
-				std::cout << "Are you in ? ? ? " << std::endl;
-				if (1 < dialogueSequences.size()) {
-					// Clear any existing dialogues
-					dialogueSystem->ClearDialogues();
-
-					// Add the dialogues for this object
-					for (const auto& dialogue : dialogueSequences[1]) {
-						dialogueSystem->AddDialogueToSequence(dialogue);
-					}
-				
-					dialogueSystem->OpenDialogue(0);
-				}
-				sceneMan->inventory.RemoveItem(0);
-
-				sceneMan->questManager->quests[0].state = QuestState::Completed;
-			
-				if (questCompletionSoundPlayed == false) {
-					audioManager->Play(9, 1.0f);
-					 // Set flag to prevent replaying
-					questCompletionSoundPlayed = true;
-					std::cout << "Sound played and flag set to: " << questCompletionSoundPlayed << std::endl;
-				}
-				
-				triggerSystem.RemoveActor(mrOwl);
-				});
-			mrOwl->BindToOnReject([this]() {
-				std::cout << "This is the wrong item\n";
-				});
-			triggerSystem.AddActor(mrOwl);
-	
+			//nothing to spawn
 		}
-		
 	}
+	
+	
+	
+	
+	
+	/// Mr owl's quest
+	//if (sceneMan->questManager->quests.find(0) != sceneMan->questManager->quests.end()) {
+	//	if (sceneMan->questManager->quests[0].state == QuestState::InProgress) {
+	//		Ref<ItemInteractable> mrOwl = std::make_shared<ItemInteractable>(assetManager, "Bear", Vec3(12.3f, -0.7f, 1.6f), 1.5f);
+	//		mrOwl->BindToOnCorrect([this, mrOwl]() {
+	//			std::cout << "Are you in ? ? ? " << std::endl;
+	//			if (1 < dialogueSequences.size()) {
+	//				// Clear any existing dialogues
+	//				dialogueSystem->ClearDialogues();
+
+	//				// Add the dialogues for this object
+	//				for (const auto& dialogue : dialogueSequences[1]) {
+	//					dialogueSystem->AddDialogueToSequence(dialogue);
+	//				}
+	//			
+	//				dialogueSystem->OpenDialogue(0);
+	//			}
+	//			sceneMan->inventory.RemoveItem(0);
+
+	//			sceneMan->questManager->quests[0].state = QuestState::Completed;
+	//		
+	//			if (questCompletionSoundPlayed == false) {
+	//				audioManager->Play(9, 1.0f);
+	//				 // Set flag to prevent replaying
+	//				questCompletionSoundPlayed = true;
+	//				std::cout << "Sound played and flag set to: " << questCompletionSoundPlayed << std::endl;
+	//			}
+	//			
+	//			triggerSystem.RemoveActor(mrOwl);
+	//			});
+	//		mrOwl->BindToOnReject([this]() {
+	//			std::cout << "This is the wrong item\n";
+	//			});
+	//		triggerSystem.AddActor(mrOwl);
+	//
+	//	}
+	//	
+	//}
 	if (sceneMan->questManager->quests.find(1) != sceneMan->questManager->quests.end()) {
 		if (sceneMan->questManager->quests[1].state == QuestState::InProgress) {
 			Ref<ItemInteractable> fairy_inter = std::make_shared<ItemInteractable>(assetManager, "Book", Vec3(2.0f, -0.5f, 0.0f), 1.5f);

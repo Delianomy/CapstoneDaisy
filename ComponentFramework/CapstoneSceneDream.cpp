@@ -321,7 +321,6 @@ bool CapstoneSceneDream::OnCreate() {
 
 
 
-	//audioManager->PlayBGmusic(7, 0.5f);
 
 	
 
@@ -1202,7 +1201,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	currentTime += deltaTime;
 	if (!underwater) {
 		currentSkybox = overworldSkybox;
-		audioManager->PlayBGmusic(7, 0.2f);
+		audioManager->PlayBGmusic(7, 0.0f);
 		if (!playerIsGrounded) {
 		
 			currentAnim = PlayerAnimType::Jumping;
@@ -1217,7 +1216,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	}
 	else {
 		currentSkybox = underwaterSkybox;
-		audioManager->PlayBGmusic(8, 0.5f);
+		audioManager->PlayBGmusic(8, 0.0f);
 		if (VMath::mag(movementInput) == 0.0f) {
 		currentAnim = PlayerAnimType::SwimmingIdle;
 		}
@@ -1913,6 +1912,7 @@ void CapstoneSceneDream::DebugUI() const {
 
 void CapstoneSceneDream::UpdateLevelQuests() {
 	/// Mr owl's quest
+
 	if (sceneMan->questManager->quests.find(0) != sceneMan->questManager->quests.end()) {
 		if (sceneMan->questManager->quests[0].state == QuestState::InProgress) {
 			Ref<ItemInteractable> mrOwl = std::make_shared<ItemInteractable>(assetManager, "Item1", Vec3(12.3f, -0.7f, 1.6f), 1.5f);
@@ -1926,19 +1926,29 @@ void CapstoneSceneDream::UpdateLevelQuests() {
 					for (const auto& dialogue : dialogueSequences[1]) {
 						dialogueSystem->AddDialogueToSequence(dialogue);
 					}
-
+				
 					dialogueSystem->OpenDialogue(0);
 				}
 				sceneMan->inventory.RemoveItem(0);
 
 				sceneMan->questManager->quests[0].state = QuestState::Completed;
+			
+				if (questCompletionSoundPlayed == false) {
+					audioManager->Play(9, 1.0f);
+					 // Set flag to prevent replaying
+					questCompletionSoundPlayed = true;
+					std::cout << "Sound played and flag set to: " << questCompletionSoundPlayed << std::endl;
+				}
+				
 				triggerSystem.RemoveActor(mrOwl);
 				});
 			mrOwl->BindToOnReject([this]() {
 				std::cout << "This is the wrong item\n";
 				});
 			triggerSystem.AddActor(mrOwl);
+	
 		}
+		
 	}
 	if (sceneMan->questManager->quests.find(1) != sceneMan->questManager->quests.end()) {
 		if (sceneMan->questManager->quests[1].state == QuestState::InProgress) {

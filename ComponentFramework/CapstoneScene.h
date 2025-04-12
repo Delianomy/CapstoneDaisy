@@ -15,6 +15,7 @@
 #include "AudioSystem.h" 
 #include "Inventory.h"
 #include "PickableItem.h"
+#include "SceneManager.h"
 
 
 using namespace MATH;
@@ -52,6 +53,9 @@ class CapstoneScene : public Scene
 	Ref<AudioManager> audioManager;
 	Ref<DialogueSystem> dialogueSystem;
 
+
+	Ref<Actor> travelToDaisyLand;
+
 	Ref<PickableItem> bear;
 	Ref<PickableItem> moonTrinket;
 	Ref<PickableItem> books;
@@ -60,12 +64,12 @@ class CapstoneScene : public Scene
 	std::shared_ptr<PickableItem> booksInInventory;
 	std::shared_ptr<PickableItem> moonInInventory;
 
-
+	SceneManager* sceneManagerRef;
 	Ref<Actor> room;
 	float playerAngle;
 	
 	std::vector<std::vector<Dialogue>> dialogueSequences;
-
+	std::vector<std::vector<Dialogue>> startDialogueSequence;
 
 	bool goLeft = false;
 	bool goRight = false;
@@ -86,7 +90,7 @@ class CapstoneScene : public Scene
 	bool rotateRight = false;
 public:
 	Matrix4 orient;
-	explicit CapstoneScene();
+	explicit CapstoneScene(SceneManager* scenemanager);
 	virtual ~CapstoneScene();
 
 	virtual bool OnCreate();
@@ -100,7 +104,7 @@ public:
 	void InitializeDialogue();
 	void DrawUI_imgui();
 	void AdrielMagik();
-	
+	void StartGameDialogue();
 };
 
 #endif // CAPSTONESCENE_H

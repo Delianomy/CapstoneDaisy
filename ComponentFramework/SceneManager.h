@@ -73,9 +73,23 @@ public:
 	bool Initialize(std::string name_, int width_, int height_);
 	void HandleEvents();
 	SceneManager();
+	bool initialStoryStart = true;
 	
 private:
 	
+	
+
+	//Forward declarations
+	class Scene* currentScene;
+	class Timer* timer;
+	class Window* window;
+
+	unsigned int fps;
+	bool isRunning;
+	bool fullScreen;
+
+public:
+
 	enum class SCENE_NUMBER {
 		SCENE0 = 0,
 		SCENE1,
@@ -92,16 +106,7 @@ private:
 
 	};
 
-	//Forward declarations
-	class Scene* currentScene;
-	class Timer* timer;
-	class Window* window;
-
-	unsigned int fps;
-	bool isRunning;
-	bool fullScreen;
 	void BuildNewScene(SCENE_NUMBER scene_);
-public:
 	QuestManager* questManager;
 	Quest currentQuest;
 	void CreateQuests();

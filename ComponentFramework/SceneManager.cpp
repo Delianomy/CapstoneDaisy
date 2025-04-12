@@ -71,7 +71,7 @@ bool SceneManager::Initialize(std::string name_, int width_, int height_) {
 	customFont= io.Fonts->AddFontFromFileTTF("fonts/dpcomic.ttf", 20.0f);
 
 	/********************************   Default first scene   ***********************/
-	BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE_DREAM);
+	BuildNewScene(SCENE_NUMBER::SCENE_CAPSTONE);
 
 
 	return true;
@@ -148,7 +148,7 @@ void SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 	switch (scene) {
 
 	case SCENE_NUMBER::SCENE_CAPSTONE:
-		currentScene = new CapstoneScene();
+		currentScene = new CapstoneScene(this);
 		currentScene->SetSceneManager(this);
 		status = currentScene->OnCreate();
 		break;

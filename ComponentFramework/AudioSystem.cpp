@@ -57,6 +57,10 @@ bool AudioManager::OnCreate()
     if (LoadAudio("ost/Underwater.mp3", true) == false) {
         return false;
     }
+    //9
+    if (LoadAudio("ost/UI_sounds/Retro8.wav", false) == false) {
+        return false;
+    }
 
 
     return true;

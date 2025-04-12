@@ -21,9 +21,10 @@ using namespace MATH;
 //using namespace MATHEX;
 
 //BEDROOM SCENE
-CapstoneScene::CapstoneScene() :drawNormals(false), drawOverlay(false) {
+CapstoneScene::CapstoneScene(SceneManager* scenemanager) :drawNormals(false), drawOverlay(false) {
 	Debug::Info("Created Scene Bedroom: ", __FILE__, __LINE__);
 	glGetIntegerv(GL_VIEWPORT, viewport);
+	this->sceneManagerRef = scenemanager;
 }
 
 bool CapstoneScene::OnCreate() {
@@ -70,6 +71,9 @@ bool CapstoneScene::OnCreate() {
 	camera->GetViewMatrix().print("ViewMatrix");
 	AddActor(camera);
 
+
+
+
 	bearInInventory = sceneMan->inventory.GetItemByName("Item1");
 	if(bearInInventory == nullptr){
 		bear = std::make_shared<PickableItem>(
@@ -89,6 +93,9 @@ bool CapstoneScene::OnCreate() {
 		bear = bearInInventory;
 	}
 	
+
+
+
 	moonInInventory = sceneMan->inventory.GetItemByName("Item2");
 	if (moonInInventory == nullptr) {
 		moonTrinket = std::make_shared<PickableItem>(
@@ -129,10 +136,23 @@ bool CapstoneScene::OnCreate() {
 		books = booksInInventory;
 	}
 
+
+	travelToDaisyLand = std::make_shared<Actor>(nullptr);
+	travelToDaisyLand->AddComponent<PhysicsComponent>(nullptr, Vec3(3.99f, -0.6f, -1.65f),/// pos
+		QMath::angleAxisRotation(90.0f, Vec3(0.0f, 1.0f, 0.0f)),
+		Vec3(0.0f, 0.0f, 0.0f) ///velocity
+	);
+	travelToDaisyLand->GetComponent<PhysicsComponent>()->SetScale(Vec3(1.9f, 1.9f, 1.9f));
+	travelToDaisyLand->AddComponent<ShaderComponent>(simpleTextureShader);
+	travelToDaisyLand->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("go to dream"));
+	travelToDaisyLand->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
+	AddTransparentActor(travelToDaisyLand);
+
+
 	
 	audioManager->Play(6, 0.13f);
 	
-
+	StartGameDialogue();
 	InitializeDialogue();
 	room = std::make_shared<Room>(nullptr, "textures/SkyBoxes/Room/1.png", "textures/SkyBoxes/Room/2.png",
 		"textures/SkyBoxes/Room/celling.png", "textures/SkyBoxes/Room/floor.png", "textures/SkyBoxes/Room/3.png",
@@ -441,7 +461,10 @@ int CapstoneScene::Pick(int x, int y) {
 		index= colorIndex - 1; // Subtract 1 to get back to 0-based index
 	}
 
+	
+
 	if (index >= 0 && index < dialogueSequences.size()) {
+	
 		// Clear any existing dialogues
 		dialogueSystem->ClearDialogues();
 
@@ -451,6 +474,9 @@ int CapstoneScene::Pick(int x, int y) {
 		}
 
 		dialogueSystem->OpenDialogue(0);
+	}
+	if (index == 3) {
+		sceneManagerRef->BuildNewScene(SceneManager::SCENE_NUMBER::SCENE_CAPSTONE_DREAM);
 	}
 
 
@@ -575,7 +601,6 @@ void CapstoneScene::InitializeDialogue() {
 
 		textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
 		trinket = Dialogue("Daisy", "But in the night when the light hits it, its very shiny.", textureID);
-		trinket.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(moonTrinket, 1); });
 		dialogueSequences[1].push_back(trinket);
 	}
 
@@ -589,7 +614,6 @@ void CapstoneScene::InitializeDialogue() {
 
 		textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
 		books_dialogue = Dialogue("Daisy", "Eh. Reading is not as fun as drawing anyways.", textureID);
-		books_dialogue.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(books, 2); });
 		dialogueSequences[2].push_back(books_dialogue);
 	}
 
@@ -755,6 +779,31 @@ void CapstoneScene::DrawUI_imgui()
 	}
 
 
+}
+
+void CapstoneScene::StartGameDialogue()
+{
+	startDialogueSequence.resize(1);
+	//Initial quest start
+	unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
+	Dialogue start1 = Dialogue("Daisy", "Hmm...I need find out how to get to that 'ball'.", textureID);
+	startDialogueSequence[0].push_back(start1);
+
+	textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
+	start1 = Dialogue("Daisy", "Maybe once I get to the Daisy Land I will figure out what to do.", textureID);
+	startDialogueSequence[0].push_back(start1);
+
+	textureID = assetManager->GetComponent<MaterialComponent>("quest")->getTextureID();
+	start1 = Dialogue("Quest", "Travel to Daisy land.", textureID);
+	startDialogueSequence[0].push_back(start1);
+
+	dialogueSystem->ClearDialogues();
+	// Add the dialogues for this object
+	for (const auto& dialogue : startDialogueSequence[0]) {
+		dialogueSystem->AddDialogueToSequence(dialogue);
+	}
+
+	dialogueSystem->OpenDialogue(0);
 }
 
 

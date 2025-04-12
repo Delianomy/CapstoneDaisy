@@ -146,6 +146,9 @@ class CapstoneSceneDream : public Scene
 	GLuint VAO;
 	GLuint VBO;
 
+
+
+	bool questCompletionSoundPlayed = false;
 public:
 	bool playerIsFacingLeft = false;
 

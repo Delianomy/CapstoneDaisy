@@ -137,7 +137,22 @@ bool CapstoneScene::OnCreate() {
 	}
 
 
-	travelToDaisyLand = std::make_shared<Actor>(nullptr);
+	travelToDaisyLand = std::make_shared<PickableItem>(
+		assetManager,                                          // AssetManager* assMan
+		"Teleport",                                               // std::string name_
+		Vec3(3.99f, -0.6f, -1.65f),                           // Vec3 pos // Quaternion orient
+		1.0f,                                                  // float triggerRadius
+		Vec3(0.3f, 0.3f, 0.3f),                               // Vec3 scale
+		assetManager->GetComponent<MaterialComponent>("go to dream"),// std::shared_ptr<MaterialComponent> material   // std::shared_ptr<MeshComponent> mesh
+		assetManager->GetComponent<ShaderComponent>("simpleTextureShader")
+	);
+	travelToDaisyLand->GetComponent<PhysicsComponent>()->SetQuaternion(QMath::angleAxisRotation(90.0f, Vec3(0.0f, 1.0f, 0.0f)));
+	triggerSystem.AddActor(travelToDaisyLand);
+	AddTransparentActor(travelToDaisyLand);
+	AddActor(travelToDaisyLand);
+
+
+	/*travelToDaisyLand = std::make_shared<Actor>(nullptr);
 	travelToDaisyLand->AddComponent<PhysicsComponent>(nullptr, Vec3(3.99f, -0.6f, -1.65f),/// pos
 		QMath::angleAxisRotation(90.0f, Vec3(0.0f, 1.0f, 0.0f)),
 		Vec3(0.0f, 0.0f, 0.0f) ///velocity
@@ -146,7 +161,7 @@ bool CapstoneScene::OnCreate() {
 	travelToDaisyLand->AddComponent<ShaderComponent>(simpleTextureShader);
 	travelToDaisyLand->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("go to dream"));
 	travelToDaisyLand->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
-	AddTransparentActor(travelToDaisyLand);
+	AddTransparentActor(travelToDaisyLand);*/
 
 
 	
@@ -465,6 +480,8 @@ int CapstoneScene::Pick(int x, int y) {
 	if (index == -1) {
 		return index;
 	}
+
+
 	Ref<PickableItem> itemPicked = std::dynamic_pointer_cast<PickableItem>(transparentActors[index]);
 
 	if (itemPicked == nullptr) {
@@ -473,6 +490,10 @@ int CapstoneScene::Pick(int x, int y) {
 	
 	std::string itemName = itemPicked->name;
 	
+	if (itemName == "Teleport") {
+		sceneManagerRef->BuildNewScene(SceneManager::SCENE_NUMBER::SCENE_CAPSTONE_DREAM);
+		return index;
+	}
 	
 		// Clear any existing dialogues
 	dialogueSystem->ClearDialogues();
@@ -484,7 +505,7 @@ int CapstoneScene::Pick(int x, int y) {
 
 	dialogueSystem->OpenDialogue(0);
 		
-	//sceneManagerRef->BuildNewScene(SceneManager::SCENE_NUMBER::SCENE_CAPSTONE_DREAM);
+	//
 	
 
 
@@ -582,6 +603,9 @@ void CapstoneScene::InitializeDialogue() {
 	dialogue_ID_to_Name.insert({ "Bear", 0 });
 	dialogue_ID_to_Name.insert({ "Moon", 1 });
 	dialogue_ID_to_Name.insert({ "Book", 2 });
+	dialogue_ID_to_Name.insert({ "Teleport", 2 });
+	
+
 
 	//Teddy Bear
 	if (!bearInInventory) {

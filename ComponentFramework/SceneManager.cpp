@@ -181,9 +181,10 @@ void SceneManager::CreateQuests()
 {
 	/// Start quest by talking to owl
 	questManager->AddQuest(Quest(0, "Go to the Daisy Land and talk to mr Owl", QuestState::InProgress));
-	/*questManager->AddQuest(Quest(0, "Bring The Bear", QuestState::NotStarted));
-	questManager->AddQuest(Quest(1, "Talk to Fairy", QuestState::NotStarted));
-	questManager->AddQuest(Quest(2, "Bring the enchanted teddy", QuestState::NotStarted));*/
+	questManager->AddQuest(Quest(1, "Find a substitution to present to mr Owl", QuestState::NotStarted));
+	
+	questManager->AddQuest(Quest(2, "Talk to Fairy", QuestState::NotStarted));
+	questManager->AddQuest(Quest(2, "Bring the enchanted teddy", QuestState::NotStarted));
 }
 
 void SceneManager::AddItemToInventory(std::shared_ptr<Actor> other, int index)

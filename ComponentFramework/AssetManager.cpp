@@ -115,6 +115,8 @@ AssetManager::AssetManager() {
 		AddComponent<MaterialComponent>("Game Title", nullptr, "textures/UI_elements/Game Title.png");
 		AddComponent<MaterialComponent>("quest", nullptr, "textures/UI_elements/cursor/cursor_hovered.png");
 		AddComponent<MaterialComponent>("go to dream", nullptr, "textures/UI_elements/cursor/hovered.png");
+		AddComponent<MaterialComponent>("F", nullptr, "textures/UI_elements/controls/F_button.png");
+
 
 		//Dialogue design
 		AddComponent<MaterialComponent>("Dialogue_profileFrame", nullptr, "textures/UI_elements/frame.png");

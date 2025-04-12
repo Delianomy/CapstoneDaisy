@@ -82,13 +82,16 @@ class CapstoneScene : public Scene
 	Vec3 lefr_right_Vector = Vec3(0.1f, 0.0f, 0.0f);
 	int animIndex = 0;
 	float currentTime = 0.0f;
-	float frameSpeed = 0.1f;
+	float frameSpeed = 0.05f;
 	bool drawNormals;
 	bool drawOverlay;
 	bool inventoryButtonPressed = true;
 
 	bool rotateRight = false;
 public:
+	std::unordered_map<std::string, int> dialogue_ID_to_Name;
+
+
 	Matrix4 orient;
 	explicit CapstoneScene(SceneManager* scenemanager);
 	virtual ~CapstoneScene();

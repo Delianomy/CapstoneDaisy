@@ -129,7 +129,7 @@ bool CapstoneSceneDream::OnCreate() {
 	player->AddComponent<MeshComponent>(assetManager->GetComponent<MeshComponent>("Square"));
 	player->AddComponent<ShaderComponent>(shader);
 	player->AddComponent<MaterialComponent>(assetManager->GetComponent<MaterialComponent>("Daisy_spriteSheet"));
-	player->AddComponent<TriggerComponent>(nullptr, 1.0f);
+	player->AddComponent<TriggerComponent>(nullptr, 0.7f);
 
 	player->GetComponent<TriggerComponent>()->SetCallback(this, &CapstoneSceneDream::PlayerTriggerCallback);
 	AddTransparentActor(player);
@@ -1672,8 +1672,8 @@ void CapstoneSceneDream::DrawInteraction()
 		ImGui::SetNextWindowSize(ImVec2(80, 80)); // Set the window size
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-		ImGui::Begin("3 button", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoDecoration);
-		ImGui::Image((intptr_t)assetManager->GetComponent<MaterialComponent>("number 3")->getTextureID(), ImVec2(80, 80));
+		ImGui::Begin("Interaction", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoDecoration);
+		ImGui::Image((intptr_t)assetManager->GetComponent<MaterialComponent>("F")->getTextureID(), ImVec2(72,72));
 		ImGui::End();
 		ImGui::PopStyleVar();
 		ImGui::PopStyleColor();
@@ -1936,7 +1936,7 @@ void CapstoneSceneDream::UpdateLevelQuests() {
 
 	if (sceneMan->questManager->quests.find(0) != sceneMan->questManager->quests.end()) {
 		if (sceneMan->questManager->quests[0].state == QuestState::InProgress) {
-			Ref<ItemInteractable> mrOwl = std::make_shared<ItemInteractable>(assetManager, "Item1", Vec3(12.3f, -0.7f, 1.6f), 1.5f);
+			Ref<ItemInteractable> mrOwl = std::make_shared<ItemInteractable>(assetManager, "Bear", Vec3(12.3f, -0.7f, 1.6f), 1.5f);
 			mrOwl->BindToOnCorrect([this, mrOwl]() {
 				std::cout << "Are you in ? ? ? " << std::endl;
 				if (1 < dialogueSequences.size()) {
@@ -1973,7 +1973,7 @@ void CapstoneSceneDream::UpdateLevelQuests() {
 	}
 	if (sceneMan->questManager->quests.find(1) != sceneMan->questManager->quests.end()) {
 		if (sceneMan->questManager->quests[1].state == QuestState::InProgress) {
-			Ref<ItemInteractable> fairy_inter = std::make_shared<ItemInteractable>(assetManager, "Item3", Vec3(2.0f, -0.5f, 0.0f), 1.5f);
+			Ref<ItemInteractable> fairy_inter = std::make_shared<ItemInteractable>(assetManager, "Book", Vec3(2.0f, -0.5f, 0.0f), 1.5f);
 			fairy_inter->BindToOnCorrect([this, fairy_inter]() {
 				std::cout << "Are you in ? ? ? " << std::endl;
 				if (1 < dialogueSequences.size()) {

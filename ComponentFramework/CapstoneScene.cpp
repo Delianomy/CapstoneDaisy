@@ -78,7 +78,7 @@ bool CapstoneScene::OnCreate() {
 	if(bearInInventory == nullptr){
 		bear = std::make_shared<PickableItem>(
 			assetManager,                                          // AssetManager* assMan
-			"Item1",                                               // std::string name_
+			"Bear",                                               // std::string name_
 			Vec3(-0.80f, -1.5f, 3.99f),                           // Vec3 pos // Quaternion orient
 			1.0f,                                                  // float triggerRadius
 			Vec3(0.1f, 0.1f, 0.1f),                               // Vec3 scale
@@ -100,7 +100,7 @@ bool CapstoneScene::OnCreate() {
 	if (moonInInventory == nullptr) {
 		moonTrinket = std::make_shared<PickableItem>(
 			assetManager,                                          // Ref<AssetManager> assMan
-			"Item2",                                               // std::string name_
+			"Moon",                                               // std::string name_
 			Vec3(-0.02f, 0.8f, 3.99f),                           // Vec3 pos // Quaternion orient
 			1.0f,                                                  // float triggerRadius
 			Vec3(0.25f, 0.25f, 0.25f),                               // Vec3 scale
@@ -120,7 +120,7 @@ bool CapstoneScene::OnCreate() {
 	if (booksInInventory == nullptr) {
 		books = std::make_shared<PickableItem>(
 			assetManager,                                          // Ref<AssetManager> assMan
-			"Item3",                                               // std::string name_
+			"Book",                                               // std::string name_
 			Vec3(1.8f, 0.32f, -3.99f),                           // Vec3 pos // Quaternion orient
 			1.0f,                                                  // float triggerRadius
 			Vec3(0.15f, 0.15f, 0.15f),                               // Vec3 scale
@@ -461,23 +461,31 @@ int CapstoneScene::Pick(int x, int y) {
 		index= colorIndex - 1; // Subtract 1 to get back to 0-based index
 	}
 
-	
 
-	if (index >= 0 && index < dialogueSequences.size()) {
+	if (index == -1) {
+		return index;
+	}
+	Ref<PickableItem> itemPicked = std::dynamic_pointer_cast<PickableItem>(transparentActors[index]);
+
+	if (itemPicked == nullptr) {
+		return index;
+	}
+	
+	std::string itemName = itemPicked->name;
+	
 	
 		// Clear any existing dialogues
-		dialogueSystem->ClearDialogues();
+	dialogueSystem->ClearDialogues();
 
 		// Add the dialogues for this object
-		for (const auto& dialogue : dialogueSequences[index]) {
+	for (const auto& dialogue : dialogueSequences[dialogue_ID_to_Name[itemName]]) {
 			dialogueSystem->AddDialogueToSequence(dialogue);
-		}
+	}
 
-		dialogueSystem->OpenDialogue(0);
-	}
-	if (index == 3) {
-		sceneManagerRef->BuildNewScene(SceneManager::SCENE_NUMBER::SCENE_CAPSTONE_DREAM);
-	}
+	dialogueSystem->OpenDialogue(0);
+		
+	//sceneManagerRef->BuildNewScene(SceneManager::SCENE_NUMBER::SCENE_CAPSTONE_DREAM);
+	
 
 
 	glEnable(GL_BLEND);
@@ -571,9 +579,11 @@ void CapstoneScene::InitializeDialogue() {
 
 	dialogueSequences.resize(transparentActors.size());
 
+	dialogue_ID_to_Name.insert({ "Bear", 0 });
+	dialogue_ID_to_Name.insert({ "Moon", 1 });
+	dialogue_ID_to_Name.insert({ "Book", 2 });
 
 	//Teddy Bear
-
 	if (!bearInInventory) {
 			unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
 			Dialogue teddy_bear = Dialogue("Daisy", "Oh! Thats my Teddy bear!", textureID);

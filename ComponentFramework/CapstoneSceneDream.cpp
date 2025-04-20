@@ -1267,7 +1267,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	currentTime += deltaTime;
 	if (!underwater) {
 		currentSkybox = overworldSkybox;
-		audioManager->PlayBGmusic(7, 0.0f);
+		audioManager->PlayBGmusic(7, 1.0f);
 		if (!playerIsGrounded) {
 		
 			currentAnim = PlayerAnimType::Jumping;
@@ -1282,7 +1282,7 @@ void CapstoneSceneDream::Update(const float deltaTime) {
 	}
 	else {
 		currentSkybox = underwaterSkybox;
-		audioManager->PlayBGmusic(8, 0.0f);
+		audioManager->PlayBGmusic(8, 1.0f);
 		if (VMath::mag(movementInput) == 0.0f) {
 		currentAnim = PlayerAnimType::SwimmingIdle;
 		}
@@ -1435,7 +1435,7 @@ void CapstoneSceneDream::Render() const {
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		DebugUI();
+		//DebugUI();
 
 		glBindBuffer(GL_UNIFORM_BUFFER, camera->GetMatriciesID());
 		glBindBuffer(GL_UNIFORM_BUFFER, light->GetLightID());
@@ -1462,7 +1462,7 @@ void CapstoneSceneDream::Render() const {
 			opaqueActor->GetComponent<MeshComponent>()->Render(GL_TRIANGLES);
 		}
 
-		RenderColliders();
+		//RenderColliders();
 		std::vector<Ref<Actor>> sortedTransparentActors = transparentActors;
 		std::sort(sortedTransparentActors.begin(), sortedTransparentActors.end(),
 			[this](const Ref<Actor>& a, const Ref<Actor>& b) {

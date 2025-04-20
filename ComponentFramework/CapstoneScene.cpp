@@ -73,7 +73,7 @@ bool CapstoneScene::OnCreate() {
 
 
 
-	bearInInventory = sceneMan->inventory.GetItemByName("Item1");
+	bearInInventory = sceneMan->inventory.GetItemByName("Bear");
 	if(bearInInventory == nullptr){
 		bear = std::make_shared<PickableItem>(
 			assetManager,                                          // AssetManager* assMan
@@ -95,7 +95,7 @@ bool CapstoneScene::OnCreate() {
 
 
 
-	moonInInventory = sceneMan->inventory.GetItemByName("Item2");
+	moonInInventory = sceneMan->inventory.GetItemByName("Moon");
 	if (moonInInventory == nullptr) {
 		moonTrinket = std::make_shared<PickableItem>(
 			assetManager,                                          // Ref<AssetManager> assMan
@@ -115,7 +115,7 @@ bool CapstoneScene::OnCreate() {
 	}
 	
 
-	booksInInventory = sceneMan->inventory.GetItemByName("Item3");
+	booksInInventory = sceneMan->inventory.GetItemByName("Book");
 	if (booksInInventory == nullptr) {
 		books = std::make_shared<PickableItem>(
 			assetManager,                                          // Ref<AssetManager> assMan

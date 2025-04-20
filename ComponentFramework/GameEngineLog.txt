@@ -1,4 +1,4 @@
-Sat Apr 12 02:05:54 2025
+Sat Apr 19 20:52:48 2025
 [INFO]: Starting the SceneManager
 [INFO]: OpenGL version: 4.6.0 NVIDIA 546.80
 [INFO]: Graphics card vendor NVIDIA Corporation
@@ -111,7 +111,6 @@ Sat Apr 12 02:05:54 2025
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
 [INFO]: Created Scene Dream: 
 [INFO]: Loading assets Scene Dream: 
 [ERROR]: Can't fint requested component in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 38
@@ -181,7 +180,6 @@ Sat Apr 12 02:05:54 2025
 [ERROR]: Can't fint requested component in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 38
 [ERROR]: Can't fint requested component in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 38
 [ERROR]: Can't fint requested component in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 38
-[ERROR]: Can't fint requested component in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 38
 [INFO]: Uniforms:
 "modelMatrix" loc:0
 "projectionMatrix" loc:1
@@ -191,8 +189,6 @@ Sat Apr 12 02:05:54 2025
 [INFO]: Deleting assets Scene Bedroom: 
 [INFO]: Deleted Scene Bedroom: 
 [INFO]: Deleting assets Scene Bedroom: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
@@ -260,30 +256,6 @@ Sat Apr 12 02:05:54 2025
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
-[INFO]: Created Scene Bedroom: 
-[INFO]: Loading assets Scene Dream: 
-[INFO]: Creating values for CameraActor: 
-[ERROR]: Can't fint requested component in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 38
-[ERROR]: Can't fint requested component in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 38
-[ERROR]: Can't fint requested component in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 38
-[ERROR]: Can't fint requested component in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 38
-[INFO]: Uniforms:
-"modelMatrix" loc:0
-"projectionMatrix" loc:1
-"skybox" loc:2
-"viewMatrix" loc:3
-
-[INFO]: Deleting assets Scene Bedroom: 
-[INFO]: Deleted Scene Bedroom: 
-[INFO]: Deleting assets Scene Bedroom: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
 [INFO]: Created Scene Dream: 
 [INFO]: Loading assets Scene Dream: 
 [ERROR]: Can't fint requested component in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 38
@@ -301,8 +273,6 @@ Sat Apr 12 02:05:54 2025
 "skybox" loc:2
 "viewMatrix" loc:3
 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting Scene Dream: 
 [INFO]: Deleted Scene Dream: 
 [INFO]: Deleting Scene Dream: 
 [INFO]: Deleting assets for Actor: 
@@ -339,29 +309,6 @@ Sat Apr 12 02:05:54 2025
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Deleting assets for Actor: 
-[INFO]: Created Scene Bedroom: 
-[INFO]: Loading assets Scene Dream: 
-[INFO]: Creating values for CameraActor: 
-[ERROR]: Can't fint requested component in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 38
-[ERROR]: Can't fint requested component in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 38
-[ERROR]: Can't fint requested component in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 38
-[ERROR]: Can't fint requested component in file: C:\Users\user\Desktop\Debuggin\ComponentByScott\CapstoneDaisy\ComponentFramework\AssetManager.h on line: 38
-[INFO]: Uniforms:
-"modelMatrix" loc:0
-"projectionMatrix" loc:1
-"skybox" loc:2
-"viewMatrix" loc:3
-
-[INFO]: Deleted Scene Bedroom: 
-[INFO]: Deleting assets Scene Bedroom: 
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
@@ -371,3 +318,6 @@ Sat Apr 12 02:05:54 2025
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting the SceneManager
+[INFO]: Deleting assets for Actor: 
+[INFO]: Deleting assets for Actor: 
+[INFO]: Deleting assets for Actor: 

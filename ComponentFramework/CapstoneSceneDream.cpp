@@ -1592,6 +1592,9 @@ void CapstoneSceneDream::DrawUI_imgui()
 		ImGui::PopStyleVar();
 		ImGui::PopStyleColor();
 
+
+
+
 		/// Drawing the object texture on top
 		if (sceneMan->inventory.items[0] != nullptr) {
 			ImGui::SetNextWindowPos(ImVec2(285, 625)); // Window position + 35

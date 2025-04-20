@@ -157,6 +157,7 @@ public:
             if (ImGui::Button("Take item")) {
 
                 currentDialogue.onItemTaken();
+                isDialogueOpen = false;
 
             }
         }

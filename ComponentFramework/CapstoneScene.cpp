@@ -591,6 +591,7 @@ void CapstoneScene::InitializeDialogue() {
 	dialogue_ID_to_Name.insert({ "Bear", 0 });
 	dialogue_ID_to_Name.insert({ "Moon", 1 });
 	dialogue_ID_to_Name.insert({ "Book", 2 });
+	dialogue_ID_to_Name.insert({ "Art Mouse_Owl", 3 });
 	dialogue_ID_to_Name.insert({ "Teleport", 2 });
 	
 
@@ -599,8 +600,7 @@ void CapstoneScene::InitializeDialogue() {
 	if (!bearInInventory) {
 			unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
 			Dialogue teddy_bear = Dialogue("Daisy", "Oh! Thats my Teddy bear!", textureID);
-			teddy_bear.isFromPickableItem = true;
-			teddy_bear.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(bear, 0); });
+
 			dialogueSequences[0].push_back(teddy_bear);
 
 			textureID = assetManager->GetComponent<MaterialComponent>("Player_laugh")->getTextureID();
@@ -609,6 +609,8 @@ void CapstoneScene::InitializeDialogue() {
 
 			textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
 			teddy_bear = Dialogue("Daisy", "Maybe this could be a good gift to Mr Owl and Mrs Mouse?", textureID);
+			teddy_bear.isFromPickableItem = true;
+			teddy_bear.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(bear, 0); });
 			dialogueSequences[0].push_back(teddy_bear);
 	}
 	
@@ -617,12 +619,12 @@ void CapstoneScene::InitializeDialogue() {
 	
 		unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_question")->getTextureID();
 		Dialogue trinket = Dialogue("Daisy", "This is my favourite thing. Cant tell whats it made of.", textureID);
-		trinket.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(moonTrinket, 1); });
-		trinket.isFromPickableItem = true;
 		dialogueSequences[1].push_back(trinket);
 
 		textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
 		trinket = Dialogue("Daisy", "But in the night when the light hits it, its very shiny.", textureID);
+		trinket.isFromPickableItem = true;
+		trinket.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(moonTrinket, 1); });
 		dialogueSequences[1].push_back(trinket);
 	}
 
@@ -630,12 +632,12 @@ void CapstoneScene::InitializeDialogue() {
 
 		unsigned int textureID = assetManager->GetComponent<MaterialComponent>("Player_surprise")->getTextureID();
 		Dialogue books_dialogue = Dialogue("Daisy", "I think my mom put those books here, because she wanted to read them", textureID);
-		books_dialogue.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(books, 2); });
-		books_dialogue.isFromPickableItem = true;
 		dialogueSequences[2].push_back(books_dialogue);
 
 		textureID = assetManager->GetComponent<MaterialComponent>("Player_smile")->getTextureID();
 		books_dialogue = Dialogue("Daisy", "Eh. Reading is not as fun as drawing anyways.", textureID);
+		books_dialogue.isFromPickableItem = true;
+		books_dialogue.SetOnItemTaken([this]() {sceneMan->AddItemToInventory(books, 2); });
 		dialogueSequences[2].push_back(books_dialogue);
 	}
 
@@ -703,6 +705,7 @@ void CapstoneScene::DrawUI_imgui()
 		ImGui::PopStyleVar();
 		ImGui::PopStyleColor();
 
+
 		/// Drawing the object texture on top
 		if (sceneMan->inventory.items[0] != nullptr) {
 			ImGui::SetNextWindowPos(ImVec2(285, 625)); // Window position + 35
@@ -714,7 +717,37 @@ void CapstoneScene::DrawUI_imgui()
 			ImGui::End();
 			ImGui::PopStyleVar();
 			ImGui::PopStyleColor();
+
+
+
+
+			//Hover over
+			ImGui::SetNextWindowPos(ImVec2(250, 590)); // Same position as slot
+			ImGui::SetNextWindowSize(ImVec2(150, 150));
+			ImGui::Begin("inventory slot 1 hover", NULL,
+				ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
+				ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar |
+				ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+
+			// Create a dummy (invisible) item with the same size to detect hover
+			ImGui::InvisibleButton("hover area 1", ImVec2(200, 200));
+			if (ImGui::IsItemHovered()) {
+				ImGui::SetNextWindowPos(ImVec2(250 + 120 + 10, 590)); 
+				ImGui::SetNextWindowSize(ImVec2(300, 140));
+				ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+				ImGui::Begin("slot 1 tooltip", NULL,
+					ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDecoration);
+				ImGui::Text("Misha the Bear");
+				ImGui::Separator();
+				ImGui::TextWrapped("A soft, cuddly bear. Brings comfort to children and sometimes even adults. May be used to cheer up a sad NPC.");
+
+				ImGui::End();
+				ImGui::PopStyleColor();
+			}
+			ImGui::End();
+
 		}
+
 		ImGui::SetNextWindowPos(ImVec2(285 + 35, 625 + 35)); // Set the window position here (x, y)
 		ImGui::SetNextWindowSize(ImVec2(80, 80)); // Set the window size
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
@@ -724,6 +757,8 @@ void CapstoneScene::DrawUI_imgui()
 		ImGui::End();
 		ImGui::PopStyleVar();
 		ImGui::PopStyleColor();
+
+
 
 
 

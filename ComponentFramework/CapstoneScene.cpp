@@ -718,9 +718,7 @@ void CapstoneScene::DrawUI_imgui()
 			ImGui::PopStyleVar();
 			ImGui::PopStyleColor();
 
-
-
-
+			
 			//Hover over
 			ImGui::SetNextWindowPos(ImVec2(250, 590)); // Same position as slot
 			ImGui::SetNextWindowSize(ImVec2(150, 150));
@@ -785,6 +783,36 @@ void CapstoneScene::DrawUI_imgui()
 			ImGui::End();
 			ImGui::PopStyleVar();
 			ImGui::PopStyleColor();
+
+
+
+			//Hover over
+			ImGui::SetNextWindowPos(ImVec2(395, 665)); // Same position as slot
+			ImGui::SetNextWindowSize(ImVec2(150, 150));
+			ImGui::Begin("inventory slot 2 hover", NULL,
+				ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
+				ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar |
+				ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+
+			// Create a dummy (invisible) item with the same size to detect hover
+			ImGui::InvisibleButton("hover area 2", ImVec2(200, 200));
+			if (ImGui::IsItemHovered()) {
+				ImGui::SetNextWindowPos(ImVec2(395 + 120 + 10, 665));
+				ImGui::SetNextWindowSize(ImVec2(300, 140));
+				ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+				ImGui::Begin("slot 2 tooltip", NULL,
+					ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDecoration);
+				ImGui::Text("Moon trinket");
+				ImGui::Separator();
+				ImGui::TextWrapped("A shiny trinket shaped like a moon. Very eyecatching and pretty. Maybe be useful to people with good taste.");
+
+				ImGui::End();
+				ImGui::PopStyleColor();
+			}
+			ImGui::End();
+
+
+
 		}
 
 		ImGui::SetNextWindowPos(ImVec2(475, 735)); // Set the window position here (x, y)
@@ -820,6 +848,33 @@ void CapstoneScene::DrawUI_imgui()
 			ImGui::End();
 			ImGui::PopStyleVar();
 			ImGui::PopStyleColor();
+
+
+
+			//Hover over
+			ImGui::SetNextWindowPos(ImVec2(465, 815)); // Same position as slot
+			ImGui::SetNextWindowSize(ImVec2(150, 150));
+			ImGui::Begin("inventory slot 3 hover", NULL,
+				ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
+				ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar |
+				ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+
+			// Create a dummy (invisible) item with the same size to detect hover
+			ImGui::InvisibleButton("hover area 3", ImVec2(200, 200));
+			if (ImGui::IsItemHovered()) {
+				ImGui::SetNextWindowPos(ImVec2(465 + 120 + 10, 815));
+				ImGui::SetNextWindowSize(ImVec2(300, 110));
+				ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+				ImGui::Begin("slot 3 tooltip", NULL,
+					ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDecoration);
+				ImGui::Text("Encyclopedias");
+				ImGui::Separator();
+				ImGui::TextWrapped("A stack of interesting books about animals and nature.");
+
+				ImGui::End();
+				ImGui::PopStyleColor();
+			}
+			ImGui::End();
 		}
 
 		ImGui::SetNextWindowPos(ImVec2(545, 885)); // Set the window position here (x, y)

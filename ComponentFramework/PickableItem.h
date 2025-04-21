@@ -15,6 +15,9 @@ public:
 	PickableItem(AssetManager* assMan, std::string name_, Vec3 pos, float triggerRadius = 0.5f, Vec3 scale = Vec3(0.1f, 0.1f, 0.1f), std::shared_ptr<MaterialComponent> material = nullptr, std::shared_ptr<ShaderComponent> shader = nullptr);
 	~PickableItem() {}
 
+	std::string itemDesctiption;
+	std::string itemName;
+
 	std::string name;
 };
 
